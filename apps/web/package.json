@@ -1,5 +1,11 @@
 {
-  "name": "web",
+  "name": "ApexAimerWeb",
+  "description": "Landings and other web support pages",
+  "author": {
+    "name": "Aleksei Savelev",
+    "url": "https://github.com/savelichalex"
+  },
+  "repository": "https://github.com/Apex-Aimer/monorepo/apps/web",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -19,6 +25,7 @@
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
     "eslint-config-custom": "*",
+    "tailwind-custom": "*",
     "tsconfig": "*",
     "typescript": "^4.5.3"
   }

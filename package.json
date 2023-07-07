@@ -4,19 +4,22 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
+    "blog:dev": "turbo run dev --filter ApexAimerBlog",
+    "web:dev": "turbo run dev --filter ApexAimerWeb"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
+    "prettier-plugin-tailwindcss": "^0.3.0",
     "turbo": "latest"
   },
-  "name": "monorepo",
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "license": "AGPL-3.0-only"
 }
