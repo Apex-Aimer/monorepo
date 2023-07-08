@@ -1,5 +1,5 @@
 import { Footer } from 'app/components/Footer'
-import Navbar from 'app/components/Navbar'
+import Navbar from 'app/components/Navbar/Navbar'
 
 export async function sharedMetaData(params) {
   return {

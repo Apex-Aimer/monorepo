@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import Image from 'next/image'
 // import { ChevronDownIcon } from '@heroicons/react/24/solid'
-import { Container } from './Container'
+import { Container } from '../Container'
+import { NavbarLogo } from './NavbarLogo'
 
 interface MenuItem {
   label: string
@@ -69,33 +69,8 @@ export default function Navbar({ logo, logoalt }: Props) {
                 </Link>
               ))}
             </div>
-            <div className="flex w-full items-center justify-between md:w-auto">
-              <Link href="/" className="w-28 dark:hidden">
-                {logo ? (
-                  <Image
-                    // {...urlForImage(logo)}
-                    src=""
-                    alt="ApexAimer Logo"
-                    priority={true}
-                    sizes="(max-width: 640px) 100vw, 200px"
-                  />
-                ) : (
-                  <span className="block text-center">ApexAimer</span>
-                )}
-              </Link>
-              <Link href="/" className="hidden w-28 dark:block">
-                {logoalt ? (
-                  <Image
-                    // {...urlForImage(props.logoalt)}
-                    src=""
-                    alt="ApexAimer Logo"
-                    priority={true}
-                    sizes="(max-width: 640px) 100vw, 200px"
-                  />
-                ) : (
-                  <span className="block text-center">ApexAimer</span>
-                )}
-              </Link>
+            <div className="flex basis-[200px]">
+              <NavbarLogo />
             </div>
             <div className="order-2 hidden w-full flex-col items-center justify-start md:order-none md:flex md:w-auto md:flex-1 md:flex-row">
               {rightmenu.map((item, index) => (
