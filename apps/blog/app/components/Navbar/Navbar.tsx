@@ -14,16 +14,20 @@ const leftmenu: MenuItem[] = [
     label: 'Home',
     href: '/',
   },
-  {
-    label: 'About',
-    href: '/about',
-  },
+  // {
+  //   label: 'About',
+  //   href: '/about',
+  // },
 ]
 
 const rightmenu: MenuItem[] = [
+  // {
+  //   label: 'Archive',
+  //   href: '/archive',
+  // },
   {
-    label: 'Archive',
-    href: '/archive',
+    label: 'About',
+    href: '/about',
   },
 ]
 

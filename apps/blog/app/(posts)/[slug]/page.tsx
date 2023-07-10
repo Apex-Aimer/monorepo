@@ -17,6 +17,8 @@ export async function generateMetadata({ params }) {
   return { title: post.title }
 }
 
+export const runtime = 'edge'
+
 export default async function Page({ params }: { params: { slug: string } }) {
   // Find the post for the current page.
   const post = await getPostBySlug(params.slug)

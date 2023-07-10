@@ -6,6 +6,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "blog:dev": "turbo run dev --filter ApexAimerBlog",
+    "blog:build": "turbo run build --filter ApexAimerBlog",
     "web:dev": "turbo run dev --filter ApexAimerWeb"
   },
   "devDependencies": {
