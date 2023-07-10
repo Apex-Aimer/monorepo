@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { Container } from 'app/components/Container'
-import { PostList } from 'app/components/PostList'
+import { PostList } from 'app/(posts)/PostList'
 
 export function Posts({ posts }) {
   return (
@@ -23,14 +23,16 @@ export function Posts({ posts }) {
               <PostList key={post._id} post={post} aspect="square" />
             ))}
           </div>
-          <div className="mt-10 flex justify-center">
-            <Link
-              href="/archive"
-              className="relative inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-2 pl-4 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 disabled:pointer-events-none disabled:opacity-40 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300"
-            >
-              <span>View all Posts</span>
-            </Link>
-          </div>
+          {posts.length > 14 && (
+            <div className="mt-10 flex justify-center">
+              <Link
+                href="/archive"
+                className="relative inline-flex items-center gap-1 rounded-md border border-gray-300 bg-white px-3 py-2 pl-4 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20 disabled:pointer-events-none disabled:opacity-40 dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300"
+              >
+                <span>View all Posts</span>
+              </Link>
+            </div>
+          )}
         </Container>
       )}
     </>

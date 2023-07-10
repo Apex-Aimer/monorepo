@@ -28,7 +28,7 @@ export function PostPage({ post }: { post: BlogPost }) {
               </div>
             )}
 
-            <h1 className="text-brand-primary mb-3 mt-2 text-center text-3xl font-semibold tracking-tight dark:text-white lg:text-4xl lg:leading-snug">
+            <h1 className="text-text-primary mb-3 mt-2 text-center font-sans text-3xl font-semibold tracking-tight dark:text-white lg:text-4xl lg:leading-snug">
               {post.draft && (
                 <span role="img" aria-label="roadwork sign">
                   🚧{' '}
@@ -71,18 +71,28 @@ export function PostPage({ post }: { post: BlogPost }) {
           </header>
         </Container>
 
-        <div className="relative z-0 mx-auto aspect-video max-w-screen-lg overflow-hidden lg:rounded-lg">
-          {post.cover && (
-            <Image
-              src={post.cover}
-              alt={post.coverAlt || 'Thumbnail'}
-              loading="eager"
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-          )}
-        </div>
+        {post.cover && (
+          <figure>
+            <div className="relative z-0 mx-auto aspect-video max-w-screen-md overflow-hidden lg:rounded-lg">
+              <Image
+                src={post.cover}
+                alt={post.coverAlt || 'Thumbnail'}
+                loading="eager"
+                fill
+                sizes="100vw"
+                className="object-cover"
+              />
+            </div>
+            {post.coverCredits && (
+              <figcaption className="mx-auto max-w-screen-md pl-1 pt-2">
+                <span
+                  dangerouslySetInnerHTML={{ __html: post.coverCredits }}
+                  className="font-sans text-[11px] text-slate-400 dark:text-slate-600"
+                />
+              </figcaption>
+            )}
+          </figure>
+        )}
 
         <Container>
           <div className="prose dark:prose-invert prose-a:text-blue-600 mx-auto my-3">

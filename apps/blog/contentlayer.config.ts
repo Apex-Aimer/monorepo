@@ -14,6 +14,7 @@ export const BlogPost = defineDocumentType(() => ({
     layout: { type: 'string' },
     cover: { type: 'string' },
     coverAlt: { type: 'string' },
+    coverCredits: { type: 'string' },
     estReadingTime: { type: 'string' },
   },
   computedFields: {

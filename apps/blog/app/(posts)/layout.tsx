@@ -43,11 +43,10 @@ export async function generateMetadata({ params }) {
   return await sharedMetaData(params)
 }
 
-export default async function Layout({ children, params }) {
-  const settings = {}
+export default async function Layout({ children }) {
   return (
     <>
-      <Navbar {...settings} />
+      <Navbar />
 
       <div>{children}</div>
 

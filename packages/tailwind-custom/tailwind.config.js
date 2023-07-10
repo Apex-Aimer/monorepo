@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
@@ -10,7 +12,40 @@ module.exports = {
     '../../packages/ui/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+    },
+    fontSize: {
+      xl: [
+        '1.4rem',
+        {
+          lineHeight: '1.68rem',
+          letterSpacing: '-0.01em',
+          fontWeight: '500',
+        },
+      ],
+      '2xl': [
+        '1.625rem',
+        {
+          lineHeight: '1.95rem',
+          letterSpacing: '-0.01em',
+          fontWeight: '700',
+        },
+      ],
+      '3xl': [
+        '1.875rem',
+        {
+          lineHeight: '2.25rem',
+          letterSpacing: '-0.02em',
+          fontWeight: '700',
+        },
+      ],
+    },
+    extend: {
+      colors: {
+        'text-primary': 'rgb(64, 64, 64)',
+      },
+    },
   },
   plugins: [],
 }

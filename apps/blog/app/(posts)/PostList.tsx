@@ -3,7 +3,7 @@ import Link from 'next/link'
 import cx from 'clsx'
 import { parseISO, format } from 'date-fns'
 import { PhotoIcon } from '@heroicons/react/24/outline'
-import { CategoryLabel } from './CategoryLabel'
+import { CategoryLabel } from '../components/CategoryLabel'
 import { BlogPost } from 'contentlayer/generated'
 
 interface Props {
@@ -37,8 +37,8 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
               aspect === 'landscape'
                 ? 'aspect-video'
                 : aspect === 'custom'
-                ? 'aspect-[5/4]'
-                : 'aspect-square'
+                ? 'aspect-video sm:aspect-[5/4]'
+                : 'aspect-video sm:aspect-square'
             )}
             href={post.url}
           >
@@ -71,15 +71,11 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
             )}
             <h2
               className={cx(
-                fontSize === 'large'
-                  ? 'text-2xl'
-                  : minimal
-                  ? 'text-3xl'
-                  : 'text-lg',
+                'text-xl',
                 fontWeight === 'normal'
-                  ? 'line-clamp-2 font-medium  tracking-normal text-black'
+                  ? 'line-clamp-2 font-medium  tracking-normal'
                   : 'font-semibold leading-snug tracking-tight',
-                'mt-2    dark:text-white'
+                'text-text-primary  mt-2  dark:text-white'
               )}
             >
               <Link href={post.url}>
