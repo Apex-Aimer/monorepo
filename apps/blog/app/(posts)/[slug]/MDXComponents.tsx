@@ -1,11 +1,11 @@
 /* eslint-disable react/display-name */
 import { Link } from '../../components/Link'
 import { Image } from '../../components/Image'
-import type { MDXComponents as TMDXComponents } from 'mdx/types'
+// import type { MDXComponents as TMDXComponents } from 'mdx/types'
 // import { TOCInline } from 'pliny/ui/TOCInline'
 // import { BlogNewsletterForm } from 'pliny/ui/NewsletterForm'
 
-export const MDXComponents: TMDXComponents = {
+export const MDXComponents = {
   Image,
   // TOCInline,
   a: (props) => <Link className="underline decoration-solid" {...props} />,

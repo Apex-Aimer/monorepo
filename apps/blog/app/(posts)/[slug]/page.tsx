@@ -8,20 +8,20 @@ export async function generateStaticParams() {
   }))
 }
 
-async function getPostBySlug(slug: string) {
+function getPostBySlug(slug: string) {
   return allBlogPosts.find((post) => post._raw.flattenedPath === slug)
 }
 
 export async function generateMetadata({ params }) {
-  const post = await getPostBySlug(params.slug)
-  return { title: post.title }
+  const post = getPostBySlug(params.slug)
+  return { title: post?.title ?? '' }
 }
 
 export const runtime = 'edge'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   // Find the post for the current page.
-  const post = await getPostBySlug(params.slug)
+  const post = getPostBySlug(params.slug)
 
   // 404 if the post does not exist.
   if (!post) notFound()

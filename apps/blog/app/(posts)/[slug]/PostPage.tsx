@@ -5,15 +5,7 @@ import { parseISO, format } from 'date-fns'
 import Image from 'next/image'
 import Link from 'next/link'
 import ScrollTopAndComment from './ScrollTopAndComment'
-import { useMDXComponent } from 'next-contentlayer/hooks'
-import { MDXComponents } from './MDXComponents'
-
-function MDXPost({ children }: { children: string }) {
-  // Parse the MDX file via the useMDXComponent hook.
-  const MDXContent = useMDXComponent(children)
-
-  return <MDXContent components={MDXComponents} />
-}
+import { MDXPost } from './MDXPost'
 
 export function PostPage({ post }: { post: BlogPost }) {
   return (

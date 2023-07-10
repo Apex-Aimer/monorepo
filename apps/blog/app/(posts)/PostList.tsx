@@ -4,7 +4,7 @@ import cx from 'clsx'
 import { parseISO, format } from 'date-fns'
 import { PhotoIcon } from '@heroicons/react/24/outline'
 import { CategoryLabel } from '../components/CategoryLabel'
-import { BlogPost } from 'contentlayer/generated'
+import type { BlogPost } from 'contentlayer/generated'
 
 interface Props {
   post: BlogPost

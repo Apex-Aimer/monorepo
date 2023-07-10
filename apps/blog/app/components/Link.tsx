@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import NextLink from 'next/link'
-import { AnchorHTMLAttributes, DetailedHTMLProps } from 'react'
+import type { AnchorHTMLAttributes, DetailedHTMLProps } from 'react'
 
 export function Link({
   href,
