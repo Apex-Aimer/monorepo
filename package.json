@@ -1,14 +1,14 @@
 {
   "private": true,
   "scripts": {
-    "build": "turbo run build",
-    "blog:build": "turbo run build --filter ApexAimerBlog",
-    "dev": "turbo run dev",
-    "blog:dev": "turbo run dev --filter ApexAimerBlog",
-    "web:dev": "turbo run dev --filter ApexAimerWeb",
+    "build": "dotenv -- turbo run build",
+    "blog:build": "dotenv -- turbo run build --filter ApexAimerBlog",
+    "dev": "dotenv -- turbo run dev",
+    "blog:dev": "dotenv -- turbo run dev --filter ApexAimerBlog",
+    "web:dev": "dotenv -- turbo run dev --filter ApexAimerWeb",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
-    "blog:deploy": "wrangler pages deploy apps/blog/.vercel/output/static",
+    "blog:deploy": "./apps/blog/scripts/pre-deploy-build.sh && wrangler pages deploy apps/blog/.vercel/output/static",
     "blog:deploy:local": "wrangler pages dev apps/blog/.vercel/output/static --ip '127.0.0.1'"
   },
   "devDependencies": {
@@ -18,7 +18,8 @@
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "turbo": "latest",
-    "wrangler": "^3.1.2"
+    "wrangler": "^3.1.2",
+    "dotenv-cli": "^7.2.1"
   },
   "packageManager": "yarn@1.22.19",
   "workspaces": [

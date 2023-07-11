@@ -60,6 +60,10 @@ export interface IBlogPostMeta {
   date: string;
   lastModDate?: string;
   cover: string;
+  /**
+   * Cloudflare Image ID
+   */
+  coverID: string;
   coverAlt: string;
   coverCredits?: string;
   estReadingTime?: number;

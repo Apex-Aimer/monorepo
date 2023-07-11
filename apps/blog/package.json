@@ -42,6 +42,6 @@
     "tailwind-custom": "*",
     "tsconfig": "*",
     "typescript": "^4.5.3",
-    "vercel": "^31.0.1"
+    "vercel": "^31.0.2"
   }
 }

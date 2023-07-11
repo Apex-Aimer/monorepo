@@ -1,11 +1,11 @@
 import { CategoryLabel } from 'app/components/CategoryLabel'
 import { Container } from 'app/components/Container'
 import { parseISO, format } from 'date-fns'
-import Image from 'next/image'
 import Link from 'next/link'
 import ScrollTopAndComment from './ScrollTopAndComment'
 import { IBlogPost } from 'mdx/generated'
 import { mdxComponents } from 'app/components/MDXComponents'
+import { Image } from 'app/components/Image'
 
 export function PostPage({ post }: { post: IBlogPost }) {
   const { component: MDXContent, meta } = post
