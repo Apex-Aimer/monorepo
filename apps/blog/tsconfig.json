@@ -8,8 +8,8 @@
       }
     ],
     "paths": {
-      "contentlayer/generated": [
-        "./.contentlayer/generated"
+      "mdx/generated": [
+        "./.mdx/generated"
       ]
     }
   },
@@ -18,7 +18,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".contentlayer/generated"
+    ".mdx/generated"
   ],
   "exclude": [
     "node_modules"

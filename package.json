@@ -2,12 +2,14 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "blog:build": "turbo run build --filter ApexAimerBlog",
     "dev": "turbo run dev",
+    "blog:dev": "turbo run dev --filter ApexAimerBlog",
+    "web:dev": "turbo run dev --filter ApexAimerWeb",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
-    "blog:dev": "turbo run dev --filter ApexAimerBlog",
-    "blog:build": "turbo run build --filter ApexAimerBlog",
-    "web:dev": "turbo run dev --filter ApexAimerWeb"
+    "blog:deploy": "wrangler pages deploy apps/blog/.vercel/output/static",
+    "blog:deploy:local": "wrangler pages dev apps/blog/.vercel/output/static --ip '127.0.0.1'"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",

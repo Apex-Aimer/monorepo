@@ -1,20 +1,20 @@
-import { allBlogPosts } from 'contentlayer/generated'
+import { allBlogPosts } from 'mdx/generated'
 import { notFound } from 'next/navigation'
 import { PostPage } from './PostPage'
 
 export async function generateStaticParams() {
   return allBlogPosts.map((post) => ({
-    slug: post._raw.flattenedPath,
+    slug: post.slug,
   }))
 }
 
 function getPostBySlug(slug: string) {
-  return allBlogPosts.find((post) => post._raw.flattenedPath === slug)
+  return allBlogPosts.find((post) => post.slug === slug)
 }
 
 export async function generateMetadata({ params }) {
   const post = getPostBySlug(params.slug)
-  return { title: post?.title ?? '' }
+  return { title: post.meta.title }
 }
 
 export const runtime = 'edge'

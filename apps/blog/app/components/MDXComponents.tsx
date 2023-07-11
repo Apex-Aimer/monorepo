@@ -1,16 +1,12 @@
-/* eslint-disable react/display-name */
-import { Link } from '../../components/Link'
-import { Image } from '../../components/Image'
-// import type { MDXComponents as TMDXComponents } from 'mdx/types'
-// import { TOCInline } from 'pliny/ui/TOCInline'
-// import { BlogNewsletterForm } from 'pliny/ui/NewsletterForm'
+import { Image } from 'app/components/Image'
+import { Link } from 'app/components/Link'
+import type { MDXComponents } from 'mdx/types'
 
-export const MDXComponents = {
-  Image,
+export const mdxComponents: MDXComponents = {
+  Image: Image,
   // TOCInline,
-  a: (props) => <Link className="underline decoration-solid" {...props} />,
-  // wrapper: Wrapper,
   // BlogNewsletterForm,
+  a: (props) => <Link className="underline decoration-solid" {...props} />,
   h2: (props) => (
     <h2 className="mb-2.5 mt-4 font-sans text-2xl font-semibold" {...props} />
   ),
