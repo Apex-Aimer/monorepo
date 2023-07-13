@@ -14,6 +14,7 @@ module.exports = {
   theme: {
     fontFamily: {
       sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans],
+      prime: ['var(--font-rubik)', ...defaultTheme.fontFamily.mono],
     },
     fontSize: {
       xl: [

@@ -8,7 +8,7 @@
     "web:dev": "dotenv -- turbo run dev --filter ApexAimerWeb",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
-    "blog:deploy": "./apps/blog/scripts/pre-deploy-build.sh && wrangler pages deploy apps/blog/.vercel/output/static",
+    "blog:deploy": "",
     "blog:deploy:local": "wrangler pages dev apps/blog/.vercel/output/static --ip '127.0.0.1'"
   },
   "devDependencies": {
