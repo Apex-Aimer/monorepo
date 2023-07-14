@@ -4,6 +4,7 @@ import cx from 'clsx'
 import { Metadata } from 'next'
 
 import { Rubik, Inter } from 'next/font/google'
+import { Providers } from './providers'
 
 export const metadata: Metadata = {
   // TODO
@@ -29,7 +30,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cx(fontRubik.variable, fontInter.variable)}>
-      <body>{children}</body>
+      <body className="antialiased dark:bg-black">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   )
 }

@@ -14,11 +14,14 @@ function Input({ ctaLabel, placeholder }: InputProps) {
       <div className="flex flex-1 items-center rounded-l-2xl border border-white bg-black px-4">
         <input
           placeholder={placeholder}
-          className="appearance-none bg-transparent font-sans text-base text-white outline-none placeholder:text-white placeholder:opacity-50"
+          className={cx(
+            'appearance-none bg-transparent font-sans text-base text-white outline-none',
+            'placeholder:text-white placeholder:opacity-50'
+          )}
         />
       </div>
       <div className="flex cursor-pointer items-center rounded-r-2xl bg-white px-6 hover:bg-gray-200">
-        <span className="font-sans text-base">{ctaLabel}</span>
+        <span className="font-sans text-base text-black">{ctaLabel}</span>
       </div>
     </div>
   )

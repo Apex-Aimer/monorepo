@@ -3,9 +3,9 @@
   "scripts": {
     "build": "dotenv -- turbo run build",
     "blog:build": "dotenv -- turbo run build --filter ApexAimerBlog",
-    "dev": "dotenv -- turbo run dev",
-    "blog:dev": "dotenv -- turbo run dev --filter ApexAimerBlog",
-    "web:dev": "dotenv -- turbo run dev --filter ApexAimerWeb",
+    "dev": "dotenv -e ./.env.local -- turbo run dev",
+    "blog:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerBlog",
+    "web:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerWeb",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "blog:deploy": "",

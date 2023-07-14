@@ -5,13 +5,21 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["BLOG_DOMAIN", "CLOUDFLARE_IMAGES_ACCOUNT_HASH"]
+      "env": [
+        "BLOG_DOMAIN",
+        "CLOUDFLARE_IMAGES_ACCOUNT_HASH",
+        "MAIN_WEB_DOMAIN"
+      ]
     },
     "lint": {},
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["BLOG_DOMAIN", "CLOUDFLARE_IMAGES_ACCOUNT_HASH"]
+      "env": [
+        "BLOG_DOMAIN",
+        "CLOUDFLARE_IMAGES_ACCOUNT_HASH",
+        "MAIN_WEB_DOMAIN"
+      ]
     }
   }
 }
