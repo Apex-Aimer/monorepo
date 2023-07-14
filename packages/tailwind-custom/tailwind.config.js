@@ -17,6 +17,38 @@ module.exports = {
       prime: ['var(--font-rubik)', ...defaultTheme.fontFamily.mono],
     },
     fontSize: {
+      xs: [
+        '0.75rem',
+        {
+          lineHeight: '1rem',
+          letterSpacing: '-0.01em',
+          fontWeight: '400',
+        },
+      ],
+      sm: [
+        '0.875rem',
+        {
+          lineHeight: '1.25rem',
+          letterSpacing: '-0.01em',
+          fontWeight: '400',
+        },
+      ],
+      base: [
+        '1rem',
+        {
+          lineHeight: '1.5rem',
+          letterSpacing: '-0.01em',
+          fontWeight: '400',
+        },
+      ],
+      lg: [
+        '1.2rem',
+        {
+          lineHeight: '1.8rem',
+          letterSpacing: '-0.01em',
+          fontWeight: '400',
+        },
+      ],
       xl: [
         '1.4rem',
         {
