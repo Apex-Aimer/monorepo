@@ -29,7 +29,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={cx(fontRubik.variable, fontInter.variable)}>
+    <html
+      lang="en"
+      className={cx(fontRubik.variable, fontInter.variable, 'dark')}
+    >
       <body className="antialiased dark:bg-black">
         <Providers>{children}</Providers>
       </body>

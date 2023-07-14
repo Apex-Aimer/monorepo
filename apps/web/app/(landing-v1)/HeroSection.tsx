@@ -2,30 +2,7 @@ import Image from 'next/image'
 import cx from 'clsx'
 
 import { PhoneMockupSVG } from './PhoneMockup'
-
-interface InputProps {
-  placeholder: string
-  ctaLabel: string
-}
-
-function Input({ ctaLabel, placeholder }: InputProps) {
-  return (
-    <div className="flex h-[3.75rem] flex-row">
-      <div className="flex flex-1 items-center rounded-l-2xl border border-white bg-black px-4">
-        <input
-          placeholder={placeholder}
-          className={cx(
-            'appearance-none bg-transparent font-sans text-base text-white outline-none',
-            'placeholder:text-white placeholder:opacity-50'
-          )}
-        />
-      </div>
-      <div className="flex cursor-pointer items-center rounded-r-2xl bg-white px-6 hover:bg-gray-200">
-        <span className="font-sans text-base text-black">{ctaLabel}</span>
-      </div>
-    </div>
-  )
-}
+import { HeroInput } from './HeroInput'
 
 export default function HeroSection() {
   return (
@@ -68,7 +45,7 @@ export default function HeroSection() {
             >
               Enter your email to request early access
             </p>
-            <Input ctaLabel="Apply" placeholder="your@email.com" />
+            <HeroInput ctaLabel="Apply" placeholder="your@email.com" />
           </div>
         </div>
         <div
