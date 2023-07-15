@@ -4,13 +4,14 @@ import cx from 'clsx'
 import { PhoneMockupSVG } from './PhoneMockup'
 import { HeroInput } from './HeroInput'
 import { HeroSubInput } from './HeroSubscriptionInput'
+import { CloudflareImage } from '../components/CloudflareImage'
 
 export default function HeroSection() {
   return (
     <div className="relative flex overflow-hidden bg-black">
       <div className="absolute inset-0 hidden aspect-video md:block">
-        <Image
-          src="/landing-cover-v1-desktop.jpg"
+        <CloudflareImage
+          src="32d68b72-5d24-4762-3c28-e5ec853cde00"
           alt="View of firing range in ApexAimer"
           fill
           className="xl:-translate-y-[1%] 2xl:-translate-y-[15%]"
@@ -56,8 +57,8 @@ export default function HeroSection() {
           )}
         >
           <div className="absolute left-1/2 top-0 aspect-[1.38] w-full min-w-[700px] -translate-x-1/2 overflow-hidden md:hidden">
-            <Image
-              src="/landing-cover-v1-mobile.jpg"
+            <CloudflareImage
+              src="be176a3f-b493-440e-a268-6f95d7c8df00"
               alt="View of firing range in ApexAimer"
               fill
             />

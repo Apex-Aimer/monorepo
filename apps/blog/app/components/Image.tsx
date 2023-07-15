@@ -10,7 +10,7 @@ function findPostByCoverSrc(cover: string) {
 }
 
 const cloudflareLoader = ({ src }) => {
-  return `https://${process.env.BLOG_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/${src}/public`
+  return `https://${process.env.BLOG_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/${src}/public`
 }
 
 export function Image({ src, ...rest }: ImageProps) {

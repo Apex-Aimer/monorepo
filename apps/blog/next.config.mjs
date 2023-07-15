@@ -13,11 +13,11 @@ const nextConfig = {
   transpilePackages: ['ui'],
   env: {
     BLOG_DOMAIN: process.env.BLOG_DOMAIN,
+    BLOG_PROD_DOMAIN: process.env.BLOG_PROD_DOMAIN,
     MAIN_WEN_DOMAIN: process.env.MAIN_WEB_DOMAIN,
-    CLOUDFLARE_IMAGES_ACCOUNT_HASH: process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH,
   },
   images: {
-    domains: [process.env.BLOG_DOMAIN],
+    domains: [process.env.BLOG_DOMAIN, process.env.BLOG_PROD_DOMAIN],
   },
   async headers() {
     if (!(process.env.NODE_ENV === 'production')) {

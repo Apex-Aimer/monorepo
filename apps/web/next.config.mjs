@@ -5,13 +5,14 @@ const nextConfig = {
   env: {
     BLOG_DOMAIN: process.env.BLOG_DOMAIN,
     MAIN_WEN_DOMAIN: process.env.MAIN_WEB_DOMAIN,
+    MAIN_WEB_PROD_DOMAIN: process.env.MAIN_WEB_PROD_DOMAIN,
     CLOUDFLARE_IMAGES_ACCOUNT_HASH: process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH,
     MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
     MAILCHIMP_API_SERVER: process.env.MAILCHIMP_API_SERVER,
     MAILCHIMP_AUDIENCE_ID: process.env.MAILCHIMP_AUDIENCE_ID,
   },
   images: {
-    domains: [process.env.MAIN_WEB_DOMAIN],
+    domains: [process.env.MAIN_WEB_DOMAIN, process.env.MAIN_WEB_PROD_DOMAIN],
   },
   async headers() {
     if (!(process.env.NODE_ENV === 'production')) {
