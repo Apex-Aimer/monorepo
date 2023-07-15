@@ -5,12 +5,15 @@ const nextConfig = {
   env: {
     BLOG_DOMAIN: process.env.BLOG_DOMAIN,
     MAIN_WEN_DOMAIN: process.env.MAIN_WEB_DOMAIN,
+    MAIN_WEB_PROD_DOMAIN: process.env.MAIN_WEB_PROD_DOMAIN,
     CLOUDFLARE_IMAGES_ACCOUNT_HASH: process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH,
+    MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
+    MAILCHIMP_API_SERVER: process.env.MAILCHIMP_API_SERVER,
+    MAILCHIMP_AUDIENCE_ID: process.env.MAILCHIMP_AUDIENCE_ID,
   },
   images: {
-    domains: [process.env.BLOG_DOMAIN],
+    domains: [process.env.MAIN_WEB_DOMAIN, process.env.MAIN_WEB_PROD_DOMAIN],
   },
-  // Adding policies:
   async headers() {
     if (!(process.env.NODE_ENV === 'production')) {
       return []
@@ -25,7 +28,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self' 'https://${process.env.MAIN_WEB_DOMAIN}'; font-src 'self' 'https://fonts.googleapis.com'`,
+            value: `default-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.googleapis.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'`,
           },
           {
             key: 'X-Content-Type-Options',
@@ -33,7 +36,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(); battery=(); geolocation=(); microphone=(self)',
+            value: 'camera=(), geolocation=(), microphone=(self)',
           },
           {
             key: 'Referrer-Policy',

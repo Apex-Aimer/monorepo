@@ -1,4 +1,4 @@
-import { Header } from 'ui'
+import { Header, Footer } from 'ui'
 import HeroSection from './HeroSection'
 import { HeaderContainer } from './HeaderContainer'
 
@@ -9,7 +9,6 @@ export default function Page() {
         left={[
           {
             label: 'Blog',
-            // TODO
             href: `http://${process.env.BLOG_DOMAIN}`,
             external: true,
           },
@@ -23,6 +22,7 @@ export default function Page() {
         container={HeaderContainer}
       />
       <HeroSection />
+      <Footer copyright="ApexAimer" container={HeaderContainer} />
     </>
   )
 }

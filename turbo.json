@@ -7,8 +7,13 @@
       "outputs": [".next/**", "!.next/cache/**"],
       "env": [
         "BLOG_DOMAIN",
+        "BLOG_PROD_DOMAIN",
         "CLOUDFLARE_IMAGES_ACCOUNT_HASH",
-        "MAIN_WEB_DOMAIN"
+        "MAIN_WEB_DOMAIN",
+        "MAIN_WEB_PROD_DOMAIN",
+        "MAILCHIMP_API_KEY",
+        "MAILCHIMP_API_SERVER",
+        "MAILCHIMP_AUDIENCE_ID"
       ]
     },
     "lint": {},
@@ -17,8 +22,13 @@
       "persistent": true,
       "env": [
         "BLOG_DOMAIN",
+        "BLOG_PROD_DOMAIN",
         "CLOUDFLARE_IMAGES_ACCOUNT_HASH",
-        "MAIN_WEB_DOMAIN"
+        "MAIN_WEB_DOMAIN",
+        "MAIN_WEB_PROD_DOMAIN",
+        "MAILCHIMP_API_KEY",
+        "MAILCHIMP_API_SERVER",
+        "MAILCHIMP_AUDIENCE_ID"
       ]
     }
   }

@@ -1,5 +1,5 @@
 import { Container } from 'app/components/Container'
-import { Footer } from 'app/components/Footer'
+import { Footer } from 'ui/Footer'
 import { Header } from 'ui/Header'
 
 async function sharedMetaData(params) {
@@ -57,7 +57,8 @@ export default async function Layout({ children }) {
         right={[
           {
             label: 'About',
-            href: '/about',
+            href: `http://${process.env.MAIN_WEB_DOMAIN}`,
+            external: true,
           },
         ]}
         container={Container}
@@ -65,7 +66,7 @@ export default async function Layout({ children }) {
 
       <div>{children}</div>
 
-      <Footer copyright="ApexAimer" />
+      <Footer copyright="ApexAimer" container={Container} />
     </>
   )
 }
