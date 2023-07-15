@@ -1,5 +1,4 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
-const { nextui } = require('@nextui-org/react')
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -11,9 +10,6 @@ module.exports = {
 
     // packages
     '../../packages/ui/**/*.{js,ts,jsx,tsx}',
-
-    // next-ui
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     fontFamily: {
@@ -84,5 +80,4 @@ module.exports = {
       },
     },
   },
-  plugins: [nextui()],
 }

@@ -3,6 +3,7 @@ import cx from 'clsx'
 
 import { PhoneMockupSVG } from './PhoneMockup'
 import { HeroInput } from './HeroInput'
+import { HeroSubInput } from './HeroSubscriptionInput'
 
 export default function HeroSection() {
   return (
@@ -45,7 +46,7 @@ export default function HeroSection() {
             >
               Enter your email to request early access
             </p>
-            <HeroInput ctaLabel="Apply" placeholder="your@email.com" />
+            <HeroSubInput />
           </div>
         </div>
         <div

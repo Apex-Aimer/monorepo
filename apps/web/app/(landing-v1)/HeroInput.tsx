@@ -2,48 +2,44 @@
 
 import cx from 'clsx'
 
-import { useButton, Spinner, ButtonProps } from '@nextui-org/react'
+import { ThreeDots } from 'react-loader-spinner'
 
-interface InputProps {
+interface ButtonProps {
+  children: string
+  onPress?(): void
+  isLoading?: boolean
+}
+
+interface InputProps extends Omit<ButtonProps, 'children'> {
   placeholder: string
   ctaLabel: string
 }
 
-function HeroInputButton({
-  children,
-  ...rest
-}: React.PropsWithChildren<ButtonProps>) {
-  const {
-    domRef,
-    children: btnChildren,
-    spinnerSize,
-    spinner = <Spinner color="current" size={spinnerSize} />,
-    spinnerPlacement,
-    isLoading,
-    getButtonProps,
-    styles,
-  } = useButton({
-    children,
-    ...rest,
-  })
-
+function HeroInputButton({ children, isLoading, onPress }: ButtonProps) {
   return (
     <button
-      ref={domRef}
       className={cx(
-        'flex cursor-pointer select-none items-center rounded-r-2xl bg-white px-6 hover:bg-gray-200',
-        styles
+        'flex cursor-pointer select-none items-center rounded-r-2xl bg-white px-6',
+        'hover:bg-gray-200'
       )}
-      {...getButtonProps()}
+      onClick={onPress}
     >
-      {isLoading && spinnerPlacement === 'start' && spinner}
-      <span className="font-sans text-base text-black">{btnChildren}</span>
-      {isLoading && spinnerPlacement === 'end' && spinner}
+      {isLoading ? (
+        <ThreeDots
+          width={42}
+          height={20}
+          color="#000"
+          ariaLabel="three-dots-loading"
+          visible={true}
+        />
+      ) : (
+        <span className="font-sans text-base text-black">{children}</span>
+      )}
     </button>
   )
 }
 
-export function HeroInput({ ctaLabel, placeholder }: InputProps) {
+export function HeroInput({ ctaLabel, placeholder, ...btnProps }: InputProps) {
   return (
     <div className="flex h-[3.75rem] flex-row">
       <div className="flex flex-1 items-center rounded-l-2xl border border-white bg-black px-4">
@@ -55,7 +51,7 @@ export function HeroInput({ ctaLabel, placeholder }: InputProps) {
           )}
         />
       </div>
-      <HeroInputButton>{ctaLabel}</HeroInputButton>
+      <HeroInputButton {...btnProps}>{ctaLabel}</HeroInputButton>
     </div>
   )
 }
