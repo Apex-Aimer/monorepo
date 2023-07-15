@@ -1,9 +1,7 @@
 import nextMdx from '@next/mdx'
 
 const withMDX = nextMdx({
-  options: {
-    // providerImportSource: '@mdx-js/react',
-  },
+  options: {},
 })
 
 /** @type {import('next').NextConfig} */
@@ -15,13 +13,16 @@ const nextConfig = {
   transpilePackages: ['ui'],
   env: {
     BLOG_DOMAIN: process.env.BLOG_DOMAIN,
+    MAIN_WEN_DOMAIN: process.env.MAIN_WEB_DOMAIN,
     CLOUDFLARE_IMAGES_ACCOUNT_HASH: process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH,
   },
   images: {
     domains: [process.env.BLOG_DOMAIN],
   },
-  // Adding policies:
   async headers() {
+    if (!(process.env.NODE_ENV === 'production')) {
+      return []
+    }
     return [
       {
         source: '/(.*)',
@@ -32,7 +33,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self' 'https://${process.env.BLOG_DOMAIN}'; font-src 'self' 'https://fonts.googleapis.com'`,
+            value: `default-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.googleapis.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'`,
           },
           {
             key: 'X-Content-Type-Options',
@@ -40,7 +41,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(); battery=(); geolocation=(); microphone=(self)',
+            value: 'camera=(), geolocation=(), microphone=(self)',
           },
           {
             key: 'Referrer-Policy',

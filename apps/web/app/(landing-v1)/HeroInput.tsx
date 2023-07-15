@@ -13,6 +13,9 @@ interface ButtonProps {
 interface InputProps extends Omit<ButtonProps, 'children'> {
   placeholder: string
   ctaLabel: string
+  error?: string
+  onFocus?(): void
+  onTextChange?(value: string): void
 }
 
 function HeroInputButton({ children, isLoading, onPress }: ButtonProps) {
@@ -39,19 +42,46 @@ function HeroInputButton({ children, isLoading, onPress }: ButtonProps) {
   )
 }
 
-export function HeroInput({ ctaLabel, placeholder, ...btnProps }: InputProps) {
+export function HeroInput({
+  ctaLabel,
+  placeholder,
+  error,
+  onFocus,
+  onTextChange,
+  ...btnProps
+}: InputProps) {
   return (
-    <div className="flex h-[3.75rem] flex-row">
-      <div className="flex flex-1 items-center rounded-l-2xl border border-white bg-black px-4">
-        <input
-          placeholder={placeholder}
+    <div>
+      <div className="flex h-[3.75rem] flex-row">
+        <div
           className={cx(
-            'appearance-none bg-transparent font-sans text-base text-white outline-none',
-            'placeholder:text-white placeholder:opacity-50'
+            'flex flex-1 items-center rounded-l-2xl border  bg-black px-4',
+            !!error ? 'border-red-500 border-r-white' : 'border-white'
           )}
-        />
+        >
+          <input
+            placeholder={placeholder}
+            className={cx(
+              'w-full appearance-none bg-transparent font-sans text-base text-white outline-none',
+              'placeholder:text-white placeholder:opacity-50',
+              !!error && 'placeholder:text-red-500 placeholder:opacity-100'
+            )}
+            onFocus={onFocus}
+            onChange={(evt) => {
+              onTextChange?.(evt.target.value)
+            }}
+          />
+        </div>
+        <HeroInputButton {...btnProps}>{ctaLabel}</HeroInputButton>
       </div>
-      <HeroInputButton {...btnProps}>{ctaLabel}</HeroInputButton>
+      <p
+        className={cx(
+          'ml-2 mt-2 line-clamp-1 max-w-xs text-xs text-red-500',
+          !error && 'opacity-0'
+        )}
+      >
+        {error || 'no error'}
+      </p>
     </div>
   )
 }

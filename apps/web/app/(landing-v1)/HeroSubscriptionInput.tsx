@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState } from 'react'
+import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 import { HeroInput } from './HeroInput'
@@ -67,15 +67,41 @@ function SubSuccess({ isOpen, onClose }: { isOpen: boolean; onClose(): void }) {
 export function HeroSubInput() {
   const [isBusy, setIsBusy] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [error, setError] = useState('')
+
+  const emailRef = useRef('')
 
   const onApply = async () => {
     setIsBusy(true)
 
-    await new Promise((r) => setTimeout(r, 1000))
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        body: JSON.stringify({
+          address: emailRef.current,
+        }),
+      })
+
+      if (!res.ok) {
+        throw await res.json()
+      }
+
+      setIsModalOpen(true)
+    } catch (err) {
+      setError(err.error)
+    }
 
     setIsBusy(false)
-    setIsModalOpen(true)
   }
+
+  const onFocus = () => {
+    setError('')
+  }
+
+  const onTextChange = (val: string) => {
+    emailRef.current = val
+  }
+
   return (
     <>
       <HeroInput
@@ -83,6 +109,9 @@ export function HeroSubInput() {
         placeholder="your@email.com"
         onPress={onApply}
         isLoading={isBusy}
+        error={error}
+        onFocus={onFocus}
+        onTextChange={onTextChange}
       />
       <SubSuccess
         isOpen={isModalOpen}

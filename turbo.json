@@ -8,7 +8,10 @@
       "env": [
         "BLOG_DOMAIN",
         "CLOUDFLARE_IMAGES_ACCOUNT_HASH",
-        "MAIN_WEB_DOMAIN"
+        "MAIN_WEB_DOMAIN",
+        "MAILCHIMP_API_KEY",
+        "MAILCHIMP_API_SERVER",
+        "MAILCHIMP_AUDIENCE_ID"
       ]
     },
     "lint": {},
@@ -18,7 +21,10 @@
       "env": [
         "BLOG_DOMAIN",
         "CLOUDFLARE_IMAGES_ACCOUNT_HASH",
-        "MAIN_WEB_DOMAIN"
+        "MAIN_WEB_DOMAIN",
+        "MAILCHIMP_API_KEY",
+        "MAILCHIMP_API_SERVER",
+        "MAILCHIMP_AUDIENCE_ID"
       ]
     }
   }
