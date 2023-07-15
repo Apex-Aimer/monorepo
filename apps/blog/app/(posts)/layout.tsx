@@ -1,5 +1,6 @@
+import { Container } from 'app/components/Container'
 import { Footer } from 'app/components/Footer'
-import Navbar from 'app/components/Navbar/Navbar'
+import { Header } from 'ui/Header'
 
 async function sharedMetaData(params) {
   return {
@@ -46,7 +47,21 @@ export async function generateMetadata({ params }) {
 export default async function Layout({ children }) {
   return (
     <>
-      <Navbar />
+      <Header
+        left={[
+          {
+            label: 'Home',
+            href: '/',
+          },
+        ]}
+        right={[
+          {
+            label: 'About',
+            href: '/about',
+          },
+        ]}
+        container={Container}
+      />
 
       <div>{children}</div>
 
