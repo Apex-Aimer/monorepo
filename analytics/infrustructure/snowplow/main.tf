@@ -6,6 +6,10 @@ provider "google" {
   region  = var.region
 }
 
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
+
 # --- Turn GCP APIs on ---
 
 resource "google_project_service" "run_api" {
@@ -157,11 +161,38 @@ resource "google_cloud_run_v2_service" "collector_server" {
 # grant access
 resource "google_cloud_run_v2_service_iam_binding" "collector_server" {
   location = google_cloud_run_v2_service.collector_server.location
-  name  = google_cloud_run_v2_service.collector_server.name
+  name     = google_cloud_run_v2_service.collector_server.name
   role     = "roles/run.invoker"
   members = [
     "allUsers"
   ]
+}
+
+# assign public domain to Collector
+
+resource "google_cloud_run_domain_mapping" "collector" {
+  location = var.region
+  name     = var.collector_domain
+
+  metadata {
+    namespace = var.project_id
+  }
+
+  spec {
+    route_name = google_cloud_run_v2_service.collector_server.name
+  }
+}
+
+locals {
+  collector_dns_record = google_cloud_run_domain_mapping.collector.status[0].resource_records[0]
+}
+
+resource "cloudflare_record" "collector" {
+  zone_id = var.cloudflare_zone_id
+  name    = local.collector_dns_record.name
+  type    = local.collector_dns_record.type
+  value   = local.collector_dns_record.rrdata
+  proxied = false
 }
 
 # --- Enrichment ---

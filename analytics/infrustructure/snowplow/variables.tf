@@ -29,3 +29,18 @@ variable "labels" {
   default     = {}
   type        = map(string)
 }
+
+variable "collector_domain" {
+  description = "Public domain name for collector"
+  type        = string
+}
+
+variable "cloudflare_api_token" {
+  description = "Cloudflare API token"
+  type        = string
+}
+
+variable "cloudflare_zone_id" {
+  description = "Cloudflare Zone ID"
+  type        = string
+}
