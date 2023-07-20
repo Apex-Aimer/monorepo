@@ -70,7 +70,7 @@ resource "google_storage_bucket_object" "schemas" {
 
 locals {
   config_iglu_resolver = base64encode(templatefile("${path.module}/configs/iglu_resolver.json.tmpl", {
-    # VENDOR      = var.vendor
+    VENDOR      = var.vendor
     BUCKET_NAME = google_storage_bucket.iglu_resolver_bucket.name
     BUCKET_PATH = ""
     })
@@ -157,7 +157,7 @@ resource "google_cloud_run_v2_service" "collector_server" {
 # grant access
 resource "google_cloud_run_v2_service_iam_binding" "collector_server" {
   location = google_cloud_run_v2_service.collector_server.location
-  service  = google_cloud_run_v2_service.collector_server.name
+  name  = google_cloud_run_v2_service.collector_server.name
   role     = "roles/run.invoker"
   members = [
     "allUsers"
