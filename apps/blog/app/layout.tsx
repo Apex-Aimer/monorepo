@@ -4,6 +4,7 @@ import './globals.css'
 import cx from 'clsx'
 
 import { Inter } from 'next/font/google'
+import { SnowplowTracker } from 'analytics/SnowplowTracker'
 import { Providers } from './providers'
 
 export const metadata: Metadata = {
@@ -26,7 +27,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={cx(font.variable)}>
       <body className="text-gray-800 antialiased dark:bg-black dark:text-gray-400">
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <SnowplowTracker />
+        </Providers>
       </body>
     </html>
   )

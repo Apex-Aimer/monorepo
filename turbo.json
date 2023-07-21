@@ -13,7 +13,9 @@
         "MAIN_WEB_PROD_DOMAIN",
         "MAILCHIMP_API_KEY",
         "MAILCHIMP_API_SERVER",
-        "MAILCHIMP_AUDIENCE_ID"
+        "MAILCHIMP_AUDIENCE_ID",
+        "SNOWPLOW_TRACKER_ID",
+        "SNOWPLOW_COLLECTOR_URL"
       ]
     },
     "lint": {},
@@ -28,7 +30,9 @@
         "MAIN_WEB_PROD_DOMAIN",
         "MAILCHIMP_API_KEY",
         "MAILCHIMP_API_SERVER",
-        "MAILCHIMP_AUDIENCE_ID"
+        "MAILCHIMP_AUDIENCE_ID",
+        "SNOWPLOW_TRACKER_ID",
+        "SNOWPLOW_COLLECTOR_URL"
       ]
     }
   }

@@ -15,6 +15,8 @@ const nextConfig = {
     BLOG_DOMAIN: process.env.BLOG_DOMAIN,
     BLOG_PROD_DOMAIN: process.env.BLOG_PROD_DOMAIN,
     MAIN_WEN_DOMAIN: process.env.MAIN_WEB_DOMAIN,
+    SNOWPLOW_TRACKER_ID: process.env.SNOWPLOW_TRACKER_ID,
+    SNOWPLOW_COLLECTOR_URL: process.env.SNOWPLOW_COLLECTOR_URL,
   },
   images: {
     domains: [process.env.BLOG_DOMAIN, process.env.BLOG_PROD_DOMAIN],
