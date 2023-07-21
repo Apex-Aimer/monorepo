@@ -35,7 +35,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.googleapis.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'`,
+            value: `default-src 'self' 'unsafe-inline' ${process.env.SNOWPLOW_COLLECTOR_URL}; font-src 'self' https://fonts.googleapis.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'`,
           },
           {
             key: 'X-Content-Type-Options',
