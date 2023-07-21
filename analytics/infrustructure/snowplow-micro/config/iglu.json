@@ -1,0 +1,28 @@
+{
+  "schema": "iglu:com.snowplowanalytics.iglu/resolver-config/jsonschema/1-0-1",
+  "data": {
+    "cacheSize": 500,
+    "repositories": [
+      {
+        "name": "Iglu Central",
+        "priority": 0,
+        "vendorPrefixes": [],
+        "connection": {
+          "http": {
+            "uri": "https://raw.githubusercontent.com/snowplow/iglu-central/master"
+          }
+        }
+      },
+      {
+        "name": "ApexAimer Schemas",
+        "priority": 10,
+        "vendorPrefixes": ["com.apexaimer"],
+        "connection": {
+          "http": {
+            "uri": "http://iglu:8080"
+          }
+        }
+      }
+    ]
+  }
+}

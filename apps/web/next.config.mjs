@@ -10,6 +10,8 @@ const nextConfig = {
     MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
     MAILCHIMP_API_SERVER: process.env.MAILCHIMP_API_SERVER,
     MAILCHIMP_AUDIENCE_ID: process.env.MAILCHIMP_AUDIENCE_ID,
+    SNOWPLOW_TRACKER_ID: process.env.SNOWPLOW_TRACKER_ID,
+    SNOWPLOW_COLLECTOR_URL: process.env.SNOWPLOW_COLLECTOR_URL,
   },
   images: {
     domains: [process.env.MAIN_WEB_DOMAIN, process.env.MAIN_WEB_PROD_DOMAIN],

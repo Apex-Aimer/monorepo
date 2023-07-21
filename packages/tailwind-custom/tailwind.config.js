@@ -10,6 +10,7 @@ module.exports = {
 
     // packages
     '../../packages/ui/**/*.{js,ts,jsx,tsx}',
+    '../../packages/analytics/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     fontFamily: {
