@@ -5,7 +5,7 @@ import { UserIcon } from 'react-native-heroicons/solid'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useState } from 'react'
-import { Drill, DrillType } from './Drill'
+import { Drill, DrillType } from '../../src/components/Drill/Drill'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 enum DurationLevels {
