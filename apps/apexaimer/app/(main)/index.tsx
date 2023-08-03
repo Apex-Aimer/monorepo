@@ -1,12 +1,13 @@
 import { FlatList, StyleSheet, Text, TextStyle, View } from 'react-native'
 import { AppStyleSheet, useAppStyles } from '../../src/components/useAppStyles'
-import { Stack } from 'expo-router'
+import { Link, Stack } from 'expo-router'
 import { UserIcon } from 'react-native-heroicons/solid'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useState } from 'react'
 import { Drill, DrillType } from '../../src/components/Drill/Drill'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../../src/components/ScreenCTA'
 
 enum DurationLevels {
   Short,
@@ -186,16 +187,22 @@ export default function MainScreen() {
         data={routines[durationLevel].data}
         renderItem={({ item, index }) => {
           return (
-            <Drill
-              {...item}
-              hasContinuation={
-                index !== routines[durationLevel].data.length - 1
-              }
-            />
+            <Link href="/instructions" asChild>
+              <Drill
+                {...item}
+                hasContinuation={
+                  index !== routines[durationLevel].data.length - 1
+                }
+                interactive
+              />
+            </Link>
           )
         }}
-        contentContainerStyle={{ paddingBottom: bottom }}
+        contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
       />
+      <Link href="/routine" asChild>
+        <ScreenCTA>START</ScreenCTA>
+      </Link>
     </>
   )
 }

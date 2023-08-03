@@ -1,7 +1,14 @@
 import { LinearGradient } from 'expo-linear-gradient'
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import { useThemeColors } from '../ThemeProvider'
-import { StyleSheet, Text, View, ViewStyle } from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { PrimaryGradientText } from '../PrimaryGradientText'
 import MovementIcon from './MovementIcon'
 import PrecisionIcon from './PrecisionIcon'
@@ -98,9 +105,15 @@ interface DrillProps extends RoutineDrill {
    * On the main screen, all are active by default
    */
   active?: boolean
+  /**
+   * Whether a drill row is pressable or not
+   * When it's `false` `onPress` handle won't have any effect
+   */
+  interactive?: boolean
+  onPress?(): void
 }
 
-export function Drill({
+function DrillInner({
   type,
   description,
   hasContinuation = true,
@@ -110,46 +123,63 @@ export function Drill({
   const theme = useThemeColors()
 
   return (
-    <View style={styles.row}>
-      <View
-        style={[
-          styles.container,
-          hasContinuation && styles.containerWithContinuation,
-        ]}
-      >
-        <LinearGradient
-          colors={
-            active
-              ? (theme['exercise item gradient'] as string[])
-              : (theme['exercise item gradient inactive'] as string[])
-          }
-          start={{ x: 1, y: 0.5 }}
-          end={{ x: 0, y: 0.5 }}
-          style={styles.containerBg}
-        ></LinearGradient>
-        <View style={styles.coverContainer}>
-          <View style={styles.cover} />
-          <CoverIcon type={type} active={active} />
-          {hasContinuation && (
-            <View style={styles.connectionLineWrapper}>
-              <View style={styles.connectionLine} />
-            </View>
-          )}
-        </View>
-        <View style={styles.descriptionWrapper}>
-          <Text
-            style={[styles.description, !active && styles.descriptionInactive]}
-          >
-            {description}
-          </Text>
-          <View style={styles.descriptionCtaWrapper}>
-            <PrimaryGradientText style={styles.descriptionCtaText}>
-              What to do {'>'}
-            </PrimaryGradientText>
+    <View
+      style={[
+        styles.container,
+        hasContinuation && styles.containerWithContinuation,
+      ]}
+    >
+      <LinearGradient
+        colors={
+          active
+            ? (theme['exercise item gradient'] as string[])
+            : (theme['exercise item gradient inactive'] as string[])
+        }
+        start={{ x: 1, y: 0.5 }}
+        end={{ x: 0, y: 0.5 }}
+        style={styles.containerBg}
+      ></LinearGradient>
+      <View style={styles.coverContainer}>
+        <View style={styles.cover} />
+        <CoverIcon type={type} active={active} />
+        {hasContinuation && (
+          <View style={styles.connectionLineWrapper}>
+            <View style={styles.connectionLine} />
           </View>
+        )}
+      </View>
+      <View style={styles.descriptionWrapper}>
+        <Text
+          style={[styles.description, !active && styles.descriptionInactive]}
+        >
+          {description}
+        </Text>
+        <View style={styles.descriptionCtaWrapper}>
+          <PrimaryGradientText style={styles.descriptionCtaText}>
+            What to do {'>'}
+          </PrimaryGradientText>
         </View>
       </View>
     </View>
+  )
+}
+
+export function Drill(props: DrillProps) {
+  const styles = useAppStyles(themedStyles)
+  const { interactive, onPress } = props
+
+  if (!interactive) {
+    return (
+      <View style={styles.row}>
+        <DrillInner {...props} />
+      </View>
+    )
+  }
+
+  return (
+    <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.6}>
+      <DrillInner {...props} />
+    </TouchableOpacity>
   )
 }
 
