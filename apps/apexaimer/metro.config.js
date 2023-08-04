@@ -21,4 +21,9 @@ config.resolver.disableHierarchicalLookup = true
 // Remove web apps
 config.resolver.blockList = exclusionList([/.*\/blog\/.*/, /.*\/web\/.*/])
 
+config.resolver.assetExts.push(
+  // Adds support for `.riv` files for Rive animations
+  'riv'
+)
+
 module.exports = config

@@ -42,7 +42,6 @@ function process<T extends NamedStyles<T> | NamedStyles<any>>(
   const str = JSON.stringify(styles)
 
   const processed = str.replace(processorRegExp, (_match, property, value) => {
-    console.log(property, value)
     return `"${property}": "${
       AppStyleSheetProcessor[property]?.(value, theme) ?? value
     }"`
