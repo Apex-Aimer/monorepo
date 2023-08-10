@@ -70,11 +70,14 @@ function Routine() {
 
   const { bottom } = useSafeAreaInsets()
 
+  const listRef = useRef<FlatList>(null)
+
   return (
     <>
       <View style={styles.wrapper}>
         <InstructionVideo uri={activeDrill.videoUri} />
         <FlatList
+          ref={listRef}
           ListHeaderComponent={
             <View style={styles.durationWrapper}>
               <View style={styles.routineStartArrow}>
@@ -100,6 +103,10 @@ function Routine() {
                   <DrillTimer
                     id={item}
                     onEnd={() => {
+                      listRef.current?.scrollToIndex({
+                        index: activeDrillIndex,
+                        animated: true,
+                      })
                       setActiveDrillIndex(activeDrillIndex + 1)
                     }}
                   />
