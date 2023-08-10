@@ -12,6 +12,7 @@ import { Drill } from '../components/Drill/Drill'
 import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
 import { routineIntensityLevel, routineOfTheDay } from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
+import { FadeInView } from '../components/FadeInView'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -57,24 +58,26 @@ function Routine() {
         data={routine.data}
         renderItem={({ item, index }) => {
           return (
-            <Link href={`/instructions/${item}`} asChild>
-              <Drill
-                id={item}
-                hasContinuation={index !== routine.data.length - 1}
-                interactive
-              >
-                <PrimaryGradientText style={styles.descriptionCtaText}>
-                  What to do {'>'}
-                </PrimaryGradientText>
-              </Drill>
-            </Link>
+            <FadeInView delay={index * 200}>
+              <Link href={`/instructions/${item}/`} asChild>
+                <Drill
+                  id={item}
+                  hasContinuation={index !== routine.data.length - 1}
+                  interactive
+                >
+                  <PrimaryGradientText style={styles.descriptionCtaText}>
+                    What to do {'>'}
+                  </PrimaryGradientText>
+                </Drill>
+              </Link>
+            </FadeInView>
           )
         }}
         // TODO: on real content there won't be a need for index
         keyExtractor={(item, index) => `${item}:${index}`}
         contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
       />
-      <Link href="/routine" asChild>
+      <Link href="/routine/" asChild>
         <ScreenCTA>START</ScreenCTA>
       </Link>
     </>

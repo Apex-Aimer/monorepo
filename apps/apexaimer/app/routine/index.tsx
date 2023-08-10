@@ -31,6 +31,7 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { RoutinCTAWithTimer } from '../components/RoutinCTAWithTimer'
+import { FadeInView } from '../components/FadeInView'
 
 const DrillTimer = memo(function DrillTimerComp({
   id,
@@ -94,24 +95,26 @@ function Routine() {
           renderItem={({ item, index }) => {
             const active = index === activeDrillIndex
             return (
-              <Drill
-                id={item}
-                hasContinuation={index !== routine.data.length - 1}
-                active={active}
-              >
-                {active && (
-                  <DrillTimer
-                    id={item}
-                    onEnd={() => {
-                      listRef.current?.scrollToIndex({
-                        index: activeDrillIndex,
-                        animated: true,
-                      })
-                      setActiveDrillIndex(activeDrillIndex + 1)
-                    }}
-                  />
-                )}
-              </Drill>
+              <FadeInView delay={index * 200}>
+                <Drill
+                  id={item}
+                  hasContinuation={index !== routine.data.length - 1}
+                  active={active}
+                >
+                  {active && (
+                    <DrillTimer
+                      id={item}
+                      onEnd={() => {
+                        listRef.current?.scrollToIndex({
+                          index: activeDrillIndex,
+                          animated: true,
+                        })
+                        setActiveDrillIndex(activeDrillIndex + 1)
+                      }}
+                    />
+                  )}
+                </Drill>
+              </FadeInView>
             )
           }}
           // TODO: on real content there won't be a need for index
