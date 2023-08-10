@@ -7,8 +7,9 @@ import { useThemeColors } from '../ThemeProvider'
 import { PrimaryGradientText } from '../PrimaryGradientText'
 import { routineDrill } from '../../store'
 import { CoverIcon } from './CoverIcon'
+import { PropsWithChildren } from 'react'
 
-interface DrillProps {
+interface DrillProps extends PropsWithChildren {
   id: string
   /**
    * UI prop, it's about connection line between rows
@@ -27,7 +28,12 @@ interface DrillProps {
   onPress?(): void
 }
 
-function DrillInner({ id, hasContinuation = true, active = true }: DrillProps) {
+function DrillInner({
+  id,
+  hasContinuation = true,
+  active = true,
+  children,
+}: DrillProps) {
   const styles = useAppStyles(themedStyles)
   const theme = useThemeColors()
   const { type, description } = useRecoilValue(routineDrill(id))
@@ -64,11 +70,7 @@ function DrillInner({ id, hasContinuation = true, active = true }: DrillProps) {
         >
           {description}
         </Text>
-        <View style={styles.descriptionCtaWrapper}>
-          <PrimaryGradientText style={styles.descriptionCtaText}>
-            What to do {'>'}
-          </PrimaryGradientText>
-        </View>
+        <View style={styles.descriptionChildren}>{children}</View>
       </View>
     </View>
   )
@@ -76,7 +78,7 @@ function DrillInner({ id, hasContinuation = true, active = true }: DrillProps) {
 
 export function Drill(props: DrillProps) {
   const styles = useAppStyles(themedStyles)
-  const { interactive, onPress } = props
+  const { interactive = false, onPress } = props
 
   if (!interactive) {
     return (
@@ -152,13 +154,9 @@ const themedStyles = AppStyleSheet.create({
   descriptionInactive: {
     color: 'line disabled',
   },
-  descriptionCtaWrapper: {
+  descriptionChildren: {
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-  },
-  descriptionCtaText: {
-    fontFamily: 'rubik 700',
-    fontSize: 16,
   },
 })

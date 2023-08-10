@@ -11,6 +11,7 @@ import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Drill } from '../components/Drill/Drill'
 import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
 import { routineIntensityLevel, routineOfTheDay } from '../store'
+import { PrimaryGradientText } from '../components/PrimaryGradientText'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -61,7 +62,11 @@ function Routine() {
                 id={item}
                 hasContinuation={index !== routine.data.length - 1}
                 interactive
-              />
+              >
+                <PrimaryGradientText style={styles.descriptionCtaText}>
+                  What to do {'>'}
+                </PrimaryGradientText>
+              </Drill>
             </Link>
           )
         }}
@@ -167,5 +172,9 @@ const themedStyles = AppStyleSheet.create({
         rotateY: '180deg',
       },
     ],
+  },
+  descriptionCtaText: {
+    fontFamily: 'rubik 700',
+    fontSize: 16,
   },
 })

@@ -1,45 +1,16 @@
 import { useCallback, useMemo, useRef } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from 'react-native'
-import { Stack, router, useLocalSearchParams } from 'expo-router'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Stack, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import { ResizeMode, Video } from 'expo-av'
 import { useRecoilValue } from 'recoil'
-import { ChevronLeftIcon } from 'react-native-heroicons/solid'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { routineDrill } from '../../store'
-import stub from '../../../assets/simple_movement_720p.m4v'
 import { CoverIcon } from '../../components/Drill/CoverIcon'
 import { DrillType } from '../../routines/routines'
-
-function InstructionVideo() {
-  const { width } = useWindowDimensions()
-
-  const videoHeight = useMemo(() => {
-    return Math.floor((width / 4) * 3)
-  }, [width])
-
-  const styles = useAppStyles(themedStyles)
-
-  return (
-    <Video
-      style={[styles.video, { height: videoHeight }]}
-      source={stub}
-      useNativeControls
-      resizeMode={ResizeMode.COVER}
-      isLooping
-      shouldPlay
-      // onPlaybackStatusUpdate={status => setStatus(() => status)}
-    />
-  )
-}
+import { headerLeft } from '../../components/HeaderBackButton'
+import { InstructionVideo } from '../../components/InstructionVideo'
 
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {
@@ -63,7 +34,9 @@ const DRILL_TYPE_DESCRIPTION = {
 export default function InstructionsScreen() {
   const styles = useAppStyles(themedStyles)
   const { key: id } = useLocalSearchParams<{ key: string }>()
-  const { description, instructions, type } = useRecoilValue(routineDrill(id))
+  const { description, instructions, type, videoUri } = useRecoilValue(
+    routineDrill(id)
+  )
   const drillTypeSheetRef = useRef<BottomSheet>(null)
 
   const renderBackdrop = useCallback(
@@ -87,18 +60,7 @@ export default function InstructionsScreen() {
         options={{
           headerTitle: '',
           headerTransparent: true,
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={router.back}
-              style={styles.backButtonPressable}
-            >
-              <ChevronLeftIcon
-                color={
-                  StyleSheet.flatten(styles.backButtonIcon).backgroundColor
-                }
-              />
-            </TouchableOpacity>
-          ),
+          headerLeft,
           headerRight: () => (
             <TouchableOpacity
               style={styles.drillTypeHeaderButton}
@@ -109,10 +71,11 @@ export default function InstructionsScreen() {
               <CoverIcon type={type} size={30} />
             </TouchableOpacity>
           ),
+          contentStyle: styles.bg,
         }}
       />
-      <View style={styles.bg}>
-        <InstructionVideo />
+      <View style={styles.container}>
+        <InstructionVideo uri={videoUri} />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{description}</Text>
         </View>
@@ -151,6 +114,8 @@ export default function InstructionsScreen() {
 const themedStyles = AppStyleSheet.create({
   bg: {
     backgroundColor: 'bg',
+  },
+  container: {
     flex: 1,
   },
   titleContainer: {
@@ -174,14 +139,7 @@ const themedStyles = AppStyleSheet.create({
     lineHeight: 22,
   },
   video: {
-    backgroundColor: 'text primary',
-  },
-  backButtonPressable: {
-    marginLeft: -15,
-    paddingHorizontal: 5,
-  },
-  backButtonIcon: {
-    backgroundColor: 'icon primary',
+    backgroundColor: 'black',
   },
   drillTypeHeaderButton: {
     alignItems: 'center',

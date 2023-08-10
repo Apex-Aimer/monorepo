@@ -1,3 +1,6 @@
+import { Image } from 'react-native'
+import stub from '../../assets/simple_movement_720p.m4v'
+
 type MDContent = Record<string, string>
 interface MDDrillMetadata {
   type: string
@@ -22,6 +25,8 @@ export interface RoutineDrill {
   duration: number
   description: string
   instructions: MDContent
+  // uri
+  videoUri: string
 }
 
 function getTypeFromMetadata(metadata: MDDrillMetadata) {
@@ -51,6 +56,7 @@ function processDrill({
     description: metadata.description,
     duration: metadata.duration,
     instructions: content,
+    videoUri: Image.resolveAssetSource(stub).uri,
   }
 }
 
