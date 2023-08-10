@@ -1,6 +1,6 @@
 ---
 type: Movement
-duration: 120
+duration: 10
 description: Slide jumps, Turns 90 deg, Turns around
 ---
 

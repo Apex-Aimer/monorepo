@@ -8,18 +8,29 @@ import {
   useState,
 } from 'react'
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
-import { Stack } from 'expo-router'
+import { Stack, router } from 'expo-router'
 import { FlatList, StyleSheet, TextStyle, View } from 'react-native'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useRecoilValueLoadable } from 'recoil'
 import { headerLeft } from '../components/HeaderBackButton'
-import { routineDrill, routineOfTheDay } from '../store'
+import {
+  routineDrill,
+  routineOfTheDay,
+  routineOfTheDayDuration,
+} from '../store'
 import { InstructionVideo } from '../components/InstructionVideo'
 import { Drill } from '../components/Drill/Drill'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
 import { StatusBar } from 'expo-status-bar'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
-import CircleGradientProgressBar from '../components/CircleGradientProgressBar'
+import { AnimatedCircleGradientProgressBar } from '../components/CircleGradientProgressBar'
+import {
+  Easing,
+  runOnJS,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
+import { RoutinCTAWithTimer } from '../components/RoutinCTAWithTimer'
 
 const DrillTimer = memo(function DrillTimerComp({
   id,
@@ -29,48 +40,28 @@ const DrillTimer = memo(function DrillTimerComp({
   onEnd(): void
 }) {
   const { duration } = useRecoilValue(routineDrill(id))
-
-  const [step, setStep] = useState(0)
-  const stepRef = useRef(0)
-
-  const increment = useCallback(() => {
-    setStep(stepRef.current + 1)
-    stepRef.current += 1
-
-    if (stepRef.current < duration) {
-      return true
-    }
-
-    return false
-  }, [duration])
+  const step = useSharedValue(0)
 
   useEffect(() => {
-    let then = Date.now()
-    function timer() {
-      setTimeout(() => {
-        const diff = Date.now() - then
-        if (diff < 1000) {
-          timer()
-          return
-        }
-        then = then + 1000
+    step.value = withTiming(
+      duration,
+      {
+        duration: duration * 1000,
+        easing: Easing.linear,
+      },
+      () => {
+        runOnJS(onEnd)()
+      }
+    )
+  }, [duration, onEnd, step])
 
-        if (!increment()) {
-          return
-        }
-
-        timer()
-      }, 100)
-    }
-    timer()
-  }, [increment])
-
-  return <CircleGradientProgressBar step={step} steps={duration} />
+  return <AnimatedCircleGradientProgressBar step={step} steps={duration} />
 })
 
 function Routine() {
   const styles = useAppStyles(themedStyles)
   const routine = useRecoilValue(routineOfTheDay)
+  const duration = useRecoilValue(routineOfTheDayDuration)
 
   const [activeDrillIndex, setActiveDrillIndex] = useState(0)
   const activeDrill = useRecoilValue(
@@ -80,46 +71,54 @@ function Routine() {
   const { bottom } = useSafeAreaInsets()
 
   return (
-    <View style={styles.wrapper}>
-      <InstructionVideo uri={activeDrill.videoUri} />
-      <FlatList
-        ListHeaderComponent={
-          <View style={styles.durationWrapper}>
-            <View style={styles.routineStartArrow}>
-              <ArrowUturnDownIcon
-                size={24}
-                color={
-                  (StyleSheet.flatten(styles.durationText) as TextStyle).color
-                }
-              />
-            </View>
-          </View>
-        }
-        data={routine.data}
-        renderItem={({ item, index }) => {
-          const active = index === activeDrillIndex
-          return (
-            <Drill
-              id={item}
-              hasContinuation={index !== routine.data.length - 1}
-              active={active}
-            >
-              {active && (
-                <DrillTimer
-                  id={item}
-                  onEnd={() => {
-                    setActiveDrillIndex(activeDrillIndex + 1)
-                  }}
+    <>
+      <View style={styles.wrapper}>
+        <InstructionVideo uri={activeDrill.videoUri} />
+        <FlatList
+          ListHeaderComponent={
+            <View style={styles.durationWrapper}>
+              <View style={styles.routineStartArrow}>
+                <ArrowUturnDownIcon
+                  size={24}
+                  color={
+                    (StyleSheet.flatten(styles.durationText) as TextStyle).color
+                  }
                 />
-              )}
-            </Drill>
-          )
+              </View>
+            </View>
+          }
+          data={routine.data}
+          renderItem={({ item, index }) => {
+            const active = index === activeDrillIndex
+            return (
+              <Drill
+                id={item}
+                hasContinuation={index !== routine.data.length - 1}
+                active={active}
+              >
+                {active && (
+                  <DrillTimer
+                    id={item}
+                    onEnd={() => {
+                      setActiveDrillIndex(activeDrillIndex + 1)
+                    }}
+                  />
+                )}
+              </Drill>
+            )
+          }}
+          // TODO: on real content there won't be a need for index
+          keyExtractor={(item, index) => `${item}:${index}`}
+          contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
+        />
+      </View>
+      <RoutinCTAWithTimer
+        duration={duration}
+        onEnd={() => {
+          router.replace('/congrats/')
         }}
-        // TODO: on real content there won't be a need for index
-        keyExtractor={(item, index) => `${item}:${index}`}
-        contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
       />
-    </View>
+    </>
   )
 }
 
@@ -140,7 +139,6 @@ export default function RoutineScreen() {
       <Suspense fallback={null}>
         <Routine />
       </Suspense>
-      <ScreenCTA>FINISH</ScreenCTA>
     </>
   )
 }

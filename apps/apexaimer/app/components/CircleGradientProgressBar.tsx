@@ -7,25 +7,35 @@ import Svg, {
   Stop,
 } from 'react-native-svg'
 import { colorWithOpacity, useThemeColors } from './ThemeProvider'
+import Animated, {
+  SharedValue,
+  useAnimatedProps,
+} from 'react-native-reanimated'
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
 interface ICircleGradientProgressBar {
   size?: number
   borderWidth?: number
-  step: number
   steps: number
   backgroundOpacity?: number
   withBackground?: boolean
+  step: SharedValue<number>
 }
 
-const CircleGradientProgressBar = ({
+export const AnimatedCircleGradientProgressBar = ({
   size = 30,
   borderWidth = 3,
-  step = 0,
-  steps = 1,
+  step,
+  steps = 100,
 }: PropsWithChildren<ICircleGradientProgressBar>) => {
   const radius = size / 2 - borderWidth / 2
   const circumference = 2 * Math.PI * radius
-  const fill = ((100 - (step * 100) / steps) / 100) * circumference
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset:
+      ((100 - (step.value * 100) / steps) / 100) * circumference,
+  }))
 
   const theme = useThemeColors()
 
@@ -49,7 +59,6 @@ const CircleGradientProgressBar = ({
             />
           </SVGLinearGradient>
         </Defs>
-
         <Circle
           cx={size / 2}
           cy={size / 2}
@@ -58,7 +67,7 @@ const CircleGradientProgressBar = ({
           stroke="url(#Gradient)"
           strokeWidth={borderWidth}
         />
-        <Circle
+        <AnimatedCircle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -66,9 +75,9 @@ const CircleGradientProgressBar = ({
           stroke="white"
           strokeWidth={borderWidth}
           strokeDasharray={circumference}
-          strokeDashoffset={fill}
+          animatedProps={animatedProps}
         />
-        <Circle
+        <AnimatedCircle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -76,11 +85,9 @@ const CircleGradientProgressBar = ({
           stroke={inactiveBorderColor}
           strokeWidth={borderWidth}
           strokeDasharray={circumference}
-          strokeDashoffset={fill}
+          animatedProps={animatedProps}
         />
       </G>
     </Svg>
   )
 }
-
-export default CircleGradientProgressBar

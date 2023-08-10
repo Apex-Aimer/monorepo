@@ -36,7 +36,7 @@ export const routineIntensityLevel = atom({
 
 export const routineOfTheDay = selector({
   key: 'routineOfTheDay',
-  get: ({ get }) => {
+  get: async ({ get }) => {
     switch (get(routineIntensityLevel)) {
       case DurationLevels.Short: {
         const shortKey = get(shortRoutineOfTheDay)
@@ -67,5 +67,16 @@ export const routineDrill = selectorFamily({
   key: 'routineDrill',
   get: (id: string) => async () => {
     return RoutineService.sharedInstance.getRoutineDrillById(id)
+  },
+})
+
+export const routineOfTheDayDuration = selector({
+  key: 'routineOfTheDayDuration',
+  get: async ({ get }) => {
+    const routine = get(routineOfTheDay)
+    const drills = await Promise.all(
+      routine.data.map(async (it) => await get(routineDrill(it)))
+    )
+    return drills.reduce((acc, { duration }) => acc + duration, 0)
   },
 })
