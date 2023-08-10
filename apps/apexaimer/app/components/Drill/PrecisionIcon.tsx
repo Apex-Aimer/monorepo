@@ -6,7 +6,7 @@ interface Props extends SvgProps {
 }
 
 const PrecisionIcon = ({ fill, ...rest }: Props) => (
-  <Svg width={26} height={26} fill="none" {...rest}>
+  <Svg width={26} height={26} viewBox="0 0 26 26" fill="none" {...rest}>
     <Circle cx={13} cy={13} r={10} stroke={fill} strokeWidth={2} />
     <Circle cx={13} cy={13} r={2} fill={fill} />
     <Path

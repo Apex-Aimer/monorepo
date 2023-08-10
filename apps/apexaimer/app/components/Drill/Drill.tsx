@@ -1,101 +1,15 @@
 import { LinearGradient } from 'expo-linear-gradient'
+import { useRecoilValue } from 'recoil'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import { useThemeColors } from '../ThemeProvider'
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
 import { PrimaryGradientText } from '../PrimaryGradientText'
-import MovementIcon from './MovementIcon'
-import PrecisionIcon from './PrecisionIcon'
-import TrackingIcon from './TrackingIcon'
-import RecoilIcon from './RecoilIcon'
+import { routineDrill } from '../../store'
+import { CoverIcon } from './CoverIcon'
 
-export enum DrillType {
-  Movement,
-  Tracking,
-  Recoil,
-  Precision,
-}
-
-export interface RoutineDrill {
-  type: DrillType
-  description: string
-}
-
-interface CoverIconProps {
-  type: DrillType
-  active?: boolean
-  style?: ViewStyle
-}
-
-function CoverIcon({ type, active = true }: CoverIconProps) {
-  const styles = useAppStyles(themedStyles)
-  const { backgroundColor: regularFill } = StyleSheet.flatten(
-    styles.coverIconRegular
-  )
-  const { backgroundColor: inactiveFill } = StyleSheet.flatten(
-    styles.coverIconInactive
-  )
-  switch (type) {
-    case DrillType.Movement:
-      return (
-        <View style={[styles.coverIcon]}>
-          <View
-            style={[
-              active ? styles.movement : styles.coverIconInactiveBg,
-              StyleSheet.absoluteFill,
-            ]}
-          />
-          <MovementIcon fill={active ? regularFill : inactiveFill} />
-        </View>
-      )
-    case DrillType.Precision:
-      return (
-        <View style={[styles.coverIcon]}>
-          <View
-            style={[
-              active ? styles.precision : styles.coverIconInactiveBg,
-              StyleSheet.absoluteFill,
-            ]}
-          />
-          <PrecisionIcon fill={active ? regularFill : inactiveFill} />
-        </View>
-      )
-    case DrillType.Tracking:
-      return (
-        <View style={[styles.coverIcon]}>
-          <View
-            style={[
-              active ? styles.tracking : styles.coverIconInactiveBg,
-              StyleSheet.absoluteFill,
-            ]}
-          />
-          <TrackingIcon fill={active ? regularFill : inactiveFill} />
-        </View>
-      )
-    case DrillType.Recoil:
-      return (
-        <View style={[styles.coverIcon]}>
-          <View
-            style={[
-              active ? styles.recoil : styles.coverIconInactiveBg,
-              StyleSheet.absoluteFill,
-            ]}
-          />
-          <RecoilIcon fill={active ? regularFill : inactiveFill} />
-        </View>
-      )
-    default:
-      return null
-  }
-}
-
-interface DrillProps extends RoutineDrill {
+interface DrillProps {
+  id: string
   /**
    * UI prop, it's about connection line between rows
    */
@@ -113,14 +27,10 @@ interface DrillProps extends RoutineDrill {
   onPress?(): void
 }
 
-function DrillInner({
-  type,
-  description,
-  hasContinuation = true,
-  active = true,
-}: DrillProps) {
+function DrillInner({ id, hasContinuation = true, active = true }: DrillProps) {
   const styles = useAppStyles(themedStyles)
   const theme = useThemeColors()
+  const { type, description } = useRecoilValue(routineDrill(id))
 
   return (
     <View
@@ -141,7 +51,7 @@ function DrillInner({
       ></LinearGradient>
       <View style={styles.coverContainer}>
         <View style={styles.cover} />
-        <CoverIcon type={type} active={active} />
+        <CoverIcon type={type} active={active} absolute />
         {hasContinuation && (
           <View style={styles.connectionLineWrapper}>
             <View style={styles.connectionLine} />
@@ -212,50 +122,6 @@ const themedStyles = AppStyleSheet.create({
     aspectRatio: 1,
     backgroundColor: 'accent primary',
     borderRadius: 10,
-  },
-  coverIcon: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 40,
-    aspectRatio: 1,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'icon primary',
-    shadowColor: 'icon shadow',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowRadius: 6,
-    shadowOpacity: 1,
-  },
-  coverIconRegular: {
-    backgroundColor: 'icon primary',
-  },
-  coverIconInactive: {
-    backgroundColor: 'line',
-  },
-  coverIconInactiveBg: {
-    borderRadius: 10,
-    backgroundColor: 'neutral drill',
-  },
-  movement: {
-    borderRadius: 10,
-    backgroundColor: 'movement',
-  },
-  precision: {
-    borderRadius: 10,
-    backgroundColor: 'precision',
-  },
-  recoil: {
-    borderRadius: 10,
-    backgroundColor: 'recoil',
-  },
-  tracking: {
-    borderRadius: 10,
-    backgroundColor: 'tracking',
   },
   connectionLineWrapper: {
     position: 'absolute',

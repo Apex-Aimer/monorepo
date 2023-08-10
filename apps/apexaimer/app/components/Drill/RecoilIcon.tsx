@@ -6,7 +6,7 @@ interface Props extends SvgProps {
 }
 
 const RecoilIcon = ({ fill, ...rest }: Props) => (
-  <Svg width={34} height={22} fill="none" {...rest}>
+  <Svg width={34} height={22} viewBox="0 0 34 22" fill="none" {...rest}>
     <Path
       fill={fill}
       fillRule="evenodd"

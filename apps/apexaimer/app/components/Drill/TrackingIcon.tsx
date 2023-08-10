@@ -6,7 +6,7 @@ interface Props extends SvgProps {
 }
 
 const TrackingIcon = ({ fill, ...rest }: Props) => (
-  <Svg width={31} height={20} fill="none" {...rest}>
+  <Svg width={31} height={20} viewBox="0 0 31 20" fill="none" {...rest}>
     <Path
       stroke={fill}
       strokeWidth={2}

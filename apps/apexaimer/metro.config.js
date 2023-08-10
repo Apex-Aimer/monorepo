@@ -26,4 +26,8 @@ config.resolver.assetExts.push(
   'riv'
 )
 
+config.resolver.sourceExts.push('md')
+
+config.transformer.babelTransformerPath = require.resolve('./transformer.js')
+
 module.exports = config

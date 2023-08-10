@@ -14,6 +14,7 @@ export const colorWithOpacity = (color: string, opacity = 1) =>
 interface ThemedColorsPalette {
   bg: ColorValue
   'bg accent': ColorValue
+  backdrop: ColorValue
   line: ColorValue
   'line disabled': ColorValue
   'text primary': ColorValue
@@ -56,6 +57,7 @@ const lightColors: ThemedColorsPalette = {
     colorWithOpacity('#FFFFFF', 0.3),
     colorWithOpacity('#FFFFFF', 0),
   ],
+  backdrop: colorWithOpacity('#282624', 0.4),
 }
 
 const darkColors: ThemedColorsPalette = {
@@ -75,6 +77,7 @@ const darkColors: ThemedColorsPalette = {
     colorWithOpacity('#424242', 0.3),
     colorWithOpacity('#424242', 0),
   ],
+  backdrop: colorWithOpacity('#F4F5EF', 0.4),
 }
 
 const staticColors: StaticColorsPalette = {

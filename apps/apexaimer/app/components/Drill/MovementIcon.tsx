@@ -6,7 +6,7 @@ interface Props extends SvgProps {
 }
 
 const MovementIcon = ({ fill, ...rest }: Props) => (
-  <Svg width={30} height={22} fill={fill} {...rest}>
+  <Svg width={30} height={22} viewBox="0 0 30 22" fill={fill} {...rest}>
     <Path
       fill={fill}
       fillRule="evenodd"

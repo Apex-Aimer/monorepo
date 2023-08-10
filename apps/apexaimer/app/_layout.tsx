@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
 
-import { Slot, Stack } from 'expo-router'
-import { ThemeProvider, useThemeColors } from '../src/components/ThemeProvider'
-import { FontsProvider } from '../src/components/FontsProvider'
+import { Stack } from 'expo-router'
+import { ThemeProvider, useThemeColors } from './components/ThemeProvider'
+import { FontsProvider } from './components/FontsProvider'
 import { PropsWithChildren } from 'react'
+import { RecoilRoot } from 'recoil'
 
 function BG({ children }: PropsWithChildren) {
   const theme = useThemeColors()
@@ -20,7 +21,9 @@ export default function RootLayout() {
       <FontsProvider>
         <ThemeProvider>
           <BG>
-            <Stack />
+            <RecoilRoot>
+              <Stack />
+            </RecoilRoot>
           </BG>
         </ThemeProvider>
       </FontsProvider>
