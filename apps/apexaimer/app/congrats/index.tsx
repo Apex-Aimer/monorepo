@@ -1,71 +1,68 @@
+import { useState } from 'react'
 import {
-  Image,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native'
-import Rive, { Fit, RiveRef } from 'rive-react-native'
 import { Stack, router } from 'expo-router'
 import { XMarkIcon } from 'react-native-heroicons/outline'
-import { useEffect, useRef } from 'react'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  interpolate,
-  withTiming,
-  withDelay,
-} from 'react-native-reanimated'
+import { ArrowRightIcon } from 'react-native-heroicons/solid'
 
-// @ts-ignore
-import congrats from '../../assets/congrats.riv'
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
+import { Banner } from './Banner'
+import { FadeInView } from '../components/FadeInView'
+import { useRecoilValue } from 'recoil'
+import { congratsMotivation } from '../store'
+import { ScreenCTA } from '../components/ScreenCTA'
+import Animated from 'react-native-reanimated'
+import { Slider } from './Slider'
+
+function Content() {
+  const styles = useAppStyles(themedStyles)
+
+  const motivation = useRecoilValue(congratsMotivation)
+
+  const { width } = useWindowDimensions()
+
+  return (
+    <>
+      <View style={styles.motivational}>
+        <FadeInView>
+          <Text style={styles.motivationalTitle}>{motivation.title}</Text>
+        </FadeInView>
+        <FadeInView delay={200}>
+          <Text style={styles.motivationalSubtitle}>{motivation.subtitle}</Text>
+        </FadeInView>
+      </View>
+      <Animated.ScrollView horizontal pagingEnabled>
+        <View style={[styles.page1, { width }]}>
+          <View style={styles.rateGeneralWrapper}>
+            <Text>
+              How was it? Rate to adjust the difficulty for the next time
+            </Text>
+          </View>
+          <View style={styles.sliderContainer}>
+            <Slider />
+          </View>
+        </View>
+        <View style={{ width }}></View>
+      </Animated.ScrollView>
+    </>
+  )
+}
 
 export default function RoutineScreen() {
   const styles = useAppStyles(themedStyles)
 
-  const riveRef = useRef<RiveRef>(null)
-
-  useEffect(() => {
-    setTimeout(() => {
-      riveRef.current?.play()
-    }, 300)
-  }, [])
-
-  const { width, height } = useWindowDimensions()
-
-  function getCenterDisplacement() {
-    'worklet'
-
-    const h = width / 2
-
-    return (height - h) / 2
-  }
-
-  const bannerPlacement = useSharedValue(0)
-
-  const bannerDisplacementStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            bannerPlacement.value,
-            [0, 1],
-            [getCenterDisplacement(), 0]
-          ),
-        },
-        {
-          scale: interpolate(bannerPlacement.value, [0, 1], [1, 0.8]),
-        },
-      ],
-    }
-  })
+  const [readyToRate, setReadyToRate] = useState(false)
 
   return (
     <>
       <Stack.Screen
         options={{
-          headerTitle: '',
+          title: null,
           headerBackVisible: false,
           headerRight: () => (
             <TouchableOpacity
@@ -82,26 +79,23 @@ export default function RoutineScreen() {
         }}
       />
       <View style={styles.bg}>
-        <Animated.View style={[styles.bannerWrapper, bannerDisplacementStyles]}>
-          <Rive
-            ref={riveRef}
-            url={Image.resolveAssetSource(congrats).uri}
-            artboardName="banner"
-            style={styles.banner}
-            autoplay={false}
-            fit={Fit.FitWidth}
-            onPause={() => {
-              bannerPlacement.value = withDelay(
-                200,
-                withTiming(1, {
-                  duration: 500,
-                })
-              )
-            }}
-          />
-        </Animated.View>
-        <View style={styles.test}></View>
+        <Banner
+          onEnd={() => {
+            setReadyToRate(true)
+          }}
+        />
+        {readyToRate && <Content />}
       </View>
+      {readyToRate && (
+        <FadeInView delay={400}>
+          <ScreenCTA>
+            <ArrowRightIcon
+              size={20}
+              color={StyleSheet.flatten(styles.ctaIcon).backgroundColor}
+            />
+          </ScreenCTA>
+        </FadeInView>
+      )}
     </>
   )
 }
@@ -114,16 +108,40 @@ const themedStyles = AppStyleSheet.create({
     backgroundColor: 'bg',
     flex: 1,
   },
-  bannerWrapper: {
+  motivational: {
     backgroundColor: 'bg',
-    zIndex: 100,
+    paddingHorizontal: 30,
   },
-  banner: {
-    width: '100%',
-    aspectRatio: 2,
+  motivationalTitle: {
+    color: 'text primary',
+    fontFamily: 'rubik 600',
+    fontSize: 20,
+    textAlign: 'center',
   },
-  test: {
-    backgroundColor: 'red',
-    height: 300,
+  motivationalSubtitle: {
+    color: 'text primary',
+    fontFamily: 'rubik 600',
+    fontSize: 18,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  ctaIcon: {
+    backgroundColor: 'icon primary',
+  },
+  page1: {
+    justifyContent: 'center',
+  },
+  rateGeneralWrapper: {
+    paddingHorizontal: 40,
+  },
+  rateGeneralText: {
+    color: 'text primary',
+    fontFamily: 'rubik 500',
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  sliderContainer: {
+    paddingHorizontal: 20,
   },
 })

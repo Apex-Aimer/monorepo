@@ -34,6 +34,8 @@ const themedStyles = AppStyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 10,
     borderRadius: 15,
+    minWidth: 150,
+    alignItems: 'center',
   },
   label: {
     fontFamily: 'rubik mono one',

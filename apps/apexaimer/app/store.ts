@@ -80,3 +80,11 @@ export const routineOfTheDayDuration = selector({
     return drills.reduce((acc, { duration }) => acc + duration, 0)
   },
 })
+
+export const congratsMotivation = atom({
+  key: 'congratsMotivationalTitle',
+  default: {
+    title: 'Warmed up and set to conquer!',
+    subtitle: ' Embrace the fun in the game today.',
+  },
+})
