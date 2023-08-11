@@ -35,9 +35,11 @@ function Dot({ index, position }: DotProps) {
   return <Animated.View style={[styles.dot, style]} />
 }
 
-interface Props extends PropsWithChildren {}
+interface Props extends PropsWithChildren {
+  dotsDelay: number
+}
 
-export function PagerView({ children }: Props) {
+export function PagerView({ children, dotsDelay }: Props) {
   const styles = useAppStyles(themedStyles)
 
   const { width } = useWindowDimensions()
@@ -63,13 +65,13 @@ export function PagerView({ children }: Props) {
           cloneElement(child, { style: [child.props.style, { width }] })
         )}
       </Animated.ScrollView>
-      <View style={styles.dots}>
+      <FadeInView delay={dotsDelay} style={styles.dots}>
         {Children.toArray(children)
           .slice(0, 5)
           .map((_, index) => (
             <Dot key={index} index={index} position={position} />
           ))}
-      </View>
+      </FadeInView>
     </View>
   )
 }
@@ -83,6 +85,7 @@ const themedStyles = AppStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
+    paddingTop: 10,
   },
   dot: {
     width: 8,

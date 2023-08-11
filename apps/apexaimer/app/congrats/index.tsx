@@ -1,5 +1,13 @@
-import { useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Suspense, useState } from 'react'
+import {
+  FlatList,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { Stack, router } from 'expo-router'
 import { XMarkIcon } from 'react-native-heroicons/outline'
 import { ArrowRightIcon } from 'react-native-heroicons/solid'
@@ -8,19 +16,19 @@ import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Banner } from './Banner'
 import { FadeInView } from '../components/FadeInView'
 import { useRecoilValue } from 'recoil'
-import { congratsMotivation } from '../store'
+import { congratsMotivation, routineOfTheDay } from '../store'
 import { Slider } from './Slider'
 import { PagerView } from './PagerView'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { PrimaryButton } from '../components/PrimaryButton'
+import { DrillRateItem } from './DrillRateItem'
 
-function Content() {
+function PrimaryRate({ style }: { style?: StyleProp<ViewStyle> }) {
   const styles = useAppStyles(themedStyles)
-
   const motivation = useRecoilValue(congratsMotivation)
 
   return (
-    <>
+    <View style={style}>
       <View style={styles.motivational}>
         <FadeInView>
           <Text style={styles.motivationalTitle}>{motivation.title}</Text>
@@ -29,28 +37,55 @@ function Content() {
           <Text style={styles.motivationalSubtitle}>{motivation.subtitle}</Text>
         </FadeInView>
       </View>
-      <FadeInView delay={400} style={{ flex: 1 }}>
-        <PagerView>
-          <View style={styles.page1}>
-            <View style={styles.rateGeneralWrapper}>
-              <Text style={styles.rateGeneralText}>
-                How was it? Rate to adjust the difficulty for the next time
-              </Text>
-            </View>
-            <View style={styles.sliderContainer}>
-              <Slider initialIndex={2} />
-            </View>
-            <View style={styles.swipeForMoreWrapper}>
-              <Text style={styles.swipeForMore}>
-                Swipe left to rate every drill separately for even more precise
-                adjustments {'>'}
-              </Text>
-            </View>
-          </View>
-          <View style={{}} />
-        </PagerView>
+      <FadeInView delay={400} style={styles.primaryRateWrapper}>
+        <View style={styles.rateGeneralWrapper}>
+          <Text style={styles.rateGeneralText}>
+            How was it? Rate to adjust the difficulty for the next time
+          </Text>
+        </View>
+        <View style={styles.sliderContainer}>
+          <Slider initialIndex={2} />
+        </View>
+        <View style={styles.swipeForMoreWrapper}>
+          <Text style={styles.swipeForMore}>
+            Swipe left to rate every drill separately for even more precise
+            adjustments {'>'}
+          </Text>
+        </View>
       </FadeInView>
-    </>
+    </View>
+  )
+}
+
+function DetailedRate({ style }: { style?: StyleProp<ViewStyle> }) {
+  const routine = useRecoilValue(routineOfTheDay)
+  const styles = useAppStyles(themedStyles)
+
+  return (
+    <FlatList
+      data={routine.data}
+      renderItem={({ item }) => (
+        <Suspense>
+          <DrillRateItem id={item} />
+        </Suspense>
+      )}
+      ItemSeparatorComponent={() => (
+        <View style={styles.detailedRatesSeparator} />
+      )}
+      contentContainerStyle={styles.detailedRatesContentContainer}
+      style={style}
+    />
+  )
+}
+
+function Content() {
+  return (
+    <Suspense>
+      <PagerView dotsDelay={600}>
+        <PrimaryRate />
+        <DetailedRate />
+      </PagerView>
+    </Suspense>
   )
 }
 
@@ -90,7 +125,11 @@ export default function RoutineScreen() {
       {readyToRate && <Content />}
       {readyToRate && (
         <FadeInView delay={600} style={[{ paddingBottom: bottom }, styles.cta]}>
-          <PrimaryButton>
+          <PrimaryButton
+            onPress={() => {
+              router.replace('/')
+            }}
+          >
             <ArrowRightIcon
               size={20}
               color={StyleSheet.flatten(styles.ctaIcon).backgroundColor}
@@ -130,7 +169,8 @@ const themedStyles = AppStyleSheet.create({
   ctaIcon: {
     backgroundColor: 'icon primary',
   },
-  page1: {
+  primaryRateWrapper: {
+    flex: 1,
     justifyContent: 'center',
   },
   rateGeneralWrapper: {
@@ -162,5 +202,14 @@ const themedStyles = AppStyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'center',
+  },
+  detailedRatesSeparator: {
+    borderColor: 'line disabled',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    marginVertical: 10,
+    marginHorizontal: 15,
+  },
+  detailedRatesContentContainer: {
+    paddingBottom: 20,
   },
 })
