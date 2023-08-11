@@ -14,6 +14,7 @@ export const colorWithOpacity = (color: string, opacity = 1) =>
 interface ThemedColorsPalette {
   bg: ColorValue
   'bg accent': ColorValue
+  'bg accent inverted': ColorValue
   backdrop: ColorValue
   line: ColorValue
   'line disabled': ColorValue
@@ -43,6 +44,7 @@ export interface ColorsPalette
 const lightColors: ThemedColorsPalette = {
   bg: '#F4F5EF',
   'bg accent': '#FFFFFF',
+  'bg accent inverted': '#424242',
   line: '#828282',
   'line disabled': colorWithOpacity('#828282', 0.5),
   'text primary': '#282624',
@@ -63,6 +65,7 @@ const lightColors: ThemedColorsPalette = {
 const darkColors: ThemedColorsPalette = {
   bg: '#282624',
   'bg accent': '#424242',
+  'bg accent inverted': '#FFFFFF',
   line: '#D0C9C9',
   'line disabled': colorWithOpacity('#D0C9C9', 0.5),
   'text primary': '#FFFFFF',

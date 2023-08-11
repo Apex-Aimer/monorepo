@@ -1,11 +1,5 @@
 import { useState } from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useWindowDimensions,
-} from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Stack, router } from 'expo-router'
 import { XMarkIcon } from 'react-native-heroicons/outline'
 import { ArrowRightIcon } from 'react-native-heroicons/solid'
@@ -15,16 +9,15 @@ import { Banner } from './Banner'
 import { FadeInView } from '../components/FadeInView'
 import { useRecoilValue } from 'recoil'
 import { congratsMotivation } from '../store'
-import { ScreenCTA } from '../components/ScreenCTA'
-import Animated from 'react-native-reanimated'
 import { Slider } from './Slider'
+import { PagerView } from './PagerView'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { PrimaryButton } from '../components/PrimaryButton'
 
 function Content() {
   const styles = useAppStyles(themedStyles)
 
   const motivation = useRecoilValue(congratsMotivation)
-
-  const { width } = useWindowDimensions()
 
   return (
     <>
@@ -36,19 +29,27 @@ function Content() {
           <Text style={styles.motivationalSubtitle}>{motivation.subtitle}</Text>
         </FadeInView>
       </View>
-      <Animated.ScrollView horizontal pagingEnabled>
-        <View style={[styles.page1, { width }]}>
-          <View style={styles.rateGeneralWrapper}>
-            <Text>
-              How was it? Rate to adjust the difficulty for the next time
-            </Text>
+      <FadeInView delay={400} style={{ flex: 1 }}>
+        <PagerView>
+          <View style={styles.page1}>
+            <View style={styles.rateGeneralWrapper}>
+              <Text style={styles.rateGeneralText}>
+                How was it? Rate to adjust the difficulty for the next time
+              </Text>
+            </View>
+            <View style={styles.sliderContainer}>
+              <Slider initialIndex={2} />
+            </View>
+            <View style={styles.swipeForMoreWrapper}>
+              <Text style={styles.swipeForMore}>
+                Swipe left to rate every drill separately for even more precise
+                adjustments {'>'}
+              </Text>
+            </View>
           </View>
-          <View style={styles.sliderContainer}>
-            <Slider />
-          </View>
-        </View>
-        <View style={{ width }}></View>
-      </Animated.ScrollView>
+          <View style={{}} />
+        </PagerView>
+      </FadeInView>
     </>
   )
 }
@@ -57,6 +58,8 @@ export default function RoutineScreen() {
   const styles = useAppStyles(themedStyles)
 
   const [readyToRate, setReadyToRate] = useState(false)
+
+  const { bottom } = useSafeAreaInsets()
 
   return (
     <>
@@ -76,24 +79,23 @@ export default function RoutineScreen() {
             </TouchableOpacity>
           ),
           headerTransparent: true,
+          contentStyle: styles.bg,
         }}
       />
-      <View style={styles.bg}>
-        <Banner
-          onEnd={() => {
-            setReadyToRate(true)
-          }}
-        />
-        {readyToRate && <Content />}
-      </View>
+      <Banner
+        onEnd={() => {
+          setReadyToRate(true)
+        }}
+      />
+      {readyToRate && <Content />}
       {readyToRate && (
-        <FadeInView delay={400}>
-          <ScreenCTA>
+        <FadeInView delay={600} style={[{ paddingBottom: bottom }, styles.cta]}>
+          <PrimaryButton>
             <ArrowRightIcon
               size={20}
               color={StyleSheet.flatten(styles.ctaIcon).backgroundColor}
             />
-          </ScreenCTA>
+          </PrimaryButton>
         </FadeInView>
       )}
     </>
@@ -143,5 +145,22 @@ const themedStyles = AppStyleSheet.create({
   },
   sliderContainer: {
     paddingHorizontal: 20,
+    paddingTop: 30,
+  },
+  cta: {
+    alignItems: 'center',
+    backgroundColor: 'bg',
+    paddingTop: 20,
+  },
+  swipeForMoreWrapper: {
+    paddingTop: 40,
+    paddingHorizontal: 40,
+  },
+  swipeForMore: {
+    color: 'line disabled',
+    fontFamily: 'rubik 500',
+    fontSize: 16,
+    lineHeight: 24,
+    textAlign: 'center',
   },
 })
