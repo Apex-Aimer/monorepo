@@ -4,11 +4,7 @@ import { Stack, router } from 'expo-router'
 import { FlatList, StyleSheet, TextStyle, View } from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { headerLeft } from '../components/HeaderBackButton'
-import {
-  routineDrill,
-  routineOfTheDay,
-  routineOfTheDayDuration,
-} from '../store'
+import { routineDrill, routineOfTheDayRunData } from '../store'
 import { InstructionVideo } from '../components/InstructionVideo'
 import { Drill } from '../components/Drill/Drill'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -51,15 +47,17 @@ const DrillTimer = memo(function DrillTimerComp({
   return <AnimatedCircleGradientProgressBar step={step} steps={duration} />
 })
 
+function DrillInstructionVideo({ id }: { id: string }) {
+  const activeDrill = useRecoilValue(routineDrill(id))
+
+  return <InstructionVideo uri={activeDrill.videoUri} />
+}
+
 function Routine() {
   const styles = useAppStyles(themedStyles)
-  const routine = useRecoilValue(routineOfTheDay)
-  const duration = useRecoilValue(routineOfTheDayDuration)
+  const { routine, duration } = useRecoilValue(routineOfTheDayRunData)
 
   const [activeDrillIndex, setActiveDrillIndex] = useState(0)
-  const activeDrill = useRecoilValue(
-    routineDrill(routine.data[activeDrillIndex])
-  )
 
   const { bottom } = useSafeAreaInsets()
 
@@ -68,7 +66,10 @@ function Routine() {
   return (
     <>
       <View style={styles.wrapper}>
-        <InstructionVideo uri={activeDrill.videoUri} />
+        {/* TODO: loading state */}
+        <Suspense>
+          <DrillInstructionVideo id={routine.data[activeDrillIndex]} />
+        </Suspense>
         <FlatList
           ref={listRef}
           ListHeaderComponent={

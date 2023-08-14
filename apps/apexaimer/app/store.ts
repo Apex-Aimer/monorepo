@@ -86,6 +86,14 @@ export const routineOfTheDayDuration = selector({
   },
 })
 
+export const routineOfTheDayRunData = selector({
+  key: 'routineOfTheDayRunData',
+  get: async ({ get }) => ({
+    routine: await get(routineOfTheDay),
+    duration: await get(routineOfTheDayDuration),
+  }),
+})
+
 export const congratsMotivation = atom({
   key: 'congratsMotivationalTitle',
   default: {
