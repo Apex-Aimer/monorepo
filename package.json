@@ -6,6 +6,7 @@
     "dev": "dotenv -e ./.env.local -- turbo run dev",
     "blog:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerBlog",
     "web:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerWeb",
+    "native:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerNative",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "blog:deploy": "",
