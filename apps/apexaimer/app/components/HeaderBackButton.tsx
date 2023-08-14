@@ -15,7 +15,20 @@ export function HeaderBackButton() {
   )
 }
 
+export function HeaderBackButtonThemed() {
+  const styles = useAppStyles(themedStyles)
+
+  return (
+    <TouchableOpacity onPress={router.back} style={styles.backButtonPressable}>
+      <ChevronLeftIcon
+        color={StyleSheet.flatten(styles.backButtonThemed).backgroundColor}
+      />
+    </TouchableOpacity>
+  )
+}
+
 export const headerLeft = () => <HeaderBackButton />
+export const headerLeftThemed = () => <HeaderBackButtonThemed />
 
 const themedStyles = AppStyleSheet.create({
   backButtonPressable: {
@@ -24,5 +37,8 @@ const themedStyles = AppStyleSheet.create({
   },
   backButtonIcon: {
     backgroundColor: 'icon primary',
+  },
+  backButtonThemed: {
+    backgroundColor: 'bg accent inverted',
   },
 })

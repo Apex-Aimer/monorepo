@@ -54,7 +54,7 @@ function DrillInner({
         start={{ x: 1, y: 0.5 }}
         end={{ x: 0, y: 0.5 }}
         style={styles.containerBg}
-      ></LinearGradient>
+      />
       <View style={styles.coverContainer}>
         <View style={styles.cover} />
         <CoverIcon type={type} active={active} absolute />

@@ -15,8 +15,12 @@ import { ArrowRightIcon } from 'react-native-heroicons/solid'
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Banner } from './Banner'
 import { FadeInView } from '../components/FadeInView'
-import { useRecoilValue } from 'recoil'
-import { congratsMotivation, routineOfTheDay } from '../store'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import {
+  congratsMotivation,
+  isRoutineOfTheDayCompleted,
+  routineOfTheDay,
+} from '../store'
 import { Slider } from './Slider'
 import { PagerView } from './PagerView'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -90,9 +94,12 @@ function Content() {
 }
 
 export default function RoutineScreen() {
-  const styles = useAppStyles(themedStyles)
-
+  const setRoutineOfTheDayCompleted = useSetRecoilState(
+    isRoutineOfTheDayCompleted
+  )
   const [readyToRate, setReadyToRate] = useState(false)
+
+  const styles = useAppStyles(themedStyles)
 
   const { bottom } = useSafeAreaInsets()
 
@@ -128,6 +135,7 @@ export default function RoutineScreen() {
           <PrimaryButton
             onPress={() => {
               router.replace('/')
+              setRoutineOfTheDayCompleted(true)
             }}
           >
             <ArrowRightIcon

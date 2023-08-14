@@ -27,13 +27,16 @@ export function CoverIcon({
   const { backgroundColor: inactiveFill } = StyleSheet.flatten(
     styles.coverIconInactive
   )
+
+  const borderRadius = Math.round(0.25 * size)
+
   switch (type) {
     case DrillType.Movement:
       return (
         <View
           style={[
             styles.coverIcon,
-            { width: size },
+            { width: size, borderRadius },
             absolute && styles.coverIconAbsolute,
           ]}
         >
@@ -41,6 +44,7 @@ export function CoverIcon({
             style={[
               active ? styles.movement : styles.coverIconInactiveBg,
               StyleSheet.absoluteFill,
+              { borderRadius },
             ]}
           />
           <MovementIcon
@@ -55,7 +59,7 @@ export function CoverIcon({
         <View
           style={[
             styles.coverIcon,
-            { width: size },
+            { width: size, borderRadius },
             absolute && styles.coverIconAbsolute,
           ]}
         >
@@ -63,6 +67,7 @@ export function CoverIcon({
             style={[
               active ? styles.precision : styles.coverIconInactiveBg,
               StyleSheet.absoluteFill,
+              { borderRadius },
             ]}
           />
           <PrecisionIcon
@@ -77,7 +82,7 @@ export function CoverIcon({
         <View
           style={[
             styles.coverIcon,
-            { width: size },
+            { width: size, borderRadius },
             absolute && styles.coverIconAbsolute,
           ]}
         >
@@ -85,6 +90,7 @@ export function CoverIcon({
             style={[
               active ? styles.tracking : styles.coverIconInactiveBg,
               StyleSheet.absoluteFill,
+              { borderRadius },
             ]}
           />
           <TrackingIcon
@@ -99,7 +105,7 @@ export function CoverIcon({
         <View
           style={[
             styles.coverIcon,
-            { width: size },
+            { width: size, borderRadius },
             absolute && styles.coverIconAbsolute,
           ]}
         >
@@ -107,6 +113,7 @@ export function CoverIcon({
             style={[
               active ? styles.recoil : styles.coverIconInactiveBg,
               StyleSheet.absoluteFill,
+              { borderRadius },
             ]}
           />
           <RecoilIcon
@@ -129,7 +136,6 @@ const themedStyles = AppStyleSheet.create({
   },
   coverIcon: {
     aspectRatio: 1,
-    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'icon primary',
@@ -148,23 +154,18 @@ const themedStyles = AppStyleSheet.create({
     backgroundColor: 'line',
   },
   coverIconInactiveBg: {
-    borderRadius: 10,
     backgroundColor: 'neutral drill',
   },
   movement: {
-    borderRadius: 10,
     backgroundColor: 'movement',
   },
   precision: {
-    borderRadius: 10,
     backgroundColor: 'precision',
   },
   recoil: {
-    borderRadius: 10,
     backgroundColor: 'recoil',
   },
   tracking: {
-    borderRadius: 10,
     backgroundColor: 'tracking',
   },
 })

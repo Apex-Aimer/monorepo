@@ -27,6 +27,7 @@ interface ThemedColorsPalette {
   'neutral drill': ColorValue
   'exercise item gradient': [ColorValue, ColorValue]
   'exercise item gradient inactive': [ColorValue, ColorValue]
+  'exercise card gradient': [ColorValue, ColorValue]
 }
 
 interface StaticColorsPalette {
@@ -59,6 +60,7 @@ const lightColors: ThemedColorsPalette = {
     colorWithOpacity('#FFFFFF', 0.3),
     colorWithOpacity('#FFFFFF', 0),
   ],
+  'exercise card gradient': ['#FFFFFF', colorWithOpacity('#FFFFFF', 0.5)],
   backdrop: colorWithOpacity('#282624', 0.4),
 }
 
@@ -80,6 +82,7 @@ const darkColors: ThemedColorsPalette = {
     colorWithOpacity('#424242', 0.3),
     colorWithOpacity('#424242', 0),
   ],
+  'exercise card gradient': ['#424242', colorWithOpacity('#424242', 0.5)],
   backdrop: colorWithOpacity('#F4F5EF', 0.4),
 }
 

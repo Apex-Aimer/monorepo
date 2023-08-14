@@ -1,16 +1,8 @@
-import {
-  Suspense,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Stack, router } from 'expo-router'
 import { FlatList, StyleSheet, TextStyle, View } from 'react-native'
-import { useRecoilValue, useRecoilValueLoadable } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import { headerLeft } from '../components/HeaderBackButton'
 import {
   routineDrill,
@@ -20,7 +12,7 @@ import {
 import { InstructionVideo } from '../components/InstructionVideo'
 import { Drill } from '../components/Drill/Drill'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
+import { SCREEN_CTA_HEIGHT } from '../components/ScreenCTA'
 import { StatusBar } from 'expo-status-bar'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import { AnimatedCircleGradientProgressBar } from '../components/CircleGradientProgressBar'

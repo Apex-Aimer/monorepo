@@ -34,6 +34,11 @@ export const routineIntensityLevel = atom({
   default: DurationLevels.Medium,
 })
 
+export const isRoutineOfTheDayCompleted = atom({
+  key: 'isRoutineOfTheDayCompleted',
+  default: false,
+})
+
 export const routineOfTheDay = selector({
   key: 'routineOfTheDay',
   get: async ({ get }) => {

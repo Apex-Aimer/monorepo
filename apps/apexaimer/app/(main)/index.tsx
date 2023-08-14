@@ -1,6 +1,13 @@
 import { Suspense, useState } from 'react'
-import { FlatList, StyleSheet, Text, TextStyle, View } from 'react-native'
-import { Link, Stack } from 'expo-router'
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+} from 'react-native'
+import { Link, Stack, router } from 'expo-router'
 import { UserIcon } from 'react-native-heroicons/solid'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
@@ -10,18 +17,62 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Drill } from '../components/Drill/Drill'
 import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
-import { routineIntensityLevel, routineOfTheDay } from '../store'
+import {
+  isRoutineOfTheDayCompleted,
+  routineIntensityLevel,
+  routineOfTheDay,
+} from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
 import { FadeInView } from '../components/FadeInView'
+import { Carousel } from './Carousel'
+import { DrillInfoCard } from './DrillInfoCard'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
     routineIntensityLevel
   )
   const routine = useRecoilValue(routineOfTheDay)
+  const isRoutineCompleted = useRecoilValue(isRoutineOfTheDayCompleted)
 
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
+
+  if (isRoutineCompleted) {
+    return (
+      <ScrollView>
+        <View style={styles.completedRoutineTitleContainer}>
+          <Text style={styles.completedRoutineTitle}>
+            You’re all set for today!
+          </Text>
+        </View>
+        <View style={styles.completedRoutineCaptionContainer}>
+          <Text style={styles.completedRoutineCaption}>
+            It’s time to jump into the game and have some fun. There’s no better
+            way to improve rather than play the game.
+          </Text>
+        </View>
+        <View style={styles.lastCompletedRoutineSectionTitleContainer}>
+          <Text style={styles.lastCompletedRoutineSectionTitle}>
+            Drills from the last warm-up
+          </Text>
+        </View>
+        <Carousel
+          data={routine.data}
+          renderItem={(item) => (
+            <Link href={`/instructions/${item}/`} asChild>
+              <DrillInfoCard id={item} />
+            </Link>
+          )}
+          // TODO: on real content there won't be a need for index
+          keyExtractor={(item, index) => `${item}:${index}`}
+          onMorePress={() => {
+            // TODO
+            router.push(`/routine-details/${'defaultMedium'}/`)
+          }}
+        />
+      </ScrollView>
+    )
+  }
 
   return (
     <>
@@ -91,7 +142,7 @@ export default function MainScreen() {
     <>
       <Stack.Screen
         options={{
-          title: '',
+          title: null,
           headerLeft: () => (
             <View style={styles.profileRow}>
               <View style={styles.profileIconBox}>
@@ -178,6 +229,34 @@ const themedStyles = AppStyleSheet.create({
   },
   descriptionCtaText: {
     fontFamily: 'rubik 700',
+    fontSize: 16,
+  },
+  completedRoutineTitleContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 40,
+  },
+  completedRoutineTitle: {
+    color: 'text primary',
+    fontFamily: 'rubik 600',
+    fontSize: 20,
+  },
+  completedRoutineCaptionContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 40,
+  },
+  completedRoutineCaption: {
+    color: 'text primary',
+    fontFamily: 'rubik 400',
+    fontSize: 14,
+  },
+  lastCompletedRoutineSectionTitleContainer: {
+    paddingTop: 50,
+    paddingHorizontal: 15,
+    paddingBottom: 15,
+  },
+  lastCompletedRoutineSectionTitle: {
+    color: 'text primary',
+    fontFamily: 'rubik 600',
     fontSize: 16,
   },
 })
