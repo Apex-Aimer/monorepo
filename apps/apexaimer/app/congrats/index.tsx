@@ -113,6 +113,7 @@ export default function RoutineScreen() {
             <TouchableOpacity
               onPress={() => {
                 router.replace('/')
+                setRoutineOfTheDayCompleted(true)
               }}
             >
               <XMarkIcon
