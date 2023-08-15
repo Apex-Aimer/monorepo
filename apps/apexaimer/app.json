@@ -35,6 +35,12 @@
             "deploymentTarget": "14.0"
           }
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to personalize your experience (i.e. choose an avatar)."
+        }
       ]
     ],
     "experiments": {

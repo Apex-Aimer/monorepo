@@ -1,5 +1,6 @@
 import { atom, selector, selectorFamily, useRecoilValue } from 'recoil'
 import { RoutineService } from './routines/RoutineService'
+import { ImageSourcePropType, ImageURISource } from 'react-native'
 
 export enum DurationLevels {
   Short,
@@ -107,6 +108,11 @@ export const congratsMotivation = atom({
 export const name = atom({
   key: 'name',
   default: 'Legend',
+})
+
+export const avatar = atom<string | null>({
+  key: 'avatar',
+  default: null,
 })
 
 export function useUserName() {

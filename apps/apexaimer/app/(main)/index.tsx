@@ -29,6 +29,7 @@ import { FadeInView } from '../components/FadeInView'
 import { Carousel } from './Carousel'
 import { DrillInfoCard } from './DrillInfoCard'
 import { useAppColorScheme } from '../components/ThemeProvider'
+import { Avatar } from '../components/Avatar'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -148,12 +149,7 @@ function ProfileButton() {
   return (
     <Link href="/profile/" asChild>
       <TouchableOpacity style={styles.profileRow} activeOpacity={0.6}>
-        <View style={styles.profileIconBox}>
-          <UserIcon
-            size={20}
-            color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
-          />
-        </View>
+        <Avatar size={24} />
         <Text style={styles.profileText}>{name}</Text>
       </TouchableOpacity>
     </Link>
@@ -194,14 +190,6 @@ const themedStyles = AppStyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-  },
-  profileIconBox: {
-    backgroundColor: 'text primary',
-    padding: 3,
-    borderRadius: 5,
-  },
-  profileIcon: {
-    backgroundColor: 'text primary inverted',
   },
   profileText: {
     color: 'text primary',

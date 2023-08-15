@@ -1,13 +1,79 @@
+import { useState } from 'react'
 import { Stack } from 'expo-router'
-import { UserIcon } from 'react-native-heroicons/solid'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
+import { moveAsync, documentDirectory, deleteAsync } from 'expo-file-system'
+import { useRecoilState } from 'recoil'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { PrimaryGradientText } from '../../components/PrimaryGradientText'
 import { SettingsSection } from '../SettingsSection'
-import { useRecoilState } from 'recoil'
-import { name as nameSelector } from '../../store'
+import { name as nameSelector, avatar as avatarSelector } from '../../store'
+import { Avatar } from '../../components/Avatar'
+
+async function pickImage() {
+  const pickResult = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    aspect: [1, 1],
+    quality: 0.2,
+    allowsEditing: true,
+  })
+
+  if (pickResult.canceled) {
+    return null
+  }
+
+  if (pickResult.assets.length === 0) {
+    return null
+  }
+
+  const pickedImage = pickResult.assets[0]
+
+  const fileType = pickedImage.uri.replace(/.*(\.[a-z]+)$/, '$1')
+
+  const uriInDocuments = `${documentDirectory}avatar${fileType}`
+
+  try {
+    await deleteAsync(uriInDocuments)
+    await moveAsync({
+      from: pickedImage.uri,
+      to: uriInDocuments,
+    })
+  } catch {
+    return null
+  }
+
+  return uriInDocuments
+}
+
+function AvatarSelect() {
+  const styles = useAppStyles(themedStyles)
+  const [busy, setBusy] = useState(false)
+  const [avatar, setAvatar] = useRecoilState(avatarSelector)
+
+  return (
+    <View style={styles.profileDetails}>
+      <Avatar size={80} loading={busy} />
+      <TouchableOpacity
+        onPress={async () => {
+          setBusy(true)
+          const imageUri = await pickImage()
+
+          if (imageUri != null) {
+            setAvatar({ uri: imageUri, cacheKey: Date.now().toString() })
+          }
+
+          setBusy(false)
+        }}
+      >
+        <PrimaryGradientText style={styles.profileText}>
+          Edit photo
+        </PrimaryGradientText>
+      </TouchableOpacity>
+    </View>
+  )
+}
 
 function NameInput() {
   const styles = useAppStyles(themedStyles)
@@ -43,20 +109,7 @@ export default function ProfileDetailsScreen() {
           headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
-
-      <View style={styles.profileDetails}>
-        <View style={styles.profileIconBox}>
-          <UserIcon
-            size={50}
-            color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
-          />
-        </View>
-        <TouchableOpacity>
-          <PrimaryGradientText style={styles.profileText}>
-            Edit photo
-          </PrimaryGradientText>
-        </TouchableOpacity>
-      </View>
+      <AvatarSelect />
       <View style={styles.sectionContainer}>
         <SettingsSection
           rows={[
@@ -98,17 +151,6 @@ const themedStyles = AppStyleSheet.create({
     alignItems: 'center',
     gap: 15,
   },
-  profileIconBox: {
-    width: 80,
-    aspectRatio: 1,
-    backgroundColor: 'text primary',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profileIcon: {
-    backgroundColor: 'text primary inverted',
-  },
   profileText: {
     fontFamily: 'rubik 500',
     fontSize: 16,
@@ -120,7 +162,7 @@ const themedStyles = AppStyleSheet.create({
   },
   profileNameContainer: {
     flex: 1,
-    paddingRight: 10,
+    paddingRight: 20,
     paddingLeft: 20,
     height: 20,
   },

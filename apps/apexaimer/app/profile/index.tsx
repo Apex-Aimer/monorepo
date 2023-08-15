@@ -12,6 +12,7 @@ import { EnvelopeIcon } from 'react-native-heroicons/outline'
 import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
 import { nativeApplicationVersion } from 'expo-application'
 import { useUserName } from '../store'
+import { Avatar } from '../components/Avatar'
 
 export default function ProfileScreen() {
   const styles = useAppStyles(themedStyles)
@@ -34,12 +35,7 @@ export default function ProfileScreen() {
       />
       <ScrollView contentContainerStyle={{ paddingBottom: bottom }}>
         <View style={styles.profileDetails}>
-          <View style={styles.profileIconBox}>
-            <UserIcon
-              size={50}
-              color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
-            />
-          </View>
+          <Avatar size={80} />
           <Text style={styles.profileText}>{name}</Text>
         </View>
         <View style={styles.sectionContainer}>
@@ -165,17 +161,6 @@ const themedStyles = AppStyleSheet.create({
     paddingTop: 20,
     alignItems: 'center',
     gap: 15,
-  },
-  profileIconBox: {
-    width: 80,
-    aspectRatio: 1,
-    backgroundColor: 'text primary',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  profileIcon: {
-    backgroundColor: 'text primary inverted',
   },
   profileText: {
     color: 'text primary',
