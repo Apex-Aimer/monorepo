@@ -22,6 +22,7 @@ import {
   isRoutineOfTheDayCompleted,
   routineIntensityLevel,
   routineOfTheDay,
+  useUserName,
 } from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
 import { FadeInView } from '../components/FadeInView'
@@ -140,6 +141,25 @@ function Routine() {
   )
 }
 
+function ProfileButton() {
+  const styles = useAppStyles(themedStyles)
+  const name = useUserName()
+
+  return (
+    <Link href="/profile/" asChild>
+      <TouchableOpacity style={styles.profileRow} activeOpacity={0.6}>
+        <View style={styles.profileIconBox}>
+          <UserIcon
+            size={20}
+            color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
+          />
+        </View>
+        <Text style={styles.profileText}>{name}</Text>
+      </TouchableOpacity>
+    </Link>
+  )
+}
+
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
 
@@ -148,21 +168,7 @@ export default function MainScreen() {
       <Stack.Screen
         options={{
           title: null,
-          headerLeft: () => (
-            <Link href="/profile/" asChild>
-              <TouchableOpacity style={styles.profileRow} activeOpacity={0.6}>
-                <View style={styles.profileIconBox}>
-                  <UserIcon
-                    size={20}
-                    color={
-                      StyleSheet.flatten(styles.profileIcon).backgroundColor
-                    }
-                  />
-                </View>
-                <Text style={styles.profileText}>Legend</Text>
-              </TouchableOpacity>
-            </Link>
-          ),
+          headerLeft: () => <ProfileButton />,
           headerRight: () => null,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,

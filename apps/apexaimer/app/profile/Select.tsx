@@ -65,7 +65,7 @@ export function Select<T extends unknown>({
             el
           ) : (
             <>
-              <View style={styles.separator} />
+              <View key={`separator:${index}`} style={styles.separator} />
               {el}
             </>
           )

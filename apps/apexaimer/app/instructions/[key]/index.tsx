@@ -97,6 +97,7 @@ export default function InstructionsScreen() {
           }}
           backdropComponent={renderBackdrop}
           backgroundStyle={styles.sheet}
+          handleIndicatorStyle={styles.sheetHandleIndicatorStyle}
         >
           <View style={styles.sheetTitleContainer}>
             <CoverIcon type={type} size={40} />
@@ -160,6 +161,9 @@ const themedStyles = AppStyleSheet.create({
   sheetBackdrop: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'backdrop',
+  },
+  sheetHandleIndicatorStyle: {
+    backgroundColor: 'line',
   },
   sheetTitleContainer: {
     flexDirection: 'row',

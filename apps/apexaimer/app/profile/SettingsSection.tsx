@@ -74,16 +74,28 @@ export function SettingsSection<T>({ rows }: Props<T>) {
 
           if (onPress != null) {
             return (
-              <TouchableOpacity style={styles.row} onPress={onPress}>
+              <TouchableOpacity
+                key={label}
+                style={styles.row}
+                onPress={onPress}
+              >
                 {row}
               </TouchableOpacity>
             )
           }
 
+          if (href != null) {
+            return (
+              <Link key={label} href={href} asChild>
+                <TouchableOpacity style={styles.row}>{row}</TouchableOpacity>
+              </Link>
+            )
+          }
+
           return (
-            <Link key={JSON.stringify(href)} href={href} asChild>
-              <TouchableOpacity style={styles.row}>{row}</TouchableOpacity>
-            </Link>
+            <View key={label} style={styles.row}>
+              {row}
+            </View>
           )
         })
         .flatMap((el, index) =>
@@ -91,7 +103,7 @@ export function SettingsSection<T>({ rows }: Props<T>) {
             el
           ) : (
             <>
-              <View style={styles.separator} />
+              <View key={`separator:${index}`} style={styles.separator} />
               {el}
             </>
           )

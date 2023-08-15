@@ -119,8 +119,7 @@ export type AppColorSchemeName = ColorSchemeName | 'system'
 // TODO: persist it
 export const preferredAppColorScheme = atom<AppColorSchemeName>({
   key: 'appColorScheme',
-  // TODO: make dark default
-  default: 'system',
+  default: 'dark',
 })
 
 export function useAppColorScheme() {

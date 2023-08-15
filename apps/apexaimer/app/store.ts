@@ -1,4 +1,4 @@
-import { atom, selector, selectorFamily } from 'recoil'
+import { atom, selector, selectorFamily, useRecoilValue } from 'recoil'
 import { RoutineService } from './routines/RoutineService'
 
 export enum DurationLevels {
@@ -101,3 +101,14 @@ export const congratsMotivation = atom({
     subtitle: ' Embrace the fun in the game today.',
   },
 })
+
+// --- User ---
+
+export const name = atom({
+  key: 'name',
+  default: 'Legend',
+})
+
+export function useUserName() {
+  return useRecoilValue(name)
+}

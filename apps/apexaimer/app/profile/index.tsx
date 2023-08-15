@@ -11,11 +11,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { EnvelopeIcon } from 'react-native-heroicons/outline'
 import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
 import { nativeApplicationVersion } from 'expo-application'
+import { useUserName } from '../store'
 
 export default function ProfileScreen() {
   const styles = useAppStyles(themedStyles)
 
   const { bottom } = useSafeAreaInsets()
+
+  const name = useUserName()
 
   return (
     <>
@@ -37,7 +40,7 @@ export default function ProfileScreen() {
               color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
             />
           </View>
-          <Text style={styles.profileText}>Legend</Text>
+          <Text style={styles.profileText}>{name}</Text>
         </View>
         <View style={styles.sectionContainer}>
           <View style={styles.sectionTitleContainer}>
