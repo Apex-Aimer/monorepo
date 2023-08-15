@@ -110,7 +110,12 @@ export const name = atom({
   default: 'Legend',
 })
 
-export const avatar = atom<string | null>({
+interface Avatar {
+  uri: string
+  cacheKey: string
+}
+
+export const avatar = atom<Avatar | null>({
   key: 'avatar',
   default: null,
 })

@@ -1,25 +1,126 @@
 import { Stack } from 'expo-router'
-import { headerLeft } from '../components/HeaderBackButton'
+import { ScrollView, Text, View, Share } from 'react-native'
+import { StarIcon, UserGroupIcon } from 'react-native-heroicons/solid'
+import { nativeApplicationVersion } from 'expo-application'
+import { EnvelopeIcon } from 'react-native-heroicons/outline'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import * as MailComposer from 'expo-mail-composer'
+import * as Linking from 'expo-linking'
+import * as Device from 'expo-device'
+import * as StoreReview from 'expo-store-review'
+import * as Sharing from 'expo-sharing'
+
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { StarIcon, UserGroupIcon, UserIcon } from 'react-native-heroicons/solid'
+import { headerLeft } from '../components/HeaderBackButton'
 import { SettingsSection } from './SettingsSection'
 import { InstagramIcon } from './icons/Instagram'
 import { TwitterIcon } from './icons/Twitter'
 import { RedditIcon } from './icons/Reddit'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { EnvelopeIcon } from 'react-native-heroicons/outline'
 import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
-import { nativeApplicationVersion } from 'expo-application'
 import { useUserName } from '../store'
 import { Avatar } from '../components/Avatar'
+import { useEffect, useState } from 'react'
+
+async function sendUsMail() {
+  const supportMail = 'support@apexaimer.com'
+
+  if (!(await MailComposer.isAvailableAsync())) {
+    Linking.openURL(`mailto:${supportMail}`)
+  }
+
+  try {
+    await MailComposer.composeAsync({
+      recipients: [supportMail],
+      subject: 'Feedback on ApexAimer',
+      body: `
+
+
+
+
+The following information may help us solve issues faster
+ApexAimer ${nativeApplicationVersion} - ${Device.osName} - ${Device.osVersion} - ${Device.modelName}
+`,
+    })
+  } catch {
+    // no-op
+  }
+}
+
+async function reviewUs() {
+  if (!(await StoreReview.hasAction())) {
+    return
+  }
+
+  try {
+    await StoreReview.requestReview()
+  } catch {
+    // no-op
+  }
+}
+
+function useCanRequestReview() {
+  const [canRate, setCanRate] = useState(true)
+
+  useEffect(() => {
+    ;(async () => {
+      const possible = await StoreReview.hasAction()
+
+      if (possible) {
+        return
+      }
+
+      setCanRate(false)
+    })()
+  }, [])
+
+  return canRate
+}
+
+async function shareUs() {
+  if (!(await Sharing.isAvailableAsync())) {
+    return
+  }
+
+  // iOS: https://apps.apple.com/us/app/gentler-streak-health-fitness/id1576857102
+  // TODO: Android link
+  const appLink = 'TODO'
+
+  try {
+    // TODO: create an image to share
+    Share.share({
+      message: `${appLink}
+Hey! I’ve found an incredible app called ApexAimer. It’s the most motivating app I’ve ever tried. You should give it a go! Let me know what you think!`,
+    })
+  } catch {
+    // no-op
+  }
+}
+
+function useCanShare() {
+  const [canShare, setCanShare] = useState(true)
+
+  useEffect(() => {
+    ;(async () => {
+      const possible = await Sharing.isAvailableAsync()
+
+      if (possible) {
+        return
+      }
+
+      setCanShare(false)
+    })()
+  }, [])
+
+  return canShare
+}
 
 export default function ProfileScreen() {
   const styles = useAppStyles(themedStyles)
-
   const { bottom } = useSafeAreaInsets()
 
   const name = useUserName()
+  const canRequestReview = useCanRequestReview()
+  const canShare = useCanShare()
 
   return (
     <>
@@ -67,7 +168,7 @@ export default function ProfileScreen() {
                 label: 'Contact Us',
                 labelIcon: EnvelopeIcon,
                 icon: { external: false },
-                href: 'https://google.com',
+                onPress: sendUsMail,
               },
             ]}
           />
@@ -100,19 +201,22 @@ export default function ProfileScreen() {
           />
           <SettingsSection
             rows={[
-              {
-                label: 'Write a Review',
-                labelIcon: StarIcon,
-                icon: { external: true },
-                href: 'https://google.com',
-              },
-              {
-                label: 'Recommend ApexAimer',
-                labelIcon: UserGroupIcon,
-                icon: { external: false },
-                // TODO: call share
-                href: 'https://google.com',
-              },
+              canRequestReview
+                ? {
+                    label: 'Write a Review',
+                    labelIcon: StarIcon,
+                    icon: { external: true },
+                    onPress: reviewUs,
+                  }
+                : null,
+              canShare
+                ? {
+                    label: 'Recommend ApexAimer',
+                    labelIcon: UserGroupIcon,
+                    icon: { external: false },
+                    onPress: shareUs,
+                  }
+                : null,
             ]}
           />
         </View>
