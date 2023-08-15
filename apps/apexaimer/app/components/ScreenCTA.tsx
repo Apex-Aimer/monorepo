@@ -19,13 +19,27 @@ export function ScreenCTA(props: Props) {
     <LinearGradient
       colors={[
         theme['bg'] as string,
+        colorWithOpacity(theme['bg'] as string, 0.8),
         colorWithOpacity(theme['bg'] as string, 0),
       ]}
-      locations={[0.6, 1]}
+      locations={[0, 0.4, 1]}
       start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
       style={[styles.wrapper, { paddingBottom: Math.max(bottom, 30) }]}
+      pointerEvents="box-none"
     >
+      <LinearGradient
+        colors={[
+          theme['bg'] as string,
+          colorWithOpacity(theme['bg'] as string, 0.8),
+          colorWithOpacity(theme['bg'] as string, 0),
+        ]}
+        locations={[0, 0.4, 1]}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={styles.wrapper}
+        pointerEvents="box-none"
+      />
       <View style={styles.inner}>
         <PrimaryButton {...props} />
       </View>

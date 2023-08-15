@@ -111,13 +111,25 @@ export function RoutinCTAWithTimer({ duration, onEnd }: Props) {
     <LinearGradient
       colors={[
         theme['bg'] as string,
+        colorWithOpacity(theme['bg'] as string, 0.8),
         colorWithOpacity(theme['bg'] as string, 0),
       ]}
-      locations={[0.6, 1]}
+      locations={[0, 0.4, 1]}
       start={{ x: 0.5, y: 1 }}
       end={{ x: 0.5, y: 0 }}
       style={[styles.wrapper, { paddingBottom: Math.max(bottom, 30) }]}
     >
+      <LinearGradient
+        colors={[
+          theme['bg'] as string,
+          colorWithOpacity(theme['bg'] as string, 0.8),
+          colorWithOpacity(theme['bg'] as string, 0),
+        ]}
+        locations={[0, 0.4, 1]}
+        start={{ x: 0.5, y: 1 }}
+        end={{ x: 0.5, y: 0 }}
+        style={styles.wrapper}
+      />
       <View style={styles.inner}>
         <GestureDetector gesture={tapGesture}>
           <AnimatedLinearGradient

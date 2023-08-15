@@ -23,7 +23,7 @@ interface SettingsRow<T> extends SettingsRowIconProps {
 }
 
 interface Props<T> {
-  rows: SettingsRow<T>[]
+  rows: (SettingsRow<T> | null)[]
 }
 
 function SettingsRowIcon({ icon }: SettingsRowIconProps) {
@@ -59,6 +59,7 @@ export function SettingsSection<T>({ rows }: Props<T>) {
   return (
     <View style={styles.container}>
       {rows
+        .filter((it) => it != null)
         .map(({ label, labelIcon: LabelIcon, href, icon, onPress }) => {
           const row = (
             <>
