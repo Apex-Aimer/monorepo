@@ -99,14 +99,9 @@ export function SettingsSection<T>({ rows }: Props<T>) {
           )
         })
         .flatMap((el, index) =>
-          index === 0 ? (
-            el
-          ) : (
-            <>
-              <View key={`separator:${index}`} style={styles.separator} />
-              {el}
-            </>
-          )
+          index === 0
+            ? [el]
+            : [<View key={`separator:${index}`} style={styles.separator} />, el]
         )}
     </View>
   )

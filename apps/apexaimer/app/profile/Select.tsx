@@ -61,14 +61,9 @@ export function Select<T extends unknown>({
           )
         })
         .flatMap((el, index) =>
-          index === 0 ? (
-            el
-          ) : (
-            <>
-              <View key={`separator:${index}`} style={styles.separator} />
-              {el}
-            </>
-          )
+          index === 0
+            ? [el]
+            : [<View key={`separator:${index}`} style={styles.separator} />, el]
         )}
     </View>
   )
