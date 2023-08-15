@@ -1,5 +1,10 @@
 import { ImageStyle, TextStyle, ViewStyle, useColorScheme } from 'react-native'
-import { ColorsPalette, darkTheme, lightTheme } from './ThemeProvider'
+import {
+  ColorsPalette,
+  darkTheme,
+  lightTheme,
+  useAppColorScheme,
+} from './ThemeProvider'
 import { Fonts } from './FontsProvider'
 
 interface AppViewStyle extends ViewStyle {
@@ -88,7 +93,7 @@ export function useAppStyles<
 }): {
   [P in keyof T]: ViewStyle | TextStyle | ImageStyle
 } {
-  const colorScheme = useColorScheme()
+  const colorScheme = useAppColorScheme()
 
   return colorScheme === 'light' ? styles.light : styles.dark
 }

@@ -11,6 +11,7 @@ import { CoverIcon } from '../../components/Drill/CoverIcon'
 import { DrillType } from '../../routines/routines'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
+import { Portal } from '@gorhom/portal'
 
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {
@@ -72,6 +73,7 @@ export default function InstructionsScreen() {
             </TouchableOpacity>
           ),
           contentStyle: styles.bg,
+          headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
       <View style={styles.container}>
@@ -84,29 +86,31 @@ export default function InstructionsScreen() {
           <Text style={styles.content}>{instructions.raw}</Text>
         </View>
       </View>
-      <BottomSheet
-        ref={drillTypeSheetRef}
-        index={-1}
-        snapPoints={['50%']}
-        enablePanDownToClose
-        onClose={() => {
-          drillTypeSheetRef.current?.close()
-        }}
-        backdropComponent={renderBackdrop}
-        backgroundStyle={styles.sheet}
-      >
-        <View style={styles.sheetTitleContainer}>
-          <CoverIcon type={type} size={40} />
-          <Text style={styles.sheetTitleText}>
-            {DRILL_TYPE_DESCRIPTION[type].title}
-          </Text>
-        </View>
-        <View style={styles.sheetContentContainer}>
-          <Text style={styles.sheetContentText}>
-            {DRILL_TYPE_DESCRIPTION[type].description}
-          </Text>
-        </View>
-      </BottomSheet>
+      <Portal>
+        <BottomSheet
+          ref={drillTypeSheetRef}
+          index={-1}
+          snapPoints={['50%']}
+          enablePanDownToClose
+          onClose={() => {
+            drillTypeSheetRef.current?.close()
+          }}
+          backdropComponent={renderBackdrop}
+          backgroundStyle={styles.sheet}
+        >
+          <View style={styles.sheetTitleContainer}>
+            <CoverIcon type={type} size={40} />
+            <Text style={styles.sheetTitleText}>
+              {DRILL_TYPE_DESCRIPTION[type].title}
+            </Text>
+          </View>
+          <View style={styles.sheetContentContainer}>
+            <Text style={styles.sheetContentText}>
+              {DRILL_TYPE_DESCRIPTION[type].description}
+            </Text>
+          </View>
+        </BottomSheet>
+      </Portal>
     </>
   )
 }
@@ -117,6 +121,9 @@ const themedStyles = AppStyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  tint: {
+    backgroundColor: 'icon primary',
   },
   titleContainer: {
     paddingHorizontal: 15,

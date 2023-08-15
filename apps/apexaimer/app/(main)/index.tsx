@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import {
   FlatList,
   ScrollView,
@@ -6,6 +6,7 @@ import {
   Text,
   TextStyle,
   View,
+  TouchableOpacity,
 } from 'react-native'
 import { Link, Stack, router } from 'expo-router'
 import { UserIcon } from 'react-native-heroicons/solid'
@@ -26,6 +27,7 @@ import { PrimaryGradientText } from '../components/PrimaryGradientText'
 import { FadeInView } from '../components/FadeInView'
 import { Carousel } from './Carousel'
 import { DrillInfoCard } from './DrillInfoCard'
+import { useAppColorScheme } from '../components/ThemeProvider'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -34,6 +36,7 @@ function Routine() {
   const routine = useRecoilValue(routineOfTheDay)
   const isRoutineCompleted = useRecoilValue(isRoutineOfTheDayCompleted)
 
+  const appColorScheme = useAppColorScheme()
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
 
@@ -77,6 +80,7 @@ function Routine() {
   return (
     <>
       <FlatList
+        key={routine.data.length}
         ListHeaderComponent={
           <>
             <View style={styles.greetingWrapper}>
@@ -88,6 +92,7 @@ function Routine() {
               <SegmentedControl
                 values={['Short', 'Medium', 'Long']}
                 selectedIndex={intensityLevel}
+                appearance={appColorScheme}
                 onChange={(event) => {
                   setIntensityLevel(event.nativeEvent.selectedSegmentIndex)
                 }}
@@ -144,19 +149,24 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => (
-            <View style={styles.profileRow}>
-              <View style={styles.profileIconBox}>
-                <UserIcon
-                  size={20}
-                  color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
-                />
-              </View>
-              <Text style={styles.profileText}>Legend</Text>
-            </View>
+            <Link href="/profile/" asChild>
+              <TouchableOpacity style={styles.profileRow} activeOpacity={0.6}>
+                <View style={styles.profileIconBox}>
+                  <UserIcon
+                    size={20}
+                    color={
+                      StyleSheet.flatten(styles.profileIcon).backgroundColor
+                    }
+                  />
+                </View>
+                <Text style={styles.profileText}>Legend</Text>
+              </TouchableOpacity>
+            </Link>
           ),
           headerRight: () => null,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
+          headerShadowVisible: false,
         }}
       />
       {/* TODO: loading state for the routine */}
@@ -188,6 +198,7 @@ const themedStyles = AppStyleSheet.create({
     backgroundColor: 'text primary inverted',
   },
   profileText: {
+    color: 'text primary',
     fontFamily: 'rubik 500',
     fontSize: 16,
   },
