@@ -1,11 +1,12 @@
-import { StatusBar } from 'expo-status-bar'
+import { PropsWithChildren } from 'react'
 import { StyleSheet, View } from 'react-native'
-
+import { PortalProvider } from '@gorhom/portal'
 import { Stack } from 'expo-router'
+import { RecoilRoot } from 'recoil'
+
 import { ThemeProvider, useThemeColors } from './components/ThemeProvider'
 import { FontsProvider } from './components/FontsProvider'
-import { PropsWithChildren } from 'react'
-import { RecoilRoot } from 'recoil'
+import { ThemedStatusBar } from './components/ThemedStatusBar'
 
 function BG({ children }: PropsWithChildren) {
   const theme = useThemeColors()
@@ -17,15 +18,17 @@ function BG({ children }: PropsWithChildren) {
 export default function RootLayout() {
   return (
     <>
-      <StatusBar style="auto" />
       <FontsProvider>
-        <ThemeProvider>
-          <BG>
-            <RecoilRoot>
-              <Stack />
-            </RecoilRoot>
-          </BG>
-        </ThemeProvider>
+        <RecoilRoot>
+          <ThemedStatusBar />
+          <ThemeProvider>
+            <PortalProvider>
+              <BG>
+                <Stack />
+              </BG>
+            </PortalProvider>
+          </ThemeProvider>
+        </RecoilRoot>
       </FontsProvider>
     </>
   )

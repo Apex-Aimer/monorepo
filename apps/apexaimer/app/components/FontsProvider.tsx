@@ -1,5 +1,6 @@
 import {
   useFonts,
+  Rubik_300Light,
   Rubik_400Regular,
   Rubik_500Medium,
   Rubik_600SemiBold,
@@ -7,13 +8,11 @@ import {
   Rubik_800ExtraBold,
   Rubik_900Black,
 } from '@expo-google-fonts/rubik'
-import {
-  useFonts as useRubikMonoOneFonts,
-  RubikMonoOne_400Regular,
-} from '@expo-google-fonts/rubik-mono-one'
+import { RubikMonoOne_400Regular } from '@expo-google-fonts/rubik-mono-one'
 import { PropsWithChildren } from 'react'
 
 export const Fonts = {
+  'rubik 300': 'Rubik_300Light',
   'rubik 400': 'Rubik_400Regular',
   'rubik 500': 'Rubik_500Medium',
   'rubik 600': 'Rubik_600SemiBold',
@@ -25,6 +24,7 @@ export const Fonts = {
 
 export function FontsProvider({ children }: PropsWithChildren) {
   const [fontsLoaded] = useFonts({
+    Rubik_300Light,
     Rubik_400Regular,
     Rubik_500Medium,
     Rubik_600SemiBold,

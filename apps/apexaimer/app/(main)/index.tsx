@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import {
   FlatList,
   ScrollView,
@@ -6,6 +6,7 @@ import {
   Text,
   TextStyle,
   View,
+  TouchableOpacity,
 } from 'react-native'
 import { Link, Stack, router } from 'expo-router'
 import { UserIcon } from 'react-native-heroicons/solid'
@@ -21,11 +22,14 @@ import {
   isRoutineOfTheDayCompleted,
   routineIntensityLevel,
   routineOfTheDay,
+  useUserName,
 } from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
 import { FadeInView } from '../components/FadeInView'
 import { Carousel } from './Carousel'
 import { DrillInfoCard } from './DrillInfoCard'
+import { useAppColorScheme } from '../components/ThemeProvider'
+import { Avatar } from '../components/Avatar'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -34,6 +38,7 @@ function Routine() {
   const routine = useRecoilValue(routineOfTheDay)
   const isRoutineCompleted = useRecoilValue(isRoutineOfTheDayCompleted)
 
+  const appColorScheme = useAppColorScheme()
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
 
@@ -77,6 +82,7 @@ function Routine() {
   return (
     <>
       <FlatList
+        key={routine.data.length}
         ListHeaderComponent={
           <>
             <View style={styles.greetingWrapper}>
@@ -88,6 +94,7 @@ function Routine() {
               <SegmentedControl
                 values={['Short', 'Medium', 'Long']}
                 selectedIndex={intensityLevel}
+                appearance={appColorScheme}
                 onChange={(event) => {
                   setIntensityLevel(event.nativeEvent.selectedSegmentIndex)
                 }}
@@ -135,6 +142,20 @@ function Routine() {
   )
 }
 
+function ProfileButton() {
+  const styles = useAppStyles(themedStyles)
+  const name = useUserName()
+
+  return (
+    <Link href="/profile/" asChild>
+      <TouchableOpacity style={styles.profileRow} activeOpacity={0.6}>
+        <Avatar size={24} />
+        <Text style={styles.profileText}>{name}</Text>
+      </TouchableOpacity>
+    </Link>
+  )
+}
+
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
 
@@ -143,20 +164,11 @@ export default function MainScreen() {
       <Stack.Screen
         options={{
           title: null,
-          headerLeft: () => (
-            <View style={styles.profileRow}>
-              <View style={styles.profileIconBox}>
-                <UserIcon
-                  size={20}
-                  color={StyleSheet.flatten(styles.profileIcon).backgroundColor}
-                />
-              </View>
-              <Text style={styles.profileText}>Legend</Text>
-            </View>
-          ),
+          headerLeft: () => <ProfileButton />,
           headerRight: () => null,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
+          headerShadowVisible: false,
         }}
       />
       {/* TODO: loading state for the routine */}
@@ -179,15 +191,8 @@ const themedStyles = AppStyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  profileIconBox: {
-    backgroundColor: 'text primary',
-    padding: 3,
-    borderRadius: 5,
-  },
-  profileIcon: {
-    backgroundColor: 'text primary inverted',
-  },
   profileText: {
+    color: 'text primary',
     fontFamily: 'rubik 500',
     fontSize: 16,
   },

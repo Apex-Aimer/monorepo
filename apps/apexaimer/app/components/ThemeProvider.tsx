@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
-import { ColorValue, useColorScheme } from 'react-native'
+import { ColorSchemeName, ColorValue, useColorScheme } from 'react-native'
+import { atom, useRecoilValue } from 'recoil'
 
 const toFixed = (valueArg: string | number, digits: number = 1): string => {
   let value = valueArg
@@ -36,6 +37,8 @@ interface StaticColorsPalette {
   'accent secondary': ColorValue
   'icon primary': ColorValue
   'icon shadow': ColorValue
+  'line accent': ColorValue
+  'line accent disabled': ColorValue
 }
 
 export interface ColorsPalette
@@ -83,7 +86,7 @@ const darkColors: ThemedColorsPalette = {
     colorWithOpacity('#424242', 0),
   ],
   'exercise card gradient': ['#424242', colorWithOpacity('#424242', 0.5)],
-  backdrop: colorWithOpacity('#F4F5EF', 0.4),
+  backdrop: colorWithOpacity('#000000', 0.4),
 }
 
 const staticColors: StaticColorsPalette = {
@@ -92,6 +95,8 @@ const staticColors: StaticColorsPalette = {
   'accent secondary': '#FF9800',
   'icon primary': '#FFFFFF',
   'icon shadow': colorWithOpacity('#000000', 0.05),
+  'line accent': '#FF5722',
+  'line accent disabled': colorWithOpacity('#FF5722', 0.5),
 }
 
 const defaultColors: ColorsPalette = {
@@ -109,10 +114,25 @@ export const darkTheme = {
   ...staticColors,
 }
 
+export type AppColorSchemeName = ColorSchemeName | 'system'
+
+// TODO: persist it
+export const preferredAppColorScheme = atom<AppColorSchemeName>({
+  key: 'appColorScheme',
+  default: 'dark',
+})
+
+export function useAppColorScheme() {
+  const appColorScheme = useRecoilValue(preferredAppColorScheme)
+  const systemColorScheme = useColorScheme()
+
+  return appColorScheme === 'system' ? systemColorScheme : appColorScheme
+}
+
 const ThemeContext = createContext<ColorsPalette>(defaultColors)
 
 export function ThemeProvider({ children }: React.PropsWithChildren) {
-  const colorScheme = useColorScheme()
+  const colorScheme = useAppColorScheme()
 
   return (
     <ThemeContext.Provider

@@ -3,7 +3,7 @@ import { FlatList, View } from 'react-native'
 import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import { useRecoilValue } from 'recoil'
 
-import { headerLeftThemed } from '../../components/HeaderBackButton'
+import { headerLeft } from '../../components/HeaderBackButton'
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { routine as routineSelector } from '../../store'
 import { Drill } from '../../components/Drill/Drill'
@@ -48,10 +48,11 @@ export default function RoutineDetailsScreen() {
       <Stack.Screen
         options={{
           title: '',
-          headerLeft: headerLeftThemed,
+          headerLeft,
           headerRight: () => null,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
+          headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
       <Suspense fallback={null}>
@@ -67,6 +68,9 @@ const themedStyles = AppStyleSheet.create({
   },
   content: {
     backgroundColor: 'bg',
+  },
+  tint: {
+    backgroundColor: 'text primary',
   },
   descriptionCtaText: {
     fontFamily: 'rubik 700',

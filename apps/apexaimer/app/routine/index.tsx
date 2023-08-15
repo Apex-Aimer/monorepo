@@ -66,8 +66,8 @@ function Routine() {
   return (
     <>
       <View style={styles.wrapper}>
-        {/* TODO: loading state */}
-        <Suspense>
+        {/* TODO: loading fallback */}
+        <Suspense fallback={null}>
           <DrillInstructionVideo id={routine.data[activeDrillIndex]} />
         </Suspense>
         <FlatList
@@ -137,6 +137,7 @@ export default function RoutineScreen() {
           headerLeft,
           headerTransparent: true,
           contentStyle: styles.bg,
+          headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
       <Suspense fallback={null}>
@@ -149,6 +150,9 @@ export default function RoutineScreen() {
 const themedStyles = AppStyleSheet.create({
   bg: {
     backgroundColor: 'bg',
+  },
+  tint: {
+    backgroundColor: 'icon primary',
   },
   wrapper: {
     flex: 1,

@@ -3,32 +3,42 @@ import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { router } from 'expo-router'
 import { ChevronLeftIcon } from 'react-native-heroicons/solid'
 
-export function HeaderBackButton() {
+type HeaderButtonProps = {
+  /**
+   * Tint color for the header.
+   */
+  tintColor?: string
+  /**
+   * Whether it's possible to navigate back in stack.
+   */
+  canGoBack: boolean
+}
+
+export type HeaderBackButtonProps = HeaderButtonProps & {
+  /**
+   * Label text for the button. Usually the title of the previous screen.
+   * By default, this is only shown on iOS.
+   */
+  label?: string
+}
+
+export function HeaderBackButton({ tintColor }: HeaderBackButtonProps) {
   const styles = useAppStyles(themedStyles)
 
   return (
     <TouchableOpacity onPress={router.back} style={styles.backButtonPressable}>
       <ChevronLeftIcon
-        color={StyleSheet.flatten(styles.backButtonIcon).backgroundColor}
+        color={
+          tintColor || StyleSheet.flatten(styles.backButtonIcon).backgroundColor
+        }
       />
     </TouchableOpacity>
   )
 }
 
-export function HeaderBackButtonThemed() {
-  const styles = useAppStyles(themedStyles)
-
-  return (
-    <TouchableOpacity onPress={router.back} style={styles.backButtonPressable}>
-      <ChevronLeftIcon
-        color={StyleSheet.flatten(styles.backButtonThemed).backgroundColor}
-      />
-    </TouchableOpacity>
-  )
-}
-
-export const headerLeft = () => <HeaderBackButton />
-export const headerLeftThemed = () => <HeaderBackButtonThemed />
+export const headerLeft = ({ tintColor }: HeaderBackButtonProps) => (
+  <HeaderBackButton tintColor={tintColor} />
+)
 
 const themedStyles = AppStyleSheet.create({
   backButtonPressable: {
