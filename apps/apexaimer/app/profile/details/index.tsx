@@ -37,11 +37,17 @@ async function pickImage() {
 
   try {
     await deleteAsync(uriInDocuments)
+  } catch {
+    // no-op
+  }
+
+  try {
     await moveAsync({
       from: pickedImage.uri,
       to: uriInDocuments,
     })
-  } catch {
+  } catch (e) {
+    console.log(e)
     return null
   }
 
