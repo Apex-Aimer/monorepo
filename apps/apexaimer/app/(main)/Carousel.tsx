@@ -14,6 +14,7 @@ import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Dots } from './Carousel/Dots'
 import { normalizeScrollX } from './Carousel/RtlConverter'
 import { usePositions } from './Carousel/usePositions'
+import { Button } from '../components/Button'
 
 interface Props<T> {
   data: T[]
@@ -125,9 +126,13 @@ export function Carousel<T extends unknown>({
             currentGravityPosition={currentGravityPosition}
           />
         </View>
-        <TouchableOpacity style={styles.moreAction} onPress={onMorePress}>
+        <Button
+          style={styles.moreAction}
+          onPress={onMorePress}
+          haptic="selection"
+        >
           <Text style={styles.moreActionText}>See all {'>'}</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
     </View>
   )

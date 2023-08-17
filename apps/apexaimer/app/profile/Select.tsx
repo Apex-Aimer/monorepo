@@ -3,6 +3,7 @@ import { Link } from 'expo-router'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { useState } from 'react'
+import { Button } from '../components/Button'
 
 interface Item<T> {
   value: T
@@ -28,13 +29,14 @@ export function Select<T extends unknown>({
       {items
         .map(({ label, value }) => {
           return (
-            <TouchableOpacity
+            <Button
               key={label}
               style={styles.row}
               onPress={() => {
                 setCurrentValue(value)
                 onChange(value)
               }}
+              haptic="selection"
             >
               <Text
                 style={[
@@ -57,7 +59,7 @@ export function Select<T extends unknown>({
                   ]}
                 ></View>
               </View>
-            </TouchableOpacity>
+            </Button>
           )
         })
         .flatMap((el, index) =>

@@ -1,10 +1,12 @@
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import * as Haptics from 'expo-haptics'
+
 import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { colorWithOpacity, useThemeColors } from './ThemeProvider'
 import { PRIMARY_BUTTON_HEIGHT } from './PrimaryButton'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface Props extends PropsWithChildren {
   duration: number
@@ -69,14 +71,21 @@ export function RoutinCTAWithTimer({ duration, onEnd }: Props) {
   const [active, setActive] = useState(true)
 
   const disable = useCallback(() => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
+
     setActive(false)
     onEnd()
   }, [onEnd])
+
+  const onStartHaptic = useCallback(() => {
+    Haptics.selectionAsync()
+  }, [])
 
   const tapGesture = Gesture.Tap()
     .enabled(active)
     .maxDuration(1000)
     .onBegin(() => {
+      runOnJS(onStartHaptic)()
       position.value = 0
       position.value = withTiming(WIDTH, { duration: 1000 }, (finished) => {
         if (!finished) {

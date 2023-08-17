@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { Link, Stack, router } from 'expo-router'
-import { UserIcon } from 'react-native-heroicons/solid'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import * as Haptics from 'expo-haptics'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Drill } from '../components/Drill/Drill'
@@ -30,6 +30,7 @@ import { Carousel } from './Carousel'
 import { DrillInfoCard } from './DrillInfoCard'
 import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
+import { Button } from '../components/Button'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -96,6 +97,7 @@ function Routine() {
                 selectedIndex={intensityLevel}
                 appearance={appColorScheme}
                 onChange={(event) => {
+                  Haptics.selectionAsync()
                   setIntensityLevel(event.nativeEvent.selectedSegmentIndex)
                 }}
               />
@@ -148,10 +150,10 @@ function ProfileButton() {
 
   return (
     <Link href="/profile/" asChild>
-      <TouchableOpacity style={styles.profileRow} activeOpacity={0.6}>
+      <Button style={styles.profileRow} activeOpacity={0.6} haptic="selection">
         <Avatar size={24} />
         <Text style={styles.profileText}>{name}</Text>
-      </TouchableOpacity>
+      </Button>
     </Link>
   )
 }

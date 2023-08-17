@@ -12,6 +12,7 @@ import { DrillType } from '../../routines/routines'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
 import { Portal } from '@gorhom/portal'
+import { Button } from '../../components/Button'
 
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {
@@ -63,14 +64,15 @@ export default function InstructionsScreen() {
           headerTransparent: true,
           headerLeft,
           headerRight: () => (
-            <TouchableOpacity
+            <Button
               style={styles.drillTypeHeaderButton}
               onPress={() => {
                 drillTypeSheetRef.current?.expand()
               }}
+              haptic="selection"
             >
               <CoverIcon type={type} size={30} />
-            </TouchableOpacity>
+            </Button>
           ),
           contentStyle: styles.bg,
           headerTintColor: styles.tint.backgroundColor as string,

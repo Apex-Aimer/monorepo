@@ -1,8 +1,10 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useCallback } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
+
 import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { useThemeColors } from './ThemeProvider'
+import { Button } from './Button'
 
 interface Props extends PropsWithChildren {
   onPress?(): void
@@ -11,8 +13,9 @@ interface Props extends PropsWithChildren {
 export function PrimaryButton({ children, onPress }: Props) {
   const theme = useThemeColors()
   const styles = useAppStyles(themedStyles)
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <Button onPress={onPress} haptic="impactLight">
       <LinearGradient
         colors={theme['primary gradient'] as string[]}
         start={{ x: 0, y: 0.5 }}
@@ -25,7 +28,7 @@ export function PrimaryButton({ children, onPress }: Props) {
           children
         )}
       </LinearGradient>
-    </TouchableOpacity>
+    </Button>
   )
 }
 

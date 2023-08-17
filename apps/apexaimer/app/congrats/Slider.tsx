@@ -1,12 +1,16 @@
 import { Text, View } from 'react-native'
-import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import Animated, {
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useCallback } from 'react'
+import * as Haptics from 'expo-haptics'
+
+import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 
 interface Props {
   initialIndex?: number
@@ -17,6 +21,19 @@ export function Slider({ initialIndex = 0 }: Props) {
 
   const width = useSharedValue(0)
   const disposition = useSharedValue(0)
+
+  const onChangeHaptic = useCallback(() => {
+    Haptics.selectionAsync()
+  }, [])
+
+  useAnimatedReaction(
+    () => disposition.value,
+    (cur, prev) => {
+      if (cur !== prev) {
+        runOnJS(onChangeHaptic)()
+      }
+    }
+  )
 
   const snapInterval = useDerivedValue(() => width.value / 4, [width])
 

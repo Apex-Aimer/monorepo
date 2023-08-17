@@ -6,6 +6,7 @@ import {
   ChevronRightIcon,
   ArrowTopRightOnSquareIcon,
 } from 'react-native-heroicons/solid'
+import { Button } from '../components/Button'
 
 interface SettingsRowIconProps {
   icon:
@@ -75,20 +76,23 @@ export function SettingsSection<T>({ rows }: Props<T>) {
 
           if (onPress != null) {
             return (
-              <TouchableOpacity
+              <Button
                 key={label}
                 style={styles.row}
                 onPress={onPress}
+                haptic="selection"
               >
                 {row}
-              </TouchableOpacity>
+              </Button>
             )
           }
 
           if (href != null) {
             return (
               <Link key={label} href={href} asChild>
-                <TouchableOpacity style={styles.row}>{row}</TouchableOpacity>
+                <Button style={styles.row} haptic="selection">
+                  {row}
+                </Button>
               </Link>
             )
           }

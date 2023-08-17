@@ -6,6 +6,7 @@ import { routineDrill } from '../store'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useThemeColors } from '../components/ThemeProvider'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
+import { Button } from '../components/Button'
 
 interface Props {
   id: string
@@ -18,7 +19,7 @@ export function DrillInfoCard({ id, onPress }: Props) {
   const { type, description } = useRecoilValue(routineDrill(id))
 
   return (
-    <TouchableOpacity style={styles.drillInfo} onPress={onPress}>
+    <Button style={styles.drillInfo} onPress={onPress} haptic="selection">
       <LinearGradient
         colors={theme['exercise card gradient'] as string[]}
         start={{ x: 1, y: 0.5 }}
@@ -39,7 +40,7 @@ export function DrillInfoCard({ id, onPress }: Props) {
           </PrimaryGradientText>
         </View>
       </View>
-    </TouchableOpacity>
+    </Button>
   )
 }
 

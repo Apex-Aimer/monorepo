@@ -3,7 +3,7 @@ import { Stack } from 'expo-router'
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { moveAsync, documentDirectory, deleteAsync } from 'expo-file-system'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { headerLeft } from '../../components/HeaderBackButton'
@@ -11,6 +11,7 @@ import { PrimaryGradientText } from '../../components/PrimaryGradientText'
 import { SettingsSection } from '../SettingsSection'
 import { name as nameSelector, avatar as avatarSelector } from '../../store'
 import { Avatar } from '../../components/Avatar'
+import { Button } from '../../components/Button'
 
 async function pickImage() {
   const pickResult = await ImagePicker.launchImageLibraryAsync({
@@ -50,12 +51,12 @@ async function pickImage() {
 function AvatarSelect() {
   const styles = useAppStyles(themedStyles)
   const [busy, setBusy] = useState(false)
-  const [avatar, setAvatar] = useRecoilState(avatarSelector)
+  const setAvatar = useSetRecoilState(avatarSelector)
 
   return (
     <View style={styles.profileDetails}>
       <Avatar size={80} loading={busy} />
-      <TouchableOpacity
+      <Button
         onPress={async () => {
           setBusy(true)
           const imageUri = await pickImage()
@@ -66,11 +67,12 @@ function AvatarSelect() {
 
           setBusy(false)
         }}
+        haptic="impactLight"
       >
         <PrimaryGradientText style={styles.profileText}>
           Edit photo
         </PrimaryGradientText>
-      </TouchableOpacity>
+      </Button>
     </View>
   )
 }

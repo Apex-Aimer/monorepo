@@ -8,6 +8,7 @@ import { PrimaryGradientText } from '../PrimaryGradientText'
 import { routineDrill } from '../../store'
 import { CoverIcon } from './CoverIcon'
 import { PropsWithChildren } from 'react'
+import { Button } from '../Button'
 
 interface DrillProps extends PropsWithChildren {
   id: string
@@ -89,9 +90,14 @@ export function Drill(props: DrillProps) {
   }
 
   return (
-    <TouchableOpacity style={styles.row} onPress={onPress} activeOpacity={0.6}>
+    <Button
+      style={styles.row}
+      onPress={onPress}
+      activeOpacity={0.6}
+      haptic="selection"
+    >
       <DrillInner {...props} />
-    </TouchableOpacity>
+    </Button>
   )
 }
 
