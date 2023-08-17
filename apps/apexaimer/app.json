@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "apexaimer",
-    "slug": "apexaimer",
+    "name": "ApexAimer",
+    "slug": "ApexAimer",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#282624"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -20,7 +20,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#282624"
       }
     },
     "web": {
