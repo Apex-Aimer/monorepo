@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import {
   FlatList,
   ScrollView,
@@ -6,9 +6,8 @@ import {
   Text,
   TextStyle,
   View,
-  TouchableOpacity,
 } from 'react-native'
-import { Link, Stack, router } from 'expo-router'
+import { Link, SplashScreen, Stack, router } from 'expo-router'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -22,6 +21,7 @@ import {
   isRoutineOfTheDayCompleted,
   routineIntensityLevel,
   routineOfTheDay,
+  useIsInitialStateReady,
   useUserName,
 } from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
@@ -31,6 +31,7 @@ import { DrillInfoCard } from './DrillInfoCard'
 import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
+import { Persistor } from '../components/Persistor/Persistor'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -158,8 +159,22 @@ function ProfileButton() {
   )
 }
 
+SplashScreen.preventAutoHideAsync()
+
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
+
+  const ready = useIsInitialStateReady()
+
+  useEffect(() => {
+    if (ready) {
+      return
+    }
+
+    setTimeout(() => {
+      SplashScreen.hideAsync()
+    })
+  }, [ready])
 
   return (
     <>
@@ -177,6 +192,7 @@ export default function MainScreen() {
       <Suspense fallback={null}>
         <Routine />
       </Suspense>
+      {ready && <Persistor />}
     </>
   )
 }

@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
-import { ColorSchemeName, ColorValue, useColorScheme } from 'react-native'
+import { ColorValue, useColorScheme } from 'react-native'
 import { atom, useRecoilValue } from 'recoil'
+import { preferredAppColorScheme } from '../store'
 
 const toFixed = (valueArg: string | number, digits: number = 1): string => {
   let value = valueArg
@@ -113,14 +114,6 @@ export const darkTheme = {
   ...darkColors,
   ...staticColors,
 }
-
-export type AppColorSchemeName = ColorSchemeName | 'system'
-
-// TODO: persist it
-export const preferredAppColorScheme = atom<AppColorSchemeName>({
-  key: 'appColorScheme',
-  default: 'dark',
-})
 
 export function useAppColorScheme() {
   const appColorScheme = useRecoilValue(preferredAppColorScheme)

@@ -13,10 +13,10 @@ import { headerLeft } from '../../components/HeaderBackButton'
 import { SettingsSection } from '../SettingsSection'
 import { Select } from '../Select'
 import { useRecoilState } from 'recoil'
-import { preferredAppColorScheme } from '../../components/ThemeProvider'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Portal } from '@gorhom/portal'
+import { preferredAppColorScheme } from '../../store'
 
 function AppearanceBottomSheetContent() {
   const styles = useAppStyles(themedStyles)

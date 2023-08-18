@@ -1,6 +1,8 @@
 import { atom, selector, selectorFamily, useRecoilValue } from 'recoil'
+import { ColorSchemeName } from 'react-native'
+
 import { RoutineService } from './routines/RoutineService'
-import { ImageSourcePropType, ImageURISource } from 'react-native'
+import { createPersistor } from './components/Persistor/createPersistor'
 
 export enum DurationLevels {
   Short,
@@ -123,3 +125,20 @@ export const avatar = atom<Avatar | null>({
 export function useUserName() {
   return useRecoilValue(name)
 }
+
+// -- Preferences --
+
+export type AppColorSchemeName = ColorSchemeName | 'system'
+
+export const preferredAppColorScheme = atom<AppColorSchemeName>({
+  key: 'appColorScheme',
+  default: 'dark',
+})
+
+// Persistence
+
+export const { usePersistor, useIsInitialStateReady } = createPersistor(
+  name,
+  avatar,
+  preferredAppColorScheme
+)

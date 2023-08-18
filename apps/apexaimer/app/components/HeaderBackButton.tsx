@@ -36,8 +36,8 @@ export function HeaderBackButton({ tintColor }: HeaderBackButtonProps) {
   )
 }
 
-export const headerLeft = ({ tintColor }: HeaderBackButtonProps) => (
-  <HeaderBackButton tintColor={tintColor} />
+export const headerLeft = (props: HeaderBackButtonProps) => (
+  <HeaderBackButton {...props} />
 )
 
 const themedStyles = AppStyleSheet.create({
