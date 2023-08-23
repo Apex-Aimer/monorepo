@@ -12,6 +12,7 @@ function transform(props) {
     delete metadata['__content']
 
     props.src = `
+export const filename = ${props.filename};
 export const metadata = ${JSON.stringify(metadata)};
 
 const content = ${JSON.stringify(md2json.parse(content))};

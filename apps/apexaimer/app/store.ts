@@ -2,13 +2,44 @@ import { atom, selector, selectorFamily, useRecoilValue } from 'recoil'
 import { ColorSchemeName } from 'react-native'
 
 import { RoutineService } from './routines/RoutineService'
-import { createPersistor } from './components/Persistor/createPersistor'
+import {
+  createPersistor,
+  getPersistedStore,
+} from './components/Persistor/createPersistor'
+import {
+  DurationLevels,
+  Levels,
+  Routine,
+  emptyRoutines,
+} from './routines/routines'
 
-export enum DurationLevels {
-  Short,
-  Medium,
-  Long,
+// --- User ---
+
+export const name = atom({
+  key: 'name',
+  default: 'Legend',
+})
+
+interface Avatar {
+  uri: string
+  cacheKey: string
 }
+
+export const avatar = atom<Avatar | null>({
+  key: 'avatar',
+  default: null,
+})
+
+const level = atom<Levels>({
+  key: 'level',
+  default: Levels.MediumEasy,
+})
+
+export function useUserName() {
+  return useRecoilValue(name)
+}
+
+// --- Routines ---
 
 const shortRoutineOfTheDay = atom({
   key: 'shortRoutineOfTheDay',
@@ -25,16 +56,28 @@ const longRoutineOfTheDay = atom({
   default: 'defaultLong',
 })
 
-export const routine = selectorFamily({
-  key: 'routine',
-  get: (id: string) => async () => {
-    return RoutineService.sharedInstance.getById(id)
-  },
-})
-
 export const routineIntensityLevel = atom({
   key: 'routineIntensityLevel',
   default: DurationLevels.Medium,
+})
+
+export const routinesOfTheDay = atom({
+  key: 'routinesOfTheDay',
+  default: emptyRoutines,
+  effects: [
+    ({ setSelf }) => {
+      async function init() {
+        const store = (await getPersistedStore()) ?? {}
+
+        return await RoutineService.sharedInstance.getRoutinesOfTheDay(
+          store[routineIntensityLevel.key] ?? DurationLevels.Medium,
+          store[level.key] ?? Levels.MediumEasy
+        )
+      }
+
+      setSelf(init())
+    },
+  ],
 })
 
 export const isRoutineOfTheDayCompleted = atom({
@@ -45,29 +88,8 @@ export const isRoutineOfTheDayCompleted = atom({
 export const routineOfTheDay = selector({
   key: 'routineOfTheDay',
   get: async ({ get }) => {
-    switch (get(routineIntensityLevel)) {
-      case DurationLevels.Short: {
-        const shortKey = get(shortRoutineOfTheDay)
-        return {
-          key: shortKey,
-          ...get(routine(shortKey)),
-        }
-      }
-      case DurationLevels.Medium: {
-        const mediumKey = get(mediumRoutineOfTheDay)
-        return {
-          key: mediumKey,
-          ...get(routine(mediumKey)),
-        }
-      }
-      case DurationLevels.Long: {
-        const longKey = get(longRoutineOfTheDay)
-        return {
-          key: longKey,
-          ...get(routine(longKey)),
-        }
-      }
-    }
+    const intensity = get(routineIntensityLevel)
+    return get(routinesOfTheDay[intensity]) as Routine
   },
 })
 
@@ -83,7 +105,13 @@ export const routineOfTheDayDuration = selector({
   get: async ({ get }) => {
     const routine = get(routineOfTheDay)
     const drills = await Promise.all(
-      routine.data.map(async (it) => await get(routineDrill(it)))
+      [
+        ...routine.common,
+        ...routine.raise,
+        ...routine.activate,
+        ...routine.mobilize,
+        ...routine.potentiate,
+      ].map(async (it) => await get(routineDrill(it)))
     )
     return drills.reduce((acc, { duration }) => acc + duration, 0)
   },
@@ -105,27 +133,6 @@ export const congratsMotivation = atom({
   },
 })
 
-// --- User ---
-
-export const name = atom({
-  key: 'name',
-  default: 'Legend',
-})
-
-interface Avatar {
-  uri: string
-  cacheKey: string
-}
-
-export const avatar = atom<Avatar | null>({
-  key: 'avatar',
-  default: null,
-})
-
-export function useUserName() {
-  return useRecoilValue(name)
-}
-
 // -- Preferences --
 
 export type AppColorSchemeName = ColorSchemeName | 'system'
@@ -140,5 +147,7 @@ export const preferredAppColorScheme = atom<AppColorSchemeName>({
 export const { usePersistor, useIsInitialStateReady } = createPersistor(
   name,
   avatar,
-  preferredAppColorScheme
+  preferredAppColorScheme,
+  routineIntensityLevel,
+  level
 )
