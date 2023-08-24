@@ -2,13 +2,13 @@
 type: Tracking
 duration: 10
 description: Dummy tracking
-modifications: Close range, ADS, Dummy random strafe
+modifications: [Close range, ADS, Dummy random strafe]
 ---
 
-## How:
+## How
 
 Track a dummy
 
-## Why:
+## Why
 
 Tracking is one of the most important aspect of aiming in the game with a high time to kill.

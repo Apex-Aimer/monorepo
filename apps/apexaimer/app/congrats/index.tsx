@@ -70,7 +70,7 @@ function DetailedRate({ style }: { style?: StyleProp<ViewStyle> }) {
       data={routine.data}
       renderItem={({ item }) => (
         <Suspense>
-          <DrillRateItem id={item} />
+          <DrillRateItem id={item.drillKey} />
         </Suspense>
       )}
       ItemSeparatorComponent={() => (

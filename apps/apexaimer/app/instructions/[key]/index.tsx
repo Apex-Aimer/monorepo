@@ -1,14 +1,15 @@
-import { useCallback, useMemo, useRef } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useCallback, useRef } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useRecoilValue } from 'recoil'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import Markdown from 'react-native-simple-markdown-updated-dependencies'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { routineDrill } from '../../store'
 import { CoverIcon } from '../../components/Drill/CoverIcon'
-import { DrillType } from '../../routines/routines'
+import { DrillType, RAMPStage } from '../../routines/routines'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
 import { Portal } from '@gorhom/portal'
@@ -35,7 +36,10 @@ const DRILL_TYPE_DESCRIPTION = {
 
 export default function InstructionsScreen() {
   const styles = useAppStyles(themedStyles)
-  const { key: id } = useLocalSearchParams<{ key: string }>()
+  const { key: id, stage } = useLocalSearchParams<{
+    key: string
+    stage: RAMPStage
+  }>()
   const { description, instructions, type, videoUri } = useRecoilValue(
     routineDrill(id)
   )
@@ -83,9 +87,8 @@ export default function InstructionsScreen() {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{description}</Text>
         </View>
-        {/* TODO: process markdown  */}
         <View style={styles.contentContainer}>
-          <Text style={styles.content}>{instructions.raw}</Text>
+          <Markdown styles={styles}>{instructions}</Markdown>
         </View>
       </View>
       <Portal>
@@ -141,8 +144,13 @@ const themedStyles = AppStyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: 30,
   },
-  content: {
-    backgroundColor: 'bg',
+  'heading 2': {
+    color: 'text primary',
+    fontFamily: 'rubik 500',
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  text: {
     color: 'text primary',
     fontFamily: 'rubik 400',
     fontSize: 16,

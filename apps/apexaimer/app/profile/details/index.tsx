@@ -47,7 +47,6 @@ async function pickImage() {
       to: uriInDocuments,
     })
   } catch (e) {
-    console.log(e)
     return null
   }
 

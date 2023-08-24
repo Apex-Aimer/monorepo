@@ -9,7 +9,7 @@ import {
 import {
   DurationLevels,
   Levels,
-  Routine,
+  RAMPStage,
   emptyRoutines,
 } from './routines/routines'
 
@@ -41,21 +41,6 @@ export function useUserName() {
 
 // --- Routines ---
 
-const shortRoutineOfTheDay = atom({
-  key: 'shortRoutineOfTheDay',
-  default: 'defaultShort',
-})
-
-const mediumRoutineOfTheDay = atom({
-  key: 'mediumRoutineOfTheDay',
-  default: 'defaultMedium',
-})
-
-const longRoutineOfTheDay = atom({
-  key: 'longRoutineOfTheDay',
-  default: 'defaultLong',
-})
-
 export const routineIntensityLevel = atom({
   key: 'routineIntensityLevel',
   default: DurationLevels.Medium,
@@ -85,11 +70,42 @@ export const isRoutineOfTheDayCompleted = atom({
   default: false,
 })
 
-export const routineOfTheDay = selector({
+interface RoutinePresentation {
+  duration: string
+  data: { stage: RAMPStage; drillKey: string }[]
+}
+
+export const routineOfTheDay = selector<RoutinePresentation>({
   key: 'routineOfTheDay',
-  get: async ({ get }) => {
+  get: ({ get }) => {
     const intensity = get(routineIntensityLevel)
-    return get(routinesOfTheDay[intensity]) as Routine
+    const routine = get(routinesOfTheDay)[intensity]
+
+    return {
+      duration: routine.duration,
+      data: [
+        ...routine.common.map((drillKey) => ({
+          stage: RAMPStage.Common,
+          drillKey,
+        })),
+        ...routine.raise.map((drillKey) => ({
+          stage: RAMPStage.Raise,
+          drillKey,
+        })),
+        ...routine.activate.map((drillKey) => ({
+          stage: RAMPStage.Activate,
+          drillKey,
+        })),
+        ...routine.mobilize.map((drillKey) => ({
+          stage: RAMPStage.Mobilize,
+          drillKey,
+        })),
+        ...routine.potentiate.map((drillKey) => ({
+          stage: RAMPStage.Potentiate,
+          drillKey,
+        })),
+      ],
+    }
   },
 })
 
@@ -103,15 +119,9 @@ export const routineDrill = selectorFamily({
 export const routineOfTheDayDuration = selector({
   key: 'routineOfTheDayDuration',
   get: async ({ get }) => {
-    const routine = get(routineOfTheDay)
+    const routine = await get(routineOfTheDay)
     const drills = await Promise.all(
-      [
-        ...routine.common,
-        ...routine.raise,
-        ...routine.activate,
-        ...routine.mobilize,
-        ...routine.potentiate,
-      ].map(async (it) => await get(routineDrill(it)))
+      routine.data.map(async (it) => await get(routineDrill(it.drillKey)))
     )
     return drills.reduce((acc, { duration }) => acc + duration, 0)
   },

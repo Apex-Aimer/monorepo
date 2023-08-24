@@ -2,10 +2,10 @@
 type: Precision
 duration: 120
 description: Bowl
-modifications: Mid range, Player still
+modifications: [Mid range, Player still]
 ---
 
-### How:
+## How
 
 Put your gun to the "single fire mode", or use non-automatic weapon.
 
@@ -17,6 +17,6 @@ Start the dummy then move to any other target you'd like to hit to left, right, 
 
 To chellange yourself try to hit headshots.
 
-### Why:
+## Why
 
 Flicking helps you to acquire targets quickly and make your crosshair placement more "sticky"

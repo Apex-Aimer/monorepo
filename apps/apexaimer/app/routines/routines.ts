@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 // @ts-expect-error
 import stub from '../../assets/simple_movement_720p.m4v'
 
-type MDContent = Record<string, string>
+type MDContent = string
 interface MDDrillMetadata {
   type: string
   duration: number
@@ -20,16 +20,24 @@ export enum DrillType {
   Precision,
 }
 
+export const enum RAMPStage {
+  Common = 'common',
+  Raise = 'raise',
+  Activate = 'activate',
+  Mobilize = 'mobilize',
+  Potentiate = 'potentiate',
+}
+
 interface Buckets {
-  raise: string[]
-  activate: string[]
-  mobilize: string[]
-  potentiate: string[]
+  [RAMPStage.Raise]: string[]
+  [RAMPStage.Activate]: string[]
+  [RAMPStage.Mobilize]: string[]
+  [RAMPStage.Potentiate]: string[]
 }
 
 export interface Routine extends Buckets {
   duration: string
-  common: string[]
+  [RAMPStage.Common]: string[]
 }
 
 export interface RoutineDrill {
@@ -248,7 +256,10 @@ function findDrillThatFits(bucket: string[], timeBudget: number) {
   )
 
   if (index === -1) {
-    return null
+    return {
+      drill: null,
+      restBucket: [],
+    }
   }
 
   return {
@@ -295,21 +306,36 @@ function generateRoutine(buckets: Buckets, timeBudget: number) {
   const drillsRotation: (keyof typeof drills)[] = Object.keys(drills).filter(
     (it) => it !== 'common'
   ) as any
-
   let rotationIndex = 0
+  let availableStages = new Set(drillsRotation)
 
   while (timeBudgetLeft > 0) {
     const stage = drillsRotation[rotationIndex]
+
+    rotationIndex += 1
+    if (rotationIndex > drillsRotation.length - 1) {
+      rotationIndex = 0
+    }
+
+    // Means no more drills that fits into the timeBudget
+    if (availableStages.size === 0) {
+      break
+    }
 
     const { drill, restBucket } = findDrillThatFits(
       localBuckets[stage],
       timeBudgetLeft
     )
 
+    // means we can't find any drill for this stage anymore
+    if (drill == null) {
+      availableStages.delete(stage)
+      continue
+    }
+
     drills[stage].push(drill)
     localBuckets[stage] = restBucket
     timeBudgetLeft = timeBudgetLeft - drillsTable[drill].duration
-    rotationIndex += 1
   }
 
   if (timeBudgetLeft > 0) {
@@ -413,7 +439,7 @@ export function generateRoutines(
   )
 
   return {
-    date: format(new Date(), 'yyyy mm dd'),
+    date: format(new Date(), 'yyyy-mm-dd'),
     [DurationLevels.Short]: {
       duration: '~ 5 min',
       common: [commonDrill],

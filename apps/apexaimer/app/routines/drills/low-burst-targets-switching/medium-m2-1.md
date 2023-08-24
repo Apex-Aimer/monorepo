@@ -2,10 +2,10 @@
 type: Precision
 duration: 120
 description: Low burst targets switching
-modifications: Mid range, No critical hit, Player strafing
+modifications: [Mid range, No critical hit, Player strafing]
 ---
 
-### How:
+## How
 
 Put your gun to the "auto fire mode".
 
@@ -15,7 +15,7 @@ Focus on "smoothness" - straight lines between the targets in one constant motio
 
 Try to look on a target and not on the reticle. Whenever you shoot the target you already should look for the next one.
 
-### Why:
+## Why
 
 Targets switching helps to develop "aim smoothness".
 

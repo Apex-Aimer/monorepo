@@ -2,10 +2,10 @@
 type: Precision
 duration: 10
 description: Single bullet flicking micro
-modifications: Long range, Critical hit, Player still
+modifications: [Long range, Critical hit, Player still]
 ---
 
-## How:
+## How
 
 Put your gun to the "single fire mode", or use non-automatic weapon.
 
@@ -13,6 +13,6 @@ Start with shooting the central target, then move to any other target you'd like
 
 Focus on "micro" crosshair movement, meaning you should shoot only the closest targets.
 
-## Why:
+## Why
 
 Flicking helps you to acquire targets quickly and make your crosshair placement more "sticky"

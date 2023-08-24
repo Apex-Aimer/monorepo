@@ -2,15 +2,15 @@
 type: Tracking
 duration: 120
 description: Dummy one clip
-modifications: Close range, Dummy constant strafing
+modifications: [Close range, Dummy constant strafing]
 ---
 
-### How:
+## How
 
 Use any SMG (CAR, R-99, Volt) or if you want to challange yourself try assault rifles (for example Flatline allows to track longer).
 
 Shoot the dummy. Try to kill the dummy with full shields within one clip.
 
-### Why:
+## Why
 
 Tracking in close range is crucial to the game.

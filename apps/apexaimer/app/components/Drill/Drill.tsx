@@ -1,13 +1,12 @@
+import { PropsWithChildren, forwardRef } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRecoilValue } from 'recoil'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import { useThemeColors } from '../ThemeProvider'
-import { PrimaryGradientText } from '../PrimaryGradientText'
 import { routineDrill } from '../../store'
 import { CoverIcon } from './CoverIcon'
-import { PropsWithChildren } from 'react'
 import { Button } from '../Button'
 
 interface DrillProps extends PropsWithChildren {
@@ -77,29 +76,32 @@ function DrillInner({
   )
 }
 
-export function Drill(props: DrillProps) {
-  const styles = useAppStyles(themedStyles)
-  const { interactive = false, onPress } = props
+export const Drill = forwardRef<TouchableOpacity, DrillProps>(
+  function DrillComp(props, ref) {
+    const styles = useAppStyles(themedStyles)
+    const { interactive = false, onPress } = props
 
-  if (!interactive) {
+    if (!interactive) {
+      return (
+        <View style={styles.row}>
+          <DrillInner {...props} />
+        </View>
+      )
+    }
+
     return (
-      <View style={styles.row}>
+      <Button
+        ref={ref}
+        style={styles.row}
+        onPress={onPress}
+        activeOpacity={0.6}
+        haptic="selection"
+      >
         <DrillInner {...props} />
-      </View>
+      </Button>
     )
   }
-
-  return (
-    <Button
-      style={styles.row}
-      onPress={onPress}
-      activeOpacity={0.6}
-      haptic="selection"
-    >
-      <DrillInner {...props} />
-    </Button>
-  )
-}
+)
 
 const themedStyles = AppStyleSheet.create({
   row: {

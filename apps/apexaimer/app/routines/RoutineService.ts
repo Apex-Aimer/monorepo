@@ -24,17 +24,28 @@ export class RoutineService {
 
     if (level === prevLevel) {
       try {
-        prevRoutines = JSON.parse(await AsyncStorage.getItem('routineOfTheDay'))
+        const savedRoutines = JSON.parse(
+          await AsyncStorage.getItem('routineOfTheDay')
+        )
+
+        if (savedRoutines != null) {
+          prevRoutines = savedRoutines
+        }
       } catch {
         // no-op
       }
     }
 
-    const routines = generateRoutines(level, prevRoutines[duration])
+    let routines = emptyRoutines
 
     try {
+      // TODO
+      routines = generateRoutines(level, emptyRoutines[DurationLevels.Short])
+      // routines = generateRoutines(level, prevRoutines[duration])
+
       await AsyncStorage.setItem('routineOfTheDay', JSON.stringify(routines))
-    } catch {
+    } catch (e) {
+      console.error(e)
       // no-op
     }
 

@@ -2,13 +2,13 @@
 type: Precision
 duration: 10
 description: Turn around target burst
-modifications: Close range, Dummy random strafe
+modifications: [Close range, Dummy random strafe]
 ---
 
-## How:
+## How
 
 Staying on the main stage, start with turning away from the central dummy. When dummy is spawned, turn around and kill the dummy within one clip.
 
-## Why:
+## Why
 
 It simulates in game scenarios, when someone shoots you in the back and you have to turn around to fight back.
