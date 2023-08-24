@@ -1,6 +1,6 @@
 ---
 type: Tracking
-duration: 10
+duration: 60
 description: Dummy tracking
 modifications: [Mid range, NoADS, Dummy random strafe]
 ---

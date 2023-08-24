@@ -1,6 +1,6 @@
 ---
 type: Precision
-duration: 10
+duration: 60
 description: Single bullet flicking micro
 modifications: [Long range, Critical hit, Player still]
 ---

@@ -8,6 +8,7 @@ import { useThemeColors } from '../ThemeProvider'
 import { routineDrill } from '../../store'
 import { CoverIcon } from './CoverIcon'
 import { Button } from '../Button'
+import { ModificationBadge } from '../ModificationBadge'
 
 interface DrillProps extends PropsWithChildren {
   id: string
@@ -36,7 +37,7 @@ function DrillInner({
 }: DrillProps) {
   const styles = useAppStyles(themedStyles)
   const theme = useThemeColors()
-  const { type, description } = useRecoilValue(routineDrill(id))
+  const { type, description, modifications } = useRecoilValue(routineDrill(id))
 
   return (
     <View
@@ -70,6 +71,11 @@ function DrillInner({
         >
           {description}
         </Text>
+        <View style={styles.descriptionModifications}>
+          {modifications.map((mod) => (
+            <ModificationBadge key={mod}>{mod}</ModificationBadge>
+          ))}
+        </View>
         <View style={styles.descriptionChildren}>{children}</View>
       </View>
     </View>
@@ -152,6 +158,7 @@ const themedStyles = AppStyleSheet.create({
   },
   descriptionWrapper: {
     flex: 1,
+    gap: 10,
   },
   description: {
     fontFamily: 'rubik 700',
@@ -161,6 +168,12 @@ const themedStyles = AppStyleSheet.create({
   },
   descriptionInactive: {
     color: 'line disabled',
+  },
+  descriptionModifications: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flexWrap: 'wrap',
+    gap: 7,
   },
   descriptionChildren: {
     flex: 1,

@@ -40,6 +40,7 @@ interface StaticColorsPalette {
   'icon shadow': ColorValue
   'line accent': ColorValue
   'line accent disabled': ColorValue
+  'text dark': ColorValue
 }
 
 export interface ColorsPalette
@@ -98,6 +99,7 @@ const staticColors: StaticColorsPalette = {
   'icon shadow': colorWithOpacity('#000000', 0.05),
   'line accent': '#FF5722',
   'line accent disabled': colorWithOpacity('#FF5722', 0.5),
+  'text dark': '#282624',
 }
 
 const defaultColors: ColorsPalette = {

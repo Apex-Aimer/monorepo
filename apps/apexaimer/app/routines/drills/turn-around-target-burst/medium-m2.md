@@ -1,6 +1,6 @@
 ---
 type: Precision
-duration: 10
+duration: 60
 description: Turn around target burst
 modifications: [Close range, Dummy random strafe]
 ---

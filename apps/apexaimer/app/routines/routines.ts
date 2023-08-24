@@ -11,6 +11,7 @@ interface MDDrillMetadata {
   type: string
   duration: number
   description: string
+  modifications: string[]
 }
 
 export enum DrillType {
@@ -44,6 +45,7 @@ export interface RoutineDrill {
   type: DrillType
   duration: number
   description: string
+  modifications: string[]
   instructions: MDContent
   // uri
   videoUri: string
@@ -74,6 +76,7 @@ function processDrill({
   return {
     type: getTypeFromMetadata(metadata),
     description: metadata.description,
+    modifications: metadata.modifications ?? [],
     duration: metadata.duration,
     instructions: content,
     videoUri: Image.resolveAssetSource(stub).uri,
@@ -228,7 +231,7 @@ const allDrillsPaths = [
 ]
 
 const bucketsIndeces = levelsInAllDrills.reduce((acc, count, index) => {
-  const start = acc[index - 1]?.[0] ?? 0
+  const start = acc[index - 1]?.[1] ?? 0
   acc.push([start, start + count])
   return acc
 }, [])

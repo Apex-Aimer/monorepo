@@ -1,6 +1,6 @@
 ---
 type: Tracking
-duration: 10
+duration: 60
 description: Dummy walk arounds
 modifications: [Mixed range, NoADS, Dummy still]
 ---
