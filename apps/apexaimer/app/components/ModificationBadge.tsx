@@ -104,7 +104,7 @@ export function ModificationBadge({
 const themedStyles = AppStyleSheet.create({
   wrapperSmall: {
     paddingHorizontal: 7,
-    paddingVertical: 3,
+    paddingVertical: 2,
     borderRadius: 5,
   },
   wrapperMid: {

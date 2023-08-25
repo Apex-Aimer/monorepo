@@ -68,6 +68,7 @@ function DrillInner({
       <View style={styles.descriptionWrapper}>
         <Text
           style={[styles.description, !active && styles.descriptionInactive]}
+          numberOfLines={1}
         >
           {description}
         </Text>

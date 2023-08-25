@@ -45,7 +45,14 @@ const DrillTimer = memo(function DrillTimerComp({
     )
   }, [duration, onEnd, step])
 
-  return <AnimatedCircleGradientProgressBar step={step} steps={duration} />
+  return (
+    <AnimatedCircleGradientProgressBar
+      step={step}
+      steps={duration}
+      size={23}
+      borderWidth={2}
+    />
+  )
 })
 
 function DrillInstructionVideo({ id }: { id: string }) {
