@@ -6,12 +6,9 @@ import {
   createPersistor,
   getPersistedStore,
 } from './components/Persistor/createPersistor'
-import {
-  DurationLevels,
-  Levels,
-  RAMPStage,
-  emptyRoutines,
-} from './routines/routines'
+import { emptyRoutines } from './routines/routines'
+import { Levels } from './routines/processing'
+import { DurationLevels, RAMPStage } from './routines/types'
 
 // --- User ---
 
@@ -32,7 +29,7 @@ export const avatar = atom<Avatar | null>({
 
 const level = atom<Levels>({
   key: 'level',
-  default: Levels.MediumEasy,
+  default: Levels.Iron,
 })
 
 export function useUserName() {
@@ -56,7 +53,7 @@ export const routinesOfTheDay = atom({
 
         return await RoutineService.sharedInstance.getRoutinesOfTheDay(
           store[routineIntensityLevel.key] ?? DurationLevels.Medium,
-          store[level.key] ?? Levels.MediumEasy
+          store[level.key] ?? Levels.Iron
         )
       }
 
@@ -90,10 +87,6 @@ export const routineOfTheDay = selector<RoutinePresentation>({
         })),
         ...routine.raise.map((drillKey) => ({
           stage: RAMPStage.Raise,
-          drillKey,
-        })),
-        ...routine.activate.map((drillKey) => ({
-          stage: RAMPStage.Activate,
           drillKey,
         })),
         ...routine.mobilize.map((drillKey) => ({

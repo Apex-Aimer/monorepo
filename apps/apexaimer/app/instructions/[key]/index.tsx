@@ -15,13 +15,14 @@ import Markdown from 'react-native-simple-markdown-updated-dependencies'
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { routineDrill } from '../../store'
 import { CoverIcon } from '../../components/Drill/CoverIcon'
-import { DrillType, RAMPStage } from '../../routines/routines'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
 import { Portal } from '@gorhom/portal'
 import { Button } from '../../components/Button'
 import { ModificationBadge } from '../../components/ModificationBadge'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { DrillType } from '../../routines/processing'
+import { RAMPStage } from '../../routines/types'
 
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {

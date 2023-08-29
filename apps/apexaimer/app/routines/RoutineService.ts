@@ -1,11 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {
-  DurationLevels,
-  Levels,
-  drillsTable,
-  emptyRoutines,
-  generateRoutines,
-} from './routines'
+
+import { drillsTable, emptyRoutines } from './routines'
+import { DurationLevels } from './types'
+import { Levels } from './processing'
+import { generateRoutines } from './generation'
 
 export class RoutineService {
   private static __instance: RoutineService
@@ -20,7 +18,7 @@ export class RoutineService {
   async getRoutinesOfTheDay(duration: DurationLevels, level: Levels) {
     let prevRoutines = emptyRoutines
 
-    const prevLevel = (await AsyncStorage.getItem('level')) ?? Levels.MediumEasy
+    const prevLevel = (await AsyncStorage.getItem('level')) ?? Levels.Iron
 
     if (level === prevLevel) {
       try {

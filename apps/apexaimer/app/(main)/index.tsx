@@ -32,7 +32,7 @@ import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { Persistor } from '../components/Persistor/Persistor'
-import { DurationLevels } from '../routines/routines'
+import { DurationLevels } from '../routines/types'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(

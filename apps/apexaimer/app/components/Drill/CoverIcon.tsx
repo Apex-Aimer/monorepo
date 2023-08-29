@@ -1,10 +1,11 @@
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { DrillType } from '../../routines/routines'
+
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import RecoilIcon from './RecoilIcon'
 import TrackingIcon from './TrackingIcon'
 import PrecisionIcon from './PrecisionIcon'
 import MovementIcon from './MovementIcon'
+import { DrillType } from '../../routines/processing'
 
 interface CoverIconProps {
   type: DrillType
