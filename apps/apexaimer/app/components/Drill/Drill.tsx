@@ -74,7 +74,12 @@ function DrillInner({
         </Text>
         <View style={styles.descriptionModifications}>
           {modifications.map((mod) => (
-            <ModificationBadge key={mod}>{mod}</ModificationBadge>
+            <ModificationBadge
+              key={mod}
+              variation={active ? 'outline' : 'disabled'}
+            >
+              {mod}
+            </ModificationBadge>
           ))}
         </View>
         <View style={styles.descriptionChildren}>{children}</View>

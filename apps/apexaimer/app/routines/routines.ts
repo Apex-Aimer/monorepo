@@ -76,7 +76,9 @@ function processDrill({
   return {
     type: getTypeFromMetadata(metadata),
     description: metadata.description,
-    modifications: metadata.modifications ?? [],
+    modifications: (metadata.modifications ?? []).sort(
+      (a, b) => a.length - b.length
+    ),
     duration: metadata.duration,
     instructions: content,
     videoUri: Image.resolveAssetSource(stub).uri,

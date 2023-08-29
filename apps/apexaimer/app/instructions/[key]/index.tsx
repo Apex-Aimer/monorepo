@@ -20,10 +20,7 @@ import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
 import { Portal } from '@gorhom/portal'
 import { Button } from '../../components/Button'
-import {
-  ModificationBadge,
-  ModificationBadgeSize,
-} from '../../components/ModificationBadge'
+import { ModificationBadge } from '../../components/ModificationBadge'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const DRILL_TYPE_DESCRIPTION = {
@@ -103,7 +100,7 @@ export default function InstructionsScreen() {
             <View style={styles.modificationsContainer}>
               {modifications.map((mod) => (
                 <TouchableOpacity key={mod}>
-                  <ModificationBadge size={ModificationBadgeSize.Mid}>
+                  <ModificationBadge size="mid" variation="solid">
                     {mod}
                   </ModificationBadge>
                 </TouchableOpacity>

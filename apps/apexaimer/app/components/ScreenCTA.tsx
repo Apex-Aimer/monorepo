@@ -1,5 +1,5 @@
-import { PropsWithChildren } from 'react'
-import { View } from 'react-native'
+import { PropsWithChildren, forwardRef } from 'react'
+import { TouchableOpacity, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { colorWithOpacity, useThemeColors } from './ThemeProvider'
@@ -10,7 +10,10 @@ interface Props extends PropsWithChildren {
   onPress?(): void
 }
 
-export function ScreenCTA(props: Props) {
+export const ScreenCTA = forwardRef<TouchableOpacity, Props>(function ScreenCTA(
+  props,
+  ref
+) {
   const theme = useThemeColors()
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
@@ -41,11 +44,11 @@ export function ScreenCTA(props: Props) {
         pointerEvents="box-none"
       />
       <View style={styles.inner}>
-        <PrimaryButton {...props} />
+        <PrimaryButton ref={ref} {...props} />
       </View>
     </LinearGradient>
   )
-}
+})
 
 const themedStyles = AppStyleSheet.create({
   wrapper: {

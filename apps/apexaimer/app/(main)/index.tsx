@@ -75,7 +75,7 @@ function Routine() {
           keyExtractor={(item, index) => `${item.drillKey}:${index}`}
           onMorePress={() => {
             // TODO
-            router.push(`/routine-details/${'defaultMedium'}/`)
+            router.push(`/routine-details/`)
           }}
         />
       </ScrollView>

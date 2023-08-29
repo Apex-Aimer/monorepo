@@ -140,7 +140,8 @@ export function Carousel<T extends unknown>({
 
 const themedStyles = AppStyleSheet.create({
   contentContainerStyle: {
-    paddingHorizontal: 5,
+    paddingLeft: 5,
+    paddingRight: 15,
   },
   itemWrapper: {
     width: ITEM_WIDTH,

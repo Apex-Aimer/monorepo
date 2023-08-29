@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback } from 'react'
+import { PropsWithChildren, forwardRef, useCallback } from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
@@ -10,27 +10,29 @@ interface Props extends PropsWithChildren {
   onPress?(): void
 }
 
-export function PrimaryButton({ children, onPress }: Props) {
-  const theme = useThemeColors()
-  const styles = useAppStyles(themedStyles)
+export const PrimaryButton = forwardRef<TouchableOpacity, Props>(
+  function PrimaryButton({ children, onPress }, ref) {
+    const theme = useThemeColors()
+    const styles = useAppStyles(themedStyles)
 
-  return (
-    <Button onPress={onPress} haptic="impactLight">
-      <LinearGradient
-        colors={theme['primary gradient'] as string[]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        style={styles.wrapper}
-      >
-        {typeof children === 'string' ? (
-          <Text style={styles.label}>{children}</Text>
-        ) : (
-          children
-        )}
-      </LinearGradient>
-    </Button>
-  )
-}
+    return (
+      <Button ref={ref} onPress={onPress} haptic="impactLight">
+        <LinearGradient
+          colors={theme['primary gradient'] as string[]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.wrapper}
+        >
+          {typeof children === 'string' ? (
+            <Text style={styles.label}>{children}</Text>
+          ) : (
+            children
+          )}
+        </LinearGradient>
+      </Button>
+    )
+  }
+)
 
 const themedStyles = AppStyleSheet.create({
   wrapper: {

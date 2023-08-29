@@ -1,4 +1,4 @@
-import { View, ViewStyle } from 'react-native'
+import { ColorValue, TextStyle, View, ViewStyle } from 'react-native'
 import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { Text } from 'react-native'
 
@@ -17,83 +17,127 @@ const ads = new Set(['ADS', 'NoADS'])
 const playerMovements = new Set(['Player still', 'Player strafing'])
 const criticals = new Set(['No critical hit', 'Critical hit'])
 
-export enum ModificationBadgeSize {
-  Small,
-  Mid,
+type BadgeSize = 'small' | 'mid'
+type BadgeVariations = 'solid' | 'outline' | 'disabled'
+
+interface WithVariations {
+  size?: BadgeSize
+  variation?: BadgeVariations
 }
 
-interface WithSize {
-  size?: ModificationBadgeSize
-}
-
-interface ModificationBadgeContentProps extends WithSize {
-  style: ViewStyle
+interface ModificationBadgeContentProps extends WithVariations {
+  color: ColorValue
   children: string
 }
 
 function ModificationBadgeContent({
-  style,
+  color,
   children,
-  size,
+  size = 'small',
+  variation = 'outline',
 }: ModificationBadgeContentProps) {
   const styles = useAppStyles(themedStyles)
-  const wrapperStyle = {
-    [ModificationBadgeSize.Small]: styles.wrapperSmall,
-    [ModificationBadgeSize.Mid]: styles.wrapperMid,
-  }[size]
-  const textStyle = {
-    [ModificationBadgeSize.Small]: styles.textSmall,
-    [ModificationBadgeSize.Mid]: styles.textMid,
-  }[size]
+  const wrapperSizeStyle = (
+    {
+      small: styles.wrapperSmall,
+      mid: styles.wrapperMid,
+    } as Record<BadgeSize, ViewStyle>
+  )[size]
+  const textSizeStyle = (
+    {
+      small: styles.textSmall,
+      mid: styles.textMid,
+    } as Record<BadgeSize, TextStyle>
+  )[size]
+  const wrapperVariationStyle = (
+    {
+      outline: {
+        borderColor: color,
+        borderWidth: 1,
+      },
+      disabled: styles.wrapperDisabled,
+      solid: {
+        borderColor: color,
+        borderWidth: 1,
+        backgroundColor: color,
+      },
+    } as Record<BadgeVariations, TextStyle>
+  )[variation]
+  const textVariationStyle = (
+    {
+      outline: {
+        color,
+      },
+      disabled: styles.textDisabled,
+      solid: styles.textSolid,
+    } as Record<BadgeVariations, TextStyle>
+  )[variation]
 
   return (
-    <View style={[wrapperStyle, style]}>
-      <Text style={textStyle}>{children}</Text>
+    <View style={[wrapperSizeStyle, wrapperVariationStyle]}>
+      <Text style={[textSizeStyle, textVariationStyle]} numberOfLines={1}>
+        {children}
+      </Text>
     </View>
   )
 }
 
-interface Props extends WithSize {
+interface Props extends WithVariations {
   children: string
 }
 
-export function ModificationBadge({
-  children,
-  size = ModificationBadgeSize.Small,
-}: Props) {
-  const styles = useAppStyles(themedStyles)
-
+export function ModificationBadge({ children, size, variation }: Props) {
   if (ranges.has(children)) {
     return (
-      <ModificationBadgeContent style={styles.range} size={size}>
+      <ModificationBadgeContent
+        color="#F5E7D2"
+        size={size}
+        variation={variation}
+      >
         {children}
       </ModificationBadgeContent>
     )
   }
   if (dummyMovements.has(children)) {
     return (
-      <ModificationBadgeContent style={styles.dummyMovement} size={size}>
+      <ModificationBadgeContent
+        color="#E0E9D9"
+        size={size}
+        variation={variation}
+      >
         {children}
       </ModificationBadgeContent>
     )
   }
   if (ads.has(children)) {
     return (
-      <ModificationBadgeContent style={styles.ads} size={size}>
+      <ModificationBadgeContent
+        color="#FBF2D4"
+        size={size}
+        variation={variation}
+      >
         {children}
       </ModificationBadgeContent>
     )
   }
   if (playerMovements.has(children)) {
     return (
-      <ModificationBadgeContent style={styles.playerMovement} size={size}>
+      <ModificationBadgeContent
+        color="#D6D2E3"
+        size={size}
+        variation={variation}
+      >
         {children}
       </ModificationBadgeContent>
     )
   }
   if (criticals.has(children)) {
     return (
-      <ModificationBadgeContent style={styles.criticalHit} size={size}>
+      <ModificationBadgeContent
+        color="#FFFFFF"
+        size={size}
+        variation={variation}
+      >
         {children}
       </ModificationBadgeContent>
     )
@@ -110,31 +154,25 @@ const themedStyles = AppStyleSheet.create({
   wrapperMid: {
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 5,
+    borderRadius: 6,
+  },
+  wrapperDisabled: {
+    borderColor: 'line disabled',
+    borderWidth: 1,
+  },
+  textSolid: {
+    color: 'text dark',
+  },
+  textDisabled: {
+    color: 'line disabled',
   },
   textSmall: {
-    color: 'text dark',
-    fontSize: 10,
+    fontSize: 9,
     fontFamily: 'rubik 500',
   },
   textMid: {
     color: 'text dark',
     fontSize: 13,
     fontFamily: 'rubik 500',
-  },
-  range: {
-    backgroundColor: '#F5E7D2',
-  },
-  ads: {
-    backgroundColor: '#FBF2D4',
-  },
-  dummyMovement: {
-    backgroundColor: '#E0E9D9',
-  },
-  playerMovement: {
-    backgroundColor: '#D6D2E3',
-  },
-  criticalHit: {
-    backgroundColor: '#FFFFFF',
   },
 })
