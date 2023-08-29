@@ -32,6 +32,7 @@ import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { Persistor } from '../components/Persistor/Persistor'
+import { DurationLevels } from '../routines/types'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -66,25 +67,31 @@ function Routine() {
         <Carousel
           data={routine.data}
           renderItem={(item) => (
-            <Link href={`/instructions/${item}/`} asChild>
-              <DrillInfoCard id={item} />
+            <Link href={`/instructions/${item.drillKey}/`} asChild>
+              <DrillInfoCard id={item.drillKey} />
             </Link>
           )}
           // TODO: on real content there won't be a need for index
-          keyExtractor={(item, index) => `${item}:${index}`}
+          keyExtractor={(item, index) => `${item.drillKey}:${index}`}
           onMorePress={() => {
             // TODO
-            router.push(`/routine-details/${'defaultMedium'}/`)
+            router.push(`/routine-details/`)
           }}
         />
       </ScrollView>
     )
   }
 
+  const intensitySelectedControlData = {
+    [DurationLevels.Short]: 0,
+    [DurationLevels.Medium]: 1,
+    [DurationLevels.Long]: 2,
+  }
+
   return (
     <>
       <FlatList
-        key={routine.data.length}
+        key={routine.duration}
         ListHeaderComponent={
           <>
             <View style={styles.greetingWrapper}>
@@ -95,11 +102,21 @@ function Routine() {
             <View style={styles.durationSelectWrapper}>
               <SegmentedControl
                 values={['Short', 'Medium', 'Long']}
-                selectedIndex={intensityLevel}
+                selectedIndex={intensitySelectedControlData[intensityLevel]}
                 appearance={appColorScheme}
                 onChange={(event) => {
                   Haptics.selectionAsync()
-                  setIntensityLevel(event.nativeEvent.selectedSegmentIndex)
+                  switch (event.nativeEvent.selectedSegmentIndex) {
+                    case 0:
+                      setIntensityLevel(DurationLevels.Short)
+                      break
+                    case 1:
+                      setIntensityLevel(DurationLevels.Medium)
+                      break
+                    case 2:
+                      setIntensityLevel(DurationLevels.Long)
+                      break
+                  }
                 }}
               />
             </View>
@@ -117,12 +134,19 @@ function Routine() {
           </>
         }
         data={routine.data}
+        extraData={routine.duration}
         renderItem={({ item, index }) => {
           return (
             <FadeInView delay={index * 200}>
-              <Link href={`/instructions/${item}/`} asChild>
+              <Link
+                href={{
+                  pathname: `/instructions/${item.drillKey}/`,
+                  params: { stage: item.stage },
+                }}
+                asChild
+              >
                 <Drill
-                  id={item}
+                  id={item.drillKey}
                   hasContinuation={index !== routine.data.length - 1}
                   interactive
                 >
@@ -135,7 +159,7 @@ function Routine() {
           )
         }}
         // TODO: on real content there won't be a need for index
-        keyExtractor={(item, index) => `${item}:${index}`}
+        keyExtractor={(item, index) => `${item.drillKey}:${index}`}
         contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
       />
       <Link href="/routine/" asChild>

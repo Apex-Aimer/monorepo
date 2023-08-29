@@ -9,7 +9,7 @@ import {
 
 const PERSISTED_STORE_KEY = '__state__'
 
-async function getPersistedStore() {
+export async function getPersistedStore() {
   try {
     const serializedStore = await AsyncStorage.getItem(PERSISTED_STORE_KEY)
 
@@ -33,7 +33,6 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
     const persistedStore = useRecoilValue(persistanceSelector)
 
     useEffect(() => {
-      console.log({ persistedStore })
       AsyncStorage.setItem(PERSISTED_STORE_KEY, JSON.stringify(persistedStore))
     }, [persistedStore])
   }
@@ -53,8 +52,6 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
     useEffect(() => {
       ;(async () => {
         const savedStore = await getPersistedStore()
-
-        console.log({ savedStore })
 
         if (savedStore == null) {
           setIsReady(true)

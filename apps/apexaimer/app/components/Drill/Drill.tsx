@@ -1,14 +1,14 @@
+import { PropsWithChildren, forwardRef } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRecoilValue } from 'recoil'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import { useThemeColors } from '../ThemeProvider'
-import { PrimaryGradientText } from '../PrimaryGradientText'
 import { routineDrill } from '../../store'
 import { CoverIcon } from './CoverIcon'
-import { PropsWithChildren } from 'react'
 import { Button } from '../Button'
+import { ModificationBadge } from '../ModificationBadge'
 
 interface DrillProps extends PropsWithChildren {
   id: string
@@ -37,7 +37,7 @@ function DrillInner({
 }: DrillProps) {
   const styles = useAppStyles(themedStyles)
   const theme = useThemeColors()
-  const { type, description } = useRecoilValue(routineDrill(id))
+  const { type, description, modifications } = useRecoilValue(routineDrill(id))
 
   return (
     <View
@@ -68,38 +68,52 @@ function DrillInner({
       <View style={styles.descriptionWrapper}>
         <Text
           style={[styles.description, !active && styles.descriptionInactive]}
+          numberOfLines={1}
         >
           {description}
         </Text>
+        <View style={styles.descriptionModifications}>
+          {modifications.map((mod) => (
+            <ModificationBadge
+              key={mod}
+              variation={active ? 'outline' : 'disabled'}
+            >
+              {mod}
+            </ModificationBadge>
+          ))}
+        </View>
         <View style={styles.descriptionChildren}>{children}</View>
       </View>
     </View>
   )
 }
 
-export function Drill(props: DrillProps) {
-  const styles = useAppStyles(themedStyles)
-  const { interactive = false, onPress } = props
+export const Drill = forwardRef<TouchableOpacity, DrillProps>(
+  function DrillComp(props, ref) {
+    const styles = useAppStyles(themedStyles)
+    const { interactive = false, onPress } = props
 
-  if (!interactive) {
+    if (!interactive) {
+      return (
+        <View style={styles.row}>
+          <DrillInner {...props} />
+        </View>
+      )
+    }
+
     return (
-      <View style={styles.row}>
+      <Button
+        ref={ref}
+        style={styles.row}
+        onPress={onPress}
+        activeOpacity={0.6}
+        haptic="selection"
+      >
         <DrillInner {...props} />
-      </View>
+      </Button>
     )
   }
-
-  return (
-    <Button
-      style={styles.row}
-      onPress={onPress}
-      activeOpacity={0.6}
-      haptic="selection"
-    >
-      <DrillInner {...props} />
-    </Button>
-  )
-}
+)
 
 const themedStyles = AppStyleSheet.create({
   row: {
@@ -150,6 +164,7 @@ const themedStyles = AppStyleSheet.create({
   },
   descriptionWrapper: {
     flex: 1,
+    gap: 10,
   },
   description: {
     fontFamily: 'rubik 700',
@@ -159,6 +174,12 @@ const themedStyles = AppStyleSheet.create({
   },
   descriptionInactive: {
     color: 'line disabled',
+  },
+  descriptionModifications: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    flexWrap: 'wrap',
+    gap: 7,
   },
   descriptionChildren: {
     flex: 1,

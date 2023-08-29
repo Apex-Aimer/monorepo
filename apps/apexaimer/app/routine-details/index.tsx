@@ -3,15 +3,15 @@ import { FlatList, View } from 'react-native'
 import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import { useRecoilValue } from 'recoil'
 
-import { headerLeft } from '../../components/HeaderBackButton'
-import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
-import { routine as routineSelector } from '../../store'
-import { Drill } from '../../components/Drill/Drill'
-import { PrimaryGradientText } from '../../components/PrimaryGradientText'
+import { headerLeft } from '../components/HeaderBackButton'
+import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
+import { routineOfTheDay } from '../store'
+import { Drill } from '../components/Drill/Drill'
+import { PrimaryGradientText } from '../components/PrimaryGradientText'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function Content({ id }: { id: string }) {
-  const routine = useRecoilValue(routineSelector(id))
+  const routine = useRecoilValue(routineOfTheDay)
 
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
@@ -21,7 +21,7 @@ function Content({ id }: { id: string }) {
       data={routine.data}
       renderItem={({ item }) => (
         <Link href={`/instructions/${item}/`} asChild>
-          <Drill id={item} hasContinuation={false} interactive>
+          <Drill id={item.drillKey} hasContinuation={false} interactive>
             <PrimaryGradientText style={styles.descriptionCtaText}>
               Details {'>'}
             </PrimaryGradientText>

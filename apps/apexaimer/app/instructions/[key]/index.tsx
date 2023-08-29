@@ -1,18 +1,28 @@
-import { useCallback, useMemo, useRef } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useCallback, useRef } from 'react'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { Stack, useLocalSearchParams } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { useRecoilValue } from 'recoil'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import Markdown from 'react-native-simple-markdown-updated-dependencies'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { routineDrill } from '../../store'
 import { CoverIcon } from '../../components/Drill/CoverIcon'
-import { DrillType } from '../../routines/routines'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
 import { Portal } from '@gorhom/portal'
 import { Button } from '../../components/Button'
+import { ModificationBadge } from '../../components/ModificationBadge'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { DrillType } from '../../routines/processing'
+import { RAMPStage } from '../../routines/types'
 
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {
@@ -35,11 +45,14 @@ const DRILL_TYPE_DESCRIPTION = {
 
 export default function InstructionsScreen() {
   const styles = useAppStyles(themedStyles)
-  const { key: id } = useLocalSearchParams<{ key: string }>()
-  const { description, instructions, type, videoUri } = useRecoilValue(
-    routineDrill(id)
-  )
+  const { key: id, stage } = useLocalSearchParams<{
+    key: string
+    stage: RAMPStage
+  }>()
+  const { description, instructions, type, videoUri, modifications } =
+    useRecoilValue(routineDrill(id))
   const drillTypeSheetRef = useRef<BottomSheet>(null)
+  const { bottom } = useSafeAreaInsets()
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -80,13 +93,25 @@ export default function InstructionsScreen() {
       />
       <View style={styles.container}>
         <InstructionVideo uri={videoUri} />
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{description}</Text>
-        </View>
-        {/* TODO: process markdown  */}
-        <View style={styles.contentContainer}>
-          <Text style={styles.content}>{instructions.raw}</Text>
-        </View>
+        <ScrollView style={{ paddingBottom: bottom }}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{description}</Text>
+          </View>
+          {modifications.length > 0 && (
+            <View style={styles.modificationsContainer}>
+              {modifications.map((mod) => (
+                <TouchableOpacity key={mod}>
+                  <ModificationBadge size="mid" variation="solid">
+                    {mod}
+                  </ModificationBadge>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+          <View style={styles.contentContainer}>
+            <Markdown styles={styles}>{instructions}</Markdown>
+          </View>
+        </ScrollView>
       </View>
       <Portal>
         <BottomSheet
@@ -130,7 +155,14 @@ const themedStyles = AppStyleSheet.create({
   },
   titleContainer: {
     paddingHorizontal: 15,
-    paddingTop: 40,
+    paddingTop: 20,
+  },
+  modificationsContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
   },
   title: {
     color: 'text primary',
@@ -139,15 +171,29 @@ const themedStyles = AppStyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 15,
-    paddingTop: 30,
+    paddingTop: 25,
   },
-  content: {
-    backgroundColor: 'bg',
+  // --- markdown styles ---
+  'heading 2': {
+    color: 'text primary',
+    fontFamily: 'rubik 500',
+    fontSize: 18,
+    lineHeight: 24,
+    paddingTop: 10,
+  },
+  text: {
     color: 'text primary',
     fontFamily: 'rubik 400',
     fontSize: 16,
     lineHeight: 22,
   },
+  paragraph: {
+    paddingTop: 10,
+  },
+  br: {
+    fontSize: 16,
+  },
+  // --- end of markdown styles ---
   video: {
     backgroundColor: 'black',
   },

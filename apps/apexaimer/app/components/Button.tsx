@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { forwardRef, useCallback } from 'react'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import * as Haptics from 'expo-haptics'
 
@@ -50,7 +50,10 @@ async function doHaptic(haptic: HapticStyle) {
   return
 }
 
-export function Button({ haptic, onPress: onPressProp, ...rest }: Props) {
+export const Button = forwardRef<TouchableOpacity, Props>(function ButtonComp(
+  { haptic, onPress: onPressProp, ...rest },
+  ref
+) {
   const onPress = useCallback(
     (evt) => {
       doHaptic(haptic)
@@ -59,5 +62,5 @@ export function Button({ haptic, onPress: onPressProp, ...rest }: Props) {
     [onPressProp, haptic]
   )
 
-  return <TouchableOpacity {...rest} onPress={onPress} />
-}
+  return <TouchableOpacity ref={ref} {...rest} onPress={onPress} />
+})

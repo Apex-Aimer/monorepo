@@ -2,6 +2,7 @@
 type: Movement
 duration: 10
 description: Slide jumps, Turns 90 deg, Turns around
+levels: Rookie-Predator
 ---
 
 Simple movement to get the blood flowing.
