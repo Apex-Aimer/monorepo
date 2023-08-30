@@ -30,6 +30,10 @@ interface ThemedColorsPalette {
   'exercise item gradient': [ColorValue, ColorValue]
   'exercise item gradient inactive': [ColorValue, ColorValue]
   'exercise card gradient': [ColorValue, ColorValue]
+  'range badge': ColorValue
+  'player movement badge': ColorValue
+  'dummy movement badge': ColorValue
+  'critical hit badge': ColorValue
 }
 
 interface StaticColorsPalette {
@@ -67,6 +71,10 @@ const lightColors: ThemedColorsPalette = {
   ],
   'exercise card gradient': ['#FFFFFF', colorWithOpacity('#FFFFFF', 0.5)],
   backdrop: colorWithOpacity('#282624', 0.4),
+  'range badge': '#E4BE83',
+  'player movement badge': '#AD9EDE',
+  'dummy movement badge': '#ADCF93',
+  'critical hit badge': '#979797',
 }
 
 const darkColors: ThemedColorsPalette = {
@@ -89,6 +97,10 @@ const darkColors: ThemedColorsPalette = {
   ],
   'exercise card gradient': ['#424242', colorWithOpacity('#424242', 0.5)],
   backdrop: colorWithOpacity('#000000', 0.4),
+  'range badge': '#F5E7D2',
+  'player movement badge': '#D6D2E3',
+  'dummy movement badge': '#E0E9D9',
+  'critical hit badge': '#FFFFFF',
 }
 
 const staticColors: StaticColorsPalette = {

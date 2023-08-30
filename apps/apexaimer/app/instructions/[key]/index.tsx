@@ -93,7 +93,7 @@ export default function InstructionsScreen() {
       />
       <View style={styles.container}>
         <InstructionVideo uri={videoUri} />
-        <ScrollView style={{ paddingBottom: bottom }}>
+        <ScrollView contentContainerStyle={{ paddingBottom: bottom }}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>{description}</Text>
           </View>

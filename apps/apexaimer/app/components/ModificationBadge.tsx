@@ -1,4 +1,10 @@
-import { ColorValue, TextStyle, View, ViewStyle } from 'react-native'
+import {
+  ColorValue,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { Text } from 'react-native'
 
@@ -13,7 +19,6 @@ const dummyMovements = new Set([
   'Dummy constant strafe',
   'Dummy random strafe',
 ])
-const ads = new Set(['ADS', 'NoADS'])
 const playerMovements = new Set(['Player still', 'Player strafing'])
 const criticals = new Set(['No critical hit', 'Critical hit'])
 
@@ -87,57 +92,36 @@ interface Props extends WithVariations {
 }
 
 export function ModificationBadge({ children, size, variation }: Props) {
+  const styles = useAppStyles(themedStyles)
+
   if (ranges.has(children)) {
+    const { backgroundColor: color } = StyleSheet.flatten(styles.range)
     return (
-      <ModificationBadgeContent
-        color="#F5E7D2"
-        size={size}
-        variation={variation}
-      >
+      <ModificationBadgeContent color={color} size={size} variation={variation}>
         {children}
       </ModificationBadgeContent>
     )
   }
   if (dummyMovements.has(children)) {
+    const { backgroundColor: color } = StyleSheet.flatten(styles.dummyMovement)
     return (
-      <ModificationBadgeContent
-        color="#E0E9D9"
-        size={size}
-        variation={variation}
-      >
-        {children}
-      </ModificationBadgeContent>
-    )
-  }
-  if (ads.has(children)) {
-    return (
-      <ModificationBadgeContent
-        color="#FBF2D4"
-        size={size}
-        variation={variation}
-      >
+      <ModificationBadgeContent color={color} size={size} variation={variation}>
         {children}
       </ModificationBadgeContent>
     )
   }
   if (playerMovements.has(children)) {
+    const { backgroundColor: color } = StyleSheet.flatten(styles.playerMovement)
     return (
-      <ModificationBadgeContent
-        color="#D6D2E3"
-        size={size}
-        variation={variation}
-      >
+      <ModificationBadgeContent color={color} size={size} variation={variation}>
         {children}
       </ModificationBadgeContent>
     )
   }
   if (criticals.has(children)) {
+    const { backgroundColor: color } = StyleSheet.flatten(styles.criticalHit)
     return (
-      <ModificationBadgeContent
-        color="#FFFFFF"
-        size={size}
-        variation={variation}
-      >
+      <ModificationBadgeContent color={color} size={size} variation={variation}>
         {children}
       </ModificationBadgeContent>
     )
@@ -161,7 +145,7 @@ const themedStyles = AppStyleSheet.create({
     borderWidth: 1,
   },
   textSolid: {
-    color: 'text dark',
+    color: 'text primary inverted',
   },
   textDisabled: {
     color: 'line disabled',
@@ -174,5 +158,17 @@ const themedStyles = AppStyleSheet.create({
     color: 'text dark',
     fontSize: 13,
     fontFamily: 'rubik 500',
+  },
+  range: {
+    backgroundColor: 'range badge',
+  },
+  playerMovement: {
+    backgroundColor: 'player movement badge',
+  },
+  dummyMovement: {
+    backgroundColor: 'dummy movement badge',
+  },
+  criticalHit: {
+    backgroundColor: 'critical hit badge',
   },
 })
