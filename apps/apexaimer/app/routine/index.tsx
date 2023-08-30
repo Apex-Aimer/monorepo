@@ -95,17 +95,22 @@ function Routine() {
           data={routine.data}
           renderItem={({ item, index }) => {
             const active = index === activeDrillIndex
+            const hasContinuation = index !== routine.data.length - 1
             return (
               <FadeInView delay={index * 200}>
                 <Drill
                   id={item.drillKey}
-                  hasContinuation={index !== routine.data.length - 1}
+                  hasContinuation={hasContinuation}
                   active={active}
                 >
                   {active && (
                     <DrillTimer
                       id={item.drillKey}
                       onEnd={() => {
+                        if (!hasContinuation) {
+                          return
+                        }
+
                         listRef.current?.scrollToIndex({
                           index: activeDrillIndex,
                           animated: true,
@@ -125,7 +130,7 @@ function Routine() {
       </View>
       <RoutinCTAWithTimer
         duration={duration}
-        onEnd={() => {
+        onPress={() => {
           router.replace('/congrats/')
         }}
       />

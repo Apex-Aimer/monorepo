@@ -10,7 +10,7 @@ import { PRIMARY_BUTTON_HEIGHT } from './PrimaryButton'
 
 interface Props extends PropsWithChildren {
   duration: number
-  onEnd?(): void
+  onPress?(): void
 }
 import AnimateableText from 'react-native-animateable-text'
 import Animated, {
@@ -24,8 +24,15 @@ import Animated, {
 } from 'react-native-reanimated'
 import MaskedView from '@react-native-masked-view/masked-view'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
+import { ScreenCTA } from './ScreenCTA'
 
-function Timer({ initialDuration }: { initialDuration: number }) {
+function Timer({
+  initialDuration,
+  onEnd,
+}: {
+  initialDuration: number
+  onEnd?(): void
+}) {
   const duration = useSharedValue(initialDuration)
 
   const animatedText = useDerivedValue(() => {
@@ -46,11 +53,19 @@ function Timer({ initialDuration }: { initialDuration: number }) {
   const styles = useAppStyles(themedStyles)
 
   useEffect(() => {
-    duration.value = withTiming(0, {
-      duration: initialDuration * 1000,
-      easing: Easing.linear,
-    })
-  }, [duration, initialDuration])
+    duration.value = withTiming(
+      0,
+      {
+        duration: initialDuration * 1000,
+        easing: Easing.linear,
+      },
+      (finished) => {
+        if (finished && onEnd != null) {
+          runOnJS(onEnd)()
+        }
+      }
+    )
+  }, [duration, initialDuration, onEnd])
 
   return <AnimateableText animatedProps={animatedProps} style={styles.label} />
 }
@@ -60,7 +75,7 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
 const WIDTH = 160
 
-export function RoutinCTAWithTimer({ duration, onEnd }: Props) {
+export function RoutinCTAWithTimer({ duration, onPress }: Props) {
   const theme = useThemeColors()
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
@@ -69,13 +84,14 @@ export function RoutinCTAWithTimer({ duration, onEnd }: Props) {
   const scale = useSharedValue(1)
 
   const [active, setActive] = useState(true)
+  const [finished, setFinished] = useState(false)
 
   const disable = useCallback(() => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)
 
     setActive(false)
-    onEnd()
-  }, [onEnd])
+    onPress()
+  }, [onPress])
 
   const onStartHaptic = useCallback(() => {
     Haptics.selectionAsync()
@@ -115,6 +131,10 @@ export function RoutinCTAWithTimer({ duration, onEnd }: Props) {
   const overlayInnerTimerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: -position.value + 1 }],
   }))
+
+  if (finished) {
+    return <ScreenCTA onPress={onPress}>FINISH</ScreenCTA>
+  }
 
   return (
     <LinearGradient
@@ -156,7 +176,12 @@ export function RoutinCTAWithTimer({ duration, onEnd }: Props) {
                     maskElement={<Timer initialDuration={duration} />}
                     style={[styles.overlayInnerTimer, overlayInnerTimerStyle]}
                   >
-                    <Timer initialDuration={duration} />
+                    <Timer
+                      initialDuration={duration}
+                      onEnd={() => {
+                        setFinished(true)
+                      }}
+                    />
                     <LinearGradient
                       colors={theme['primary gradient'] as string[]}
                       start={{ x: 0, y: 0.5 }}
