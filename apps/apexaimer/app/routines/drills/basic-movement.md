@@ -1,8 +1,10 @@
 ---
 type: Movement
-duration: 10
-description: Slide jumps, Turns 90 deg, Turns around
+duration: 60
+description: Simple movement - turns, slides, jumps
 levels: Rookie-Predator
+videoUri: https://customer-xzvhmwg826li9fy3.cloudflarestream.com/7ce5cd34d01361aa7031ba7c5b51f8fa/downloads/default.mp4
+thumbnail: https://customer-xzvhmwg826li9fy3.cloudflarestream.com/7ce5cd34d01361aa7031ba7c5b51f8fa/thumbnails/thumbnail.jpg
 ---
 
 Simple movement to get the blood flowing.

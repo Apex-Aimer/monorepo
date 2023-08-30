@@ -3,7 +3,7 @@
     "name": "ApexAimer",
     "slug": "ApexAimer",
     "version": "0.0.1",
-    "scheme": "com.apexaimer",
+    "scheme": "apexaimer",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#282624"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.apexaimer",
@@ -46,6 +48,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9042a6e2-e3fe-42bf-944c-2a5a1d9085a5"
+      }
+    },
+    "owner": "apexaimer"
   }
 }

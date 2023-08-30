@@ -2,7 +2,7 @@ import { Image } from 'react-native'
 import findIndex from 'lodash/findIndex'
 
 // @ts-expect-error
-import stub from '../../assets/simple_movement_720p.m4v'
+import stub from '../../assets/simple_movement.mp4'
 
 type MDContent = string
 interface MDDrillMetadata {
@@ -11,6 +11,8 @@ interface MDDrillMetadata {
   description: string
   modifications: string[]
   levels: string
+  videoUri?: string
+  thumbnail?: string
 }
 
 export enum DrillType {
@@ -63,6 +65,7 @@ export interface RoutineDrill {
   instructions: MDContent
   // uri
   videoUri: string
+  thumbnail?: string
 }
 
 function getTypeFromMetadata(metadata: MDDrillMetadata) {
@@ -166,7 +169,8 @@ function processDrill(
     levels: getLevelsFromMetadata(metadata, filename),
     duration: metadata.duration,
     instructions: content,
-    videoUri: Image.resolveAssetSource(stub).uri,
+    videoUri: metadata.videoUri ?? Image.resolveAssetSource(stub).uri,
+    thumbnail: metadata.thumbnail,
   }
 }
 

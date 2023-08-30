@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { RefObject, Suspense, useCallback, useRef } from 'react'
 import {
   ScrollView,
   StyleSheet,
@@ -11,16 +11,16 @@ import { StatusBar } from 'expo-status-bar'
 import { useRecoilValue } from 'recoil'
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import Markdown from 'react-native-simple-markdown-updated-dependencies'
+import { Portal } from '@gorhom/portal'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
 import { routineDrill } from '../../store'
 import { CoverIcon } from '../../components/Drill/CoverIcon'
 import { headerLeft } from '../../components/HeaderBackButton'
 import { InstructionVideo } from '../../components/InstructionVideo'
-import { Portal } from '@gorhom/portal'
 import { Button } from '../../components/Button'
 import { ModificationBadge } from '../../components/ModificationBadge'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { DrillType } from '../../routines/processing'
 import { RAMPStage } from '../../routines/types'
 
@@ -43,16 +43,67 @@ const DRILL_TYPE_DESCRIPTION = {
   },
 }
 
+function Instructions({ id }: { id: string }) {
+  const styles = useAppStyles(themedStyles)
+  const { description, instructions, videoUri, thumbnail, modifications } =
+    useRecoilValue(routineDrill(id))
+  const { bottom } = useSafeAreaInsets()
+
+  return (
+    <View style={styles.container}>
+      <InstructionVideo uri={videoUri} thumbnail={thumbnail} />
+      <ScrollView contentContainerStyle={{ paddingBottom: bottom }}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{description}</Text>
+        </View>
+        {modifications.length > 0 && (
+          <View style={styles.modificationsContainer}>
+            {modifications.map((mod) => (
+              <TouchableOpacity key={mod}>
+                <ModificationBadge size="mid" variation="solid">
+                  {mod}
+                </ModificationBadge>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+        <View style={styles.contentContainer}>
+          <Markdown styles={styles}>{instructions}</Markdown>
+        </View>
+      </ScrollView>
+    </View>
+  )
+}
+
+function TypeButton({
+  sheetRef,
+  id,
+}: {
+  sheetRef: RefObject<BottomSheet>
+  id: string
+}) {
+  const styles = useAppStyles(themedStyles)
+  const { type } = useRecoilValue(routineDrill(id))
+  return (
+    <Button
+      style={styles.drillTypeHeaderButton}
+      onPress={() => {
+        sheetRef.current?.expand()
+      }}
+      haptic="selection"
+    >
+      <CoverIcon type={type} size={30} />
+    </Button>
+  )
+}
+
 export default function InstructionsScreen() {
   const styles = useAppStyles(themedStyles)
   const { key: id, stage } = useLocalSearchParams<{
     key: string
     stage: RAMPStage
   }>()
-  const { description, instructions, type, videoUri, modifications } =
-    useRecoilValue(routineDrill(id))
   const drillTypeSheetRef = useRef<BottomSheet>(null)
-  const { bottom } = useSafeAreaInsets()
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -77,42 +128,17 @@ export default function InstructionsScreen() {
           headerTransparent: true,
           headerLeft,
           headerRight: () => (
-            <Button
-              style={styles.drillTypeHeaderButton}
-              onPress={() => {
-                drillTypeSheetRef.current?.expand()
-              }}
-              haptic="selection"
-            >
-              <CoverIcon type={type} size={30} />
-            </Button>
+            <Suspense fallback={null}>
+              <TypeButton id={id} sheetRef={drillTypeSheetRef} />
+            </Suspense>
           ),
           contentStyle: styles.bg,
           headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
-      <View style={styles.container}>
-        <InstructionVideo uri={videoUri} />
-        <ScrollView contentContainerStyle={{ paddingBottom: bottom }}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>{description}</Text>
-          </View>
-          {modifications.length > 0 && (
-            <View style={styles.modificationsContainer}>
-              {modifications.map((mod) => (
-                <TouchableOpacity key={mod}>
-                  <ModificationBadge size="mid" variation="solid">
-                    {mod}
-                  </ModificationBadge>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-          <View style={styles.contentContainer}>
-            <Markdown styles={styles}>{instructions}</Markdown>
-          </View>
-        </ScrollView>
-      </View>
+      <Suspense fallback={null}>
+        <Instructions id={id} />
+      </Suspense>
       <Portal>
         <BottomSheet
           ref={drillTypeSheetRef}
@@ -126,7 +152,7 @@ export default function InstructionsScreen() {
           backgroundStyle={styles.sheet}
           handleIndicatorStyle={styles.sheetHandleIndicatorStyle}
         >
-          <View style={styles.sheetTitleContainer}>
+          {/* <View style={styles.sheetTitleContainer}>
             <CoverIcon type={type} size={40} />
             <Text style={styles.sheetTitleText}>
               {DRILL_TYPE_DESCRIPTION[type].title}
@@ -136,7 +162,7 @@ export default function InstructionsScreen() {
             <Text style={styles.sheetContentText}>
               {DRILL_TYPE_DESCRIPTION[type].description}
             </Text>
-          </View>
+          </View> */}
         </BottomSheet>
       </Portal>
     </>
