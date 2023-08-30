@@ -5,7 +5,6 @@ import shuffle from 'lodash/shuffle'
 import without from 'lodash/without'
 import findIndex from 'lodash/findIndex'
 import sum from 'lodash/sum'
-import { format } from 'date-fns'
 
 import { DrillCategory, Levels, RoutineDrill, levelsArray } from './processing'
 import { DurationLevels, Routine, RoutinesOfTheDay } from './types'
@@ -246,10 +245,12 @@ function getRoutine(
 
 export function generateRoutines(
   level: Levels,
-  prevRoutine: Routine
+  prevRoutine: Routine,
+  date: string
 ): RoutinesOfTheDay {
   const categoriesForLevel = getCategoriesForLevel(level)
-  const nextLevel = levelsArray[findIndex(levelsArray, level) + 1]
+  const nextLevel =
+    levelsArray[findIndex(levelsArray, (it) => it === level) + 1]
   const categoriesForNextLevel = getCategoriesForLevel(nextLevel)
 
   const raise = getRaiseDrills(
@@ -267,7 +268,7 @@ export function generateRoutines(
   const common = drillsCategoriesMap[DrillCategory.BasicMovement]
 
   return {
-    date: format(new Date(), 'yyyy-mm-dd'),
+    date,
     [DurationLevels.Short]: getRoutine(
       common,
       raise,

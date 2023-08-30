@@ -21,16 +21,16 @@ export enum DrillType {
 }
 
 export const enum Levels {
-  Rookie,
-  Iron,
-  Bronze,
-  Silver,
-  Gold,
-  Platinum,
-  Diamond,
-  Ascendant,
-  Master,
-  Predator,
+  Rookie = 'rookie',
+  Iron = 'iron',
+  Bronze = 'bronze',
+  Silver = 'silver',
+  Gold = 'gold',
+  Platinum = 'platinum',
+  Diamond = 'diamond',
+  Ascendant = 'ascendant',
+  Master = 'master',
+  Predator = 'predator',
 }
 
 export const enum DrillCategory {
