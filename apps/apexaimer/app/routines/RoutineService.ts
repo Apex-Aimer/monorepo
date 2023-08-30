@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { format } from 'date-fns'
 
 import { drillsTable, emptyRoutines } from './routines'
 import { DurationLevels } from './types'
@@ -15,39 +15,14 @@ export class RoutineService {
     return this.__instance
   }
 
-  async getRoutinesOfTheDay(duration: DurationLevels, level: Levels) {
-    let prevRoutines = emptyRoutines
+  async getRoutinesOfTheDay(level: Levels, prevRoutines = emptyRoutines) {
+    const date = format(new Date(), 'yyyy-mm-dd')
 
-    const prevLevel = (await AsyncStorage.getItem('level')) ?? Levels.Iron
-
-    if (level === prevLevel) {
-      try {
-        const savedRoutines = JSON.parse(
-          await AsyncStorage.getItem('routineOfTheDay')
-        )
-
-        if (savedRoutines != null) {
-          prevRoutines = savedRoutines
-        }
-      } catch {
-        // no-op
-      }
+    if (date === prevRoutines.date) {
+      return prevRoutines
     }
 
-    let routines = emptyRoutines
-
-    try {
-      // TODO
-      routines = generateRoutines(level, emptyRoutines[DurationLevels.Short])
-      // routines = generateRoutines(level, prevRoutines[duration])
-
-      await AsyncStorage.setItem('routineOfTheDay', JSON.stringify(routines))
-    } catch (e) {
-      console.error(e)
-      // no-op
-    }
-
-    return routines
+    return generateRoutines(level, prevRoutines[DurationLevels.Short], date)
   }
 
   async getRoutineDrillById(id: string) {

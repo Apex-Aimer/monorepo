@@ -52,8 +52,8 @@ export const routinesOfTheDay = atom({
         const store = (await getPersistedStore()) ?? {}
 
         return await RoutineService.sharedInstance.getRoutinesOfTheDay(
-          store[routineIntensityLevel.key] ?? DurationLevels.Medium,
-          store[level.key] ?? Levels.Iron
+          store[level.key],
+          store['routinesOfTheDay']
         )
       }
 
