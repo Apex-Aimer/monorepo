@@ -11,8 +11,7 @@ interface MDDrillMetadata {
   description: string
   modifications: string[]
   levels: string
-  videoUri?: string
-  thumbnail?: string
+  videoCloudflareID?: string
 }
 
 export enum DrillType {
@@ -154,6 +153,24 @@ interface RawDrill {
   filename: string
 }
 
+function processCloudflareVideo(videoId?: string) {
+  if (videoId == null) {
+    // TODO
+    return Image.resolveAssetSource(stub).uri
+  }
+
+  return `https://customer-xzvhmwg826li9fy3.cloudflarestream.com/${videoId}/downloads/default.mp4`
+}
+
+function processCloudflareVideoThumbnail(videoId?: string) {
+  if (videoId == null) {
+    // TODO
+    return undefined
+  }
+
+  return `https://customer-xzvhmwg826li9fy3.cloudflarestream.com/${videoId}/thumbnails/thumbnail.jpg`
+}
+
 function processDrill(
   category: DrillCategory,
   { default: content, metadata, filename }: RawDrill
@@ -169,8 +186,8 @@ function processDrill(
     levels: getLevelsFromMetadata(metadata, filename),
     duration: metadata.duration,
     instructions: content,
-    videoUri: metadata.videoUri ?? Image.resolveAssetSource(stub).uri,
-    thumbnail: metadata.thumbnail,
+    videoUri: processCloudflareVideo(metadata.videoCloudflareID),
+    thumbnail: processCloudflareVideoThumbnail(metadata.videoCloudflareID),
   }
 }
 

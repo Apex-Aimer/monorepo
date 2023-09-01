@@ -1,9 +1,11 @@
-import { Suspense, forwardRef, memo, useMemo } from 'react'
-import { StyleSheet, View, useWindowDimensions } from 'react-native'
+import { forwardRef, memo, useMemo } from 'react'
+import { StyleSheet, useWindowDimensions } from 'react-native'
 import { ResizeMode, Video, VideoProps } from 'expo-av'
-import { downloadAsync, documentDirectory } from 'expo-file-system'
-import { selectorFamily, useRecoilValue } from 'recoil'
-import { Image } from 'expo-image'
+import {
+  downloadAsync,
+  documentDirectory,
+  getInfoAsync,
+} from 'expo-file-system'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 class Cache {
@@ -21,21 +23,21 @@ class Cache {
   private entries: Record<string, string> = {}
   private tasks: Record<string, Promise<string>> = {}
 
-  async getEntry(uri: string) {
+  getEntry(uri: string) {
     const cacheEntry = this.entries[uri]
 
     // TODO: check that cache entry is valid
-    // if (cacheEntry != null) {
-    //   return cacheEntry
-    // }
+    if (cacheEntry != null) {
+      return cacheEntry
+    }
 
     if (!uri.startsWith('http')) {
       return uri
     }
 
-    const localUri = await this.getTask(uri)
+    this.setTask(uri)
 
-    return localUri
+    return uri
   }
 
   private async init() {
@@ -43,7 +45,24 @@ class Cache {
       const json = await AsyncStorage.getItem(Cache.STORAGE_KEY)
       const entries = JSON.parse(json)
 
-      this.entries = entries
+      const checkedEntries = await Promise.all(
+        Object.keys(entries).map(async (key) => {
+          const file = entries[key]
+
+          try {
+            const { exists, uri } = await getInfoAsync(file)
+
+            if (exists) {
+              return { [key]: uri }
+            }
+            return null
+          } catch {
+            return null
+          }
+        })
+      )
+
+      this.entries = Object.assign({}, ...checkedEntries)
     } catch {
       // no-op
     }
@@ -61,8 +80,6 @@ class Cache {
       const result = await downloadAsync(uri, `${documentDirectory}${uniqPath}`)
       localUri = result.uri
 
-      console.log('downloaded video: ', result.uri)
-
       setTimeout(() => {
         this.entries = {
           ...this.entries,
@@ -79,27 +96,18 @@ class Cache {
     return localUri
   }
 
-  private getTask(uri: string) {
+  private setTask(uri: string) {
     if (this.tasks[uri] != null) {
-      return this.tasks[uri]
+      return
     }
 
     const task = this.download(uri)
 
     this.tasks[uri] = this.initTask.then(() => task)
 
-    return task
+    return
   }
 }
-
-const videosCacheEntry = selectorFamily({
-  key: 'instructionsVideosCacheEntry',
-  get: (uri: string) => async () => {
-    const entry = await Cache.sharedInstance.getEntry(uri)
-    console.log({ entry })
-    return entry
-  },
-})
 
 interface CachedVideoProps extends VideoProps {
   uri: string
@@ -112,9 +120,7 @@ interface Props {
 
 export const CachedVideo = forwardRef<Video, CachedVideoProps>(
   function CachedVideoComp({ uri, ...rest }, _ref) {
-    const cachedUri = useRecoilValue(videosCacheEntry(uri))
-
-    console.log({ cachedUri })
+    const cachedUri = Cache.sharedInstance.getEntry(uri)
 
     return <Video ref={_ref} source={{ uri: cachedUri }} {...rest} />
   }
@@ -132,35 +138,20 @@ export const InstructionVideo = memo(
       return Math.floor((width / 4) * 3)
     }, [width])
 
-    // const fallback = (
-    //   <Image
-    //     style={[styles.video, { height: videoHeight }]}
-    //     source={{ uri: thumbnail }}
-    //   />
-    // )
-
-    const fallback = (
-      <View
-        style={[
-          styles.video,
-          { height: videoHeight },
-          { backgroundColor: 'red' },
-        ]}
-      ></View>
-    )
-
     return (
-      <Suspense fallback={fallback}>
-        <CachedVideo
-          ref={_ref}
-          style={[styles.video, { height: videoHeight }]}
-          uri={uri}
-          useNativeControls
-          resizeMode={ResizeMode.COVER}
-          isLooping
-          shouldPlay
-        />
-      </Suspense>
+      <CachedVideo
+        ref={_ref}
+        style={[styles.video, { height: videoHeight }]}
+        uri={uri}
+        useNativeControls
+        resizeMode={ResizeMode.COVER}
+        isLooping
+        shouldPlay
+        posterSource={{ uri: thumbnail }}
+        onError={(err) => {
+          console.log(err)
+        }}
+      />
     )
   })
 )

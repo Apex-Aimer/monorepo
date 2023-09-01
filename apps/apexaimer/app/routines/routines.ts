@@ -31,7 +31,9 @@ export const drillsCategoriesMap: Record<DrillCategory, RoutineDrill[]> = {
   [DrillCategory.DummyTrackingADS]: processDrills(
     DrillCategory.DummyTrackingADS,
     require('./drills/dummy-tracking-ads/1.md'),
-    require('./drills/dummy-tracking-ads/2.md')
+    require('./drills/dummy-tracking-ads/2.md'),
+    require('./drills/dummy-tracking-ads/3.md'),
+    require('./drills/dummy-tracking-ads/4.md')
   ),
   [DrillCategory.DummyTrackingNoADS]: processDrills(
     DrillCategory.DummyTrackingNoADS,
@@ -39,35 +41,7 @@ export const drillsCategoriesMap: Record<DrillCategory, RoutineDrill[]> = {
   ),
   [DrillCategory.DummyWalkArounds]: processDrills(
     DrillCategory.DummyWalkArounds,
-    require('./drills/dummy-walk-arounds/1.md'),
-    require('./drills/dummy-walk-arounds/2.md')
-  ),
-  [DrillCategory.SingleBulletTargetsSwitching]: processDrills(
-    DrillCategory.SingleBulletTargetsSwitching,
-    require('./drills/single-bullet-targets-switching/1.md'),
-    require('./drills/single-bullet-targets-switching/2.md'),
-    require('./drills/single-bullet-targets-switching/3.md'),
-    require('./drills/single-bullet-targets-switching/4.md'),
-    require('./drills/single-bullet-targets-switching/5.md'),
-    require('./drills/single-bullet-targets-switching/6.md'),
-    require('./drills/single-bullet-targets-switching/7.md')
-  ),
-  [DrillCategory.SingleBulletFlicking]: processDrills(
-    DrillCategory.SingleBulletFlicking,
-    require('./drills/single-bullet-flicking/1.md'),
-    require('./drills/single-bullet-flicking/2.md'),
-    require('./drills/single-bullet-flicking/3.md'),
-    require('./drills/single-bullet-flicking/4.md'),
-    require('./drills/single-bullet-flicking/5.md'),
-    require('./drills/single-bullet-flicking/6.md'),
-    require('./drills/single-bullet-flicking/7.md')
-  ),
-  [DrillCategory.SingleBulletFlickingMicro]: processDrills(
-    DrillCategory.SingleBulletFlickingMicro,
-    require('./drills/single-bullet-flicking-micro/1.md'),
-    require('./drills/single-bullet-flicking-micro/2.md'),
-    require('./drills/single-bullet-flicking-micro/3.md'),
-    require('./drills/single-bullet-flicking-micro/4.md')
+    require('./drills/dummy-walk-arounds/1.md')
   ),
   [DrillCategory.LowBurstTargetsSwitching]: processDrills(
     DrillCategory.LowBurstTargetsSwitching,
@@ -87,6 +61,33 @@ export const drillsCategoriesMap: Record<DrillCategory, RoutineDrill[]> = {
     require('./drills/recoil-control-ladder/4.md'),
     require('./drills/recoil-control-ladder/5.md'),
     require('./drills/recoil-control-ladder/6.md')
+  ),
+  [DrillCategory.SingleBulletFlicking]: processDrills(
+    DrillCategory.SingleBulletFlicking,
+    require('./drills/single-bullet-flicking/1.md'),
+    require('./drills/single-bullet-flicking/2.md'),
+    require('./drills/single-bullet-flicking/3.md'),
+    require('./drills/single-bullet-flicking/4.md'),
+    require('./drills/single-bullet-flicking/5.md'),
+    require('./drills/single-bullet-flicking/6.md'),
+    require('./drills/single-bullet-flicking/7.md')
+  ),
+  [DrillCategory.SingleBulletFlickingMicro]: processDrills(
+    DrillCategory.SingleBulletFlickingMicro,
+    require('./drills/single-bullet-flicking-micro/1.md'),
+    require('./drills/single-bullet-flicking-micro/2.md'),
+    require('./drills/single-bullet-flicking-micro/3.md'),
+    require('./drills/single-bullet-flicking-micro/4.md')
+  ),
+  [DrillCategory.SingleBulletTargetsSwitching]: processDrills(
+    DrillCategory.SingleBulletTargetsSwitching,
+    require('./drills/single-bullet-targets-switching/1.md'),
+    require('./drills/single-bullet-targets-switching/2.md'),
+    require('./drills/single-bullet-targets-switching/3.md'),
+    require('./drills/single-bullet-targets-switching/4.md'),
+    require('./drills/single-bullet-targets-switching/5.md'),
+    require('./drills/single-bullet-targets-switching/6.md'),
+    require('./drills/single-bullet-targets-switching/7.md')
   ),
   [DrillCategory.TargetsRecoil]: processDrills(
     DrillCategory.TargetsRecoil,
