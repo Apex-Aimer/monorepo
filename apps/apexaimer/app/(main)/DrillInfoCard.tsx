@@ -8,6 +8,7 @@ import { useThemeColors } from '../components/ThemeProvider'
 import { Button } from '../components/Button'
 import { ModificationBadge } from '../components/ModificationBadge'
 import { forwardRef } from 'react'
+import { Image, ImageStyle } from 'expo-image'
 
 interface Props {
   id: string
@@ -18,7 +19,7 @@ export const DrillInfoCard = forwardRef<TouchableOpacity, Props>(
   function DrillInfoCardComp({ id, onPress }, ref) {
     const theme = useThemeColors()
     const styles = useAppStyles(themedStyles)
-    const { type, description, modifications } = useRecoilValue(
+    const { type, description, modifications, thumbnail } = useRecoilValue(
       routineDrill(id)
     )
 
@@ -36,11 +37,18 @@ export const DrillInfoCard = forwardRef<TouchableOpacity, Props>(
           style={StyleSheet.absoluteFill}
         />
         <View style={styles.coverContainer}>
-          <View style={styles.cover} />
+          <Image
+            style={styles.cover as ImageStyle}
+            source={{ uri: thumbnail }}
+            alt={description}
+          />
           <CoverIcon type={type} size={40} active absolute />
         </View>
         <View style={styles.description}>
-          <Text style={styles.descriptionText} numberOfLines={2}>
+          <Text
+            style={styles.descriptionText}
+            numberOfLines={(modifications?.length ?? 0) > 1 ? 2 : 4}
+          >
             {description}
           </Text>
           <View style={styles.descriptionModifications}>
