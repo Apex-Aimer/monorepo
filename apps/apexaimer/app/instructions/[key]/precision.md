@@ -1,0 +1,1 @@
+Precision drills focus on honing your aiming skills and achieving pinpoint accuracy. Whether it's headshots, flick shots, or long-range engagements, these drills elevate your accuracy, increase your damage per shot, and make you a formidable marksman.

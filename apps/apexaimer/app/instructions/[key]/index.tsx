@@ -27,19 +27,19 @@ import { RAMPStage } from '../../routines/types'
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {
     title: 'Movement',
-    description: 'Movement drills description...',
+    description: require('./movement.md').default,
   },
   [DrillType.Precision]: {
     title: 'Precision',
-    description: 'Precision drills description...',
+    description: require('./precision.md').default,
   },
   [DrillType.Recoil]: {
     title: 'Recoil',
-    description: 'Recoil drills description...',
+    description: require('./recoil.md').default,
   },
   [DrillType.Tracking]: {
     title: 'Tracking',
-    description: 'Tracking drills description...',
+    description: require('./tracking.md').default,
   },
 }
 
@@ -94,6 +94,27 @@ function TypeButton({
     >
       <CoverIcon type={type} size={30} />
     </Button>
+  )
+}
+
+function TypeSheetContent({ id }: { id: string }) {
+  const styles = useAppStyles(themedStyles)
+  const { type } = useRecoilValue(routineDrill(id))
+
+  return (
+    <>
+      <View style={styles.sheetTitleContainer}>
+        <CoverIcon type={type} size={40} />
+        <Text style={styles.sheetTitleText}>
+          {DRILL_TYPE_DESCRIPTION[type].title}
+        </Text>
+      </View>
+      <View style={styles.sheetContentContainer}>
+        <Markdown styles={styles}>
+          {DRILL_TYPE_DESCRIPTION[type].description}
+        </Markdown>
+      </View>
+    </>
   )
 }
 
@@ -152,17 +173,7 @@ export default function InstructionsScreen() {
           backgroundStyle={styles.sheet}
           handleIndicatorStyle={styles.sheetHandleIndicatorStyle}
         >
-          {/* <View style={styles.sheetTitleContainer}>
-            <CoverIcon type={type} size={40} />
-            <Text style={styles.sheetTitleText}>
-              {DRILL_TYPE_DESCRIPTION[type].title}
-            </Text>
-          </View>
-          <View style={styles.sheetContentContainer}>
-            <Text style={styles.sheetContentText}>
-              {DRILL_TYPE_DESCRIPTION[type].description}
-            </Text>
-          </View> */}
+          <TypeSheetContent id={id} />
         </BottomSheet>
       </Portal>
     </>

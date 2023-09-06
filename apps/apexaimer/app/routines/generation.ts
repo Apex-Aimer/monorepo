@@ -33,10 +33,6 @@ function getRaiseDrills(
 ) {
   let weight = 1
 
-  /**
-   * TODO: remove not applicable for the current level drills
-   */
-
   let bucket = shuffle(
     intersection(
       without(Object.keys(raiseDrillsWeighted), ...prevCategories),
