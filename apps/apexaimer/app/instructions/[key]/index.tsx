@@ -211,13 +211,34 @@ const themedStyles = AppStyleSheet.create({
     color: 'text primary',
     fontFamily: 'rubik 400',
     fontSize: 16,
-    lineHeight: 22,
+    lineHeight: 25,
   },
   paragraph: {
     paddingTop: 10,
   },
   br: {
     fontSize: 16,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    color: 'text primary',
+    paddingTop: 10,
+  },
+  listItemNumber: {
+    fontWeight: 'bold',
+    color: 'text primary',
+    paddingTop: 3,
+    paddingRight: 5,
+  },
+  listItemBullet: {
+    fontWeight: 'bold',
+    color: 'text primary',
+    paddingTop: 2,
+    paddingRight: 5,
+  },
+  listItemText: {
+    color: 'text primary',
   },
   // --- end of markdown styles ---
   video: {
