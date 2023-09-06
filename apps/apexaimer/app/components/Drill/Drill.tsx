@@ -9,6 +9,7 @@ import { routineDrill } from '../../store'
 import { CoverIcon } from './CoverIcon'
 import { Button } from '../Button'
 import { ModificationBadge } from '../ModificationBadge'
+import { Image, ImageStyle } from 'expo-image'
 
 interface DrillProps extends PropsWithChildren {
   id: string
@@ -37,7 +38,9 @@ function DrillInner({
 }: DrillProps) {
   const styles = useAppStyles(themedStyles)
   const theme = useThemeColors()
-  const { type, description, modifications } = useRecoilValue(routineDrill(id))
+  const { type, description, modifications, thumbnail } = useRecoilValue(
+    routineDrill(id)
+  )
 
   return (
     <View
@@ -57,7 +60,14 @@ function DrillInner({
         style={styles.containerBg}
       />
       <View style={styles.coverContainer}>
-        <View style={styles.cover} />
+        <View style={styles.cover}>
+          <Image
+            style={styles.coverImage as ImageStyle}
+            source={{ uri: thumbnail }}
+            alt={description}
+          />
+          {!active && <View style={styles.coverInactive} />}
+        </View>
         <CoverIcon type={type} active={active} absolute />
         {hasContinuation && (
           <View style={styles.connectionLineWrapper}>
@@ -144,6 +154,14 @@ const themedStyles = AppStyleSheet.create({
     aspectRatio: 1,
     backgroundColor: 'accent primary',
     borderRadius: 10,
+    overflow: 'hidden',
+  },
+  coverImage: {
+    flex: 1,
+  },
+  coverInactive: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'backdrop',
   },
   connectionLineWrapper: {
     position: 'absolute',

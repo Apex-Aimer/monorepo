@@ -2,7 +2,7 @@ import { Image } from 'react-native'
 import findIndex from 'lodash/findIndex'
 
 // @ts-expect-error
-import stub from '../../assets/simple_movement_720p.m4v'
+import stub from '../../assets/simple_movement.mp4'
 
 type MDContent = string
 interface MDDrillMetadata {
@@ -11,6 +11,7 @@ interface MDDrillMetadata {
   description: string
   modifications: string[]
   levels: string
+  videoCloudflareID?: string
 }
 
 export enum DrillType {
@@ -63,6 +64,7 @@ export interface RoutineDrill {
   instructions: MDContent
   // uri
   videoUri: string
+  thumbnail?: string
 }
 
 function getTypeFromMetadata(metadata: MDDrillMetadata) {
@@ -151,6 +153,24 @@ interface RawDrill {
   filename: string
 }
 
+function processCloudflareVideo(videoId?: string) {
+  if (videoId == null) {
+    // TODO
+    return Image.resolveAssetSource(stub).uri
+  }
+
+  return `https://customer-xzvhmwg826li9fy3.cloudflarestream.com/${videoId}/downloads/default.mp4`
+}
+
+function processCloudflareVideoThumbnail(videoId?: string) {
+  if (videoId == null) {
+    // TODO
+    return undefined
+  }
+
+  return `https://customer-xzvhmwg826li9fy3.cloudflarestream.com/${videoId}/thumbnails/thumbnail.jpg`
+}
+
 function processDrill(
   category: DrillCategory,
   { default: content, metadata, filename }: RawDrill
@@ -166,7 +186,8 @@ function processDrill(
     levels: getLevelsFromMetadata(metadata, filename),
     duration: metadata.duration,
     instructions: content,
-    videoUri: Image.resolveAssetSource(stub).uri,
+    videoUri: processCloudflareVideo(metadata.videoCloudflareID),
+    thumbnail: processCloudflareVideoThumbnail(metadata.videoCloudflareID),
   }
 }
 
