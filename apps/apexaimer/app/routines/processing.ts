@@ -3,6 +3,7 @@ import findIndex from 'lodash/findIndex'
 
 // @ts-expect-error
 import stub from '../../assets/simple_movement.mp4'
+import { ModificationT } from '../components/ModificationBadge'
 
 type MDContent = string
 interface MDDrillMetadata {
@@ -59,7 +60,7 @@ export interface RoutineDrill {
   type: DrillType
   duration: number
   description: string
-  modifications: string[]
+  modifications: ModificationT[]
   levels: Set<Levels>
   instructions: MDContent
   // uri
