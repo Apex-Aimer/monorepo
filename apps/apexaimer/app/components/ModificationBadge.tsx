@@ -8,19 +8,47 @@ import {
 import { AppStyleSheet, useAppStyles } from './useAppStyles'
 import { Text } from 'react-native'
 
-const ranges = new Set([
-  'Close range',
-  'Mid range',
-  'Long range',
-  'Mixed range',
-])
-const dummyMovements = new Set([
+const ranges = new Set(['Close range', 'Mid range', 'Long range'])
+const dummyMovement = new Set([
   'Dummy still',
   'Dummy constant strafe',
   'Dummy random strafe',
 ])
-const playerMovements = new Set(['Player still', 'Player strafing'])
-const criticals = new Set(['No critical hit', 'Critical hit'])
+const playerMovement = new Set(['Player still', 'Player strafing'])
+const criticals = new Set([
+  // 'No critical hit',
+  'Critical hit',
+])
+
+export type ModificationT =
+  | 'ranges'
+  | 'dummyMovement'
+  | 'playerMovement'
+  | 'criticals'
+
+export function getModificationByType<U extends unknown>(
+  map: Record<ModificationT, U>
+) {
+  return (mod: ModificationT) => {
+    return map[mod]
+  }
+}
+
+export function getModificationByLabel(label: string): ModificationT | null {
+  if (ranges.has(label)) {
+    return 'ranges'
+  }
+  if (dummyMovement.has(label)) {
+    return 'dummyMovement'
+  }
+  if (playerMovement.has(label)) {
+    return 'playerMovement'
+  }
+  if (criticals.has(label)) {
+    return 'criticals'
+  }
+  return null
+}
 
 type BadgeSize = 'small' | 'mid'
 type BadgeVariations = 'solid' | 'outline' | 'disabled'
@@ -102,7 +130,7 @@ export function ModificationBadge({ children, size, variation }: Props) {
       </ModificationBadgeContent>
     )
   }
-  if (dummyMovements.has(children)) {
+  if (dummyMovement.has(children)) {
     const { backgroundColor: color } = StyleSheet.flatten(styles.dummyMovement)
     return (
       <ModificationBadgeContent color={color} size={size} variation={variation}>
@@ -110,7 +138,7 @@ export function ModificationBadge({ children, size, variation }: Props) {
       </ModificationBadgeContent>
     )
   }
-  if (playerMovements.has(children)) {
+  if (playerMovement.has(children)) {
     const { backgroundColor: color } = StyleSheet.flatten(styles.playerMovement)
     return (
       <ModificationBadgeContent color={color} size={size} variation={variation}>

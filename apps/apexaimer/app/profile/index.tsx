@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router'
+import { Link, Stack } from 'expo-router'
 import { ScrollView, Text, View, Share } from 'react-native'
 import { StarIcon, UserGroupIcon } from 'react-native-heroicons/solid'
 import { nativeApplicationVersion } from 'expo-application'
@@ -245,6 +245,20 @@ export default function ProfileScreen() {
           <Text style={styles.footerCaption}>
             © {new Date().getFullYear()} ApexAimer. All Rights Reserved.
           </Text>
+          <Text style={styles.footerCaption}>
+            This app is not affiliated with or sponsored by Electronic Arts Inc.
+            or its licensors.
+          </Text>
+          <Text style={styles.footerCaption}>
+            Game content and materials are trademarks and copyrights of{' '}
+            <Link href="https://ea.com/" style={styles.footerLink}>
+              Electronic Arts Inc.
+            </Link>{' '}
+            or{' '}
+            <Link href="https://www.respawn.com/" style={styles.footerLink}>
+              Respawn
+            </Link>
+          </Text>
         </View>
       </ScrollView>
     </>
@@ -299,5 +313,10 @@ const themedStyles = AppStyleSheet.create({
     color: 'text primary',
     fontFamily: 'rubik 300',
     fontSize: 12,
+    textAlign: 'center',
+    paddingHorizontal: 30,
+  },
+  footerLink: {
+    color: 'accent primary',
   },
 })
