@@ -296,7 +296,7 @@ const themedStyles = AppStyleSheet.create({
   sectionTitle: {
     color: 'text primary',
     fontFamily: 'rubik 500',
-    fontSize: 14,
+    fontSize: 15,
   },
   footer: {
     paddingTop: 60,

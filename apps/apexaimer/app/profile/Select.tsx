@@ -88,7 +88,7 @@ const themedStyles = AppStyleSheet.create({
   label: {
     color: 'text primary',
     fontFamily: 'rubik 400',
-    fontSize: 14,
+    fontSize: 16,
   },
   labelActive: {
     color: 'accent primary',

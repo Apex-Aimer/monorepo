@@ -360,24 +360,24 @@ const themedStyles = AppStyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 15,
-    paddingTop: 25,
+    paddingTop: 15,
   },
   // --- markdown styles ---
   'heading 2': {
     color: 'text primary',
-    fontFamily: 'rubik 500',
-    fontSize: 18,
+    fontFamily: 'rubik 600',
+    fontSize: 20,
     lineHeight: 24,
     paddingTop: 10,
   },
   text: {
     color: 'text primary',
     fontFamily: 'rubik 400',
-    fontSize: 16,
-    lineHeight: 25,
+    fontSize: 17,
+    lineHeight: 26,
   },
   paragraph: {
-    paddingTop: 10,
+    paddingTop: 15,
   },
   br: {
     fontSize: 16,
@@ -445,7 +445,7 @@ const themedStyles = AppStyleSheet.create({
   },
   sheetContentContainer: {
     paddingHorizontal: 15,
-    paddingTop: 30,
+    paddingTop: 15,
   },
   sheetContentText: {
     color: 'text primary',
