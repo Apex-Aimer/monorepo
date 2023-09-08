@@ -26,7 +26,6 @@ class Cache {
   getEntry(uri: string) {
     const cacheEntry = this.entries[uri]
 
-    // TODO: check that cache entry is valid
     if (cacheEntry != null) {
       return cacheEntry
     }
@@ -35,9 +34,21 @@ class Cache {
       return uri
     }
 
-    this.setTask(uri)
-
     return uri
+  }
+
+  downloadIfNeeded(uri: string) {
+    const cacheEntry = this.entries[uri]
+
+    if (cacheEntry != null) {
+      return
+    }
+
+    if (!uri.startsWith('http')) {
+      return
+    }
+
+    this.setTask(uri)
   }
 
   private async init() {
@@ -122,7 +133,16 @@ export const CachedVideo = forwardRef<Video, CachedVideoProps>(
   function CachedVideoComp({ uri, ...rest }, _ref) {
     const cachedUri = Cache.sharedInstance.getEntry(uri)
 
-    return <Video ref={_ref} source={{ uri: cachedUri }} {...rest} />
+    return (
+      <Video
+        ref={_ref}
+        source={{ uri: cachedUri }}
+        onLoad={() => {
+          Cache.sharedInstance.downloadIfNeeded(uri)
+        }}
+        {...rest}
+      />
+    )
   }
 )
 
@@ -148,6 +168,7 @@ export const InstructionVideo = memo(
         isLooping
         shouldPlay
         posterSource={{ uri: thumbnail }}
+        posterStyle={{ width, height: videoHeight }}
         onError={(err) => {
           console.log(err)
         }}
