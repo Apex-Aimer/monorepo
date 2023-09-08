@@ -229,12 +229,12 @@ export default function ProfileScreen() {
               {
                 label: 'Terms of Use',
                 icon: { external: false },
-                href: '/profile/terms-of-use/',
+                href: '/profile/terms-of-use',
               },
               {
                 label: 'Privacy Policy',
                 icon: { external: false },
-                href: '/profile/privacy-policy/',
+                href: '/profile/privacy-policy',
               },
             ]}
           />
