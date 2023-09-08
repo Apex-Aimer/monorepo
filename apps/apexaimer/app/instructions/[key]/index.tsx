@@ -181,17 +181,19 @@ function Instructions({ id }: { id: string }) {
           {modifications.length > 0 && (
             <View style={styles.modificationsContainer}>
               {modifications.map((modLabel) => (
-                <TouchableOpacity
+                <Button
                   key={modLabel}
                   onPress={() => {
                     const mod = getModificationByLabel(modLabel)
                     modsSheets[mod]?.current?.expand()
                   }}
+                  haptic="selection"
+                  activeOpacity={0.6}
                 >
                   <ModificationBadge size="mid" variation="solid">
                     {modLabel}
                   </ModificationBadge>
-                </TouchableOpacity>
+                </Button>
               ))}
             </View>
           )}
