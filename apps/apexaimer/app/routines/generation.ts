@@ -3,12 +3,19 @@ import intersection from 'lodash/intersection'
 import uniq from 'lodash/uniq'
 import shuffle from 'lodash/shuffle'
 import without from 'lodash/without'
-import findIndex from 'lodash/findIndex'
 import sum from 'lodash/sum'
+import identity from 'lodash/identity'
 
-import { DrillCategory, Levels, RoutineDrill, levelsArray } from './processing'
-import { DurationLevels, Routine, RoutinesOfTheDay } from './types'
-import { drillsCategoriesMap, drillsTable } from './routines'
+import {
+  DrillCategory,
+  DrillsCategoriesMap,
+  DrillsMap,
+  DurationLevels,
+  Routine,
+  RoutineDrill,
+  RoutinesOfTheDay,
+} from './types'
+import { Levels, getNextLevel } from './levels'
 
 /**
  * Weights are made to compose drills better,
@@ -27,28 +34,28 @@ const raiseDrillsWeighted = {
   [DrillCategory.DummyOneClipSmoke]: 3, // TODO
 }
 
-function getRaiseDrills(
+export function getWeightedDrills(bucket: string[], weight: number) {
+  return bucket.filter((key) => raiseDrillsWeighted[key] >= weight)
+}
+
+export function getBucketForRaiseDrills(
   prevCategories: DrillCategory[],
   applicableCategories: DrillCategory[]
-) {
-  let weight = 1
-
-  let bucket = shuffle(
+): string[] {
+  return shuffle(
     intersection(
       without(Object.keys(raiseDrillsWeighted), ...prevCategories),
       applicableCategories
     )
   )
+}
 
-  // We want to have from 2 to 4 drills in raise stage
-  let cap = 2 + random(2)
-
+export function getRaiseDrills(bucket: string[], cap: number) {
+  let weight = 1
   const drills = []
 
-  while (cap > 0) {
-    const [drill, ...rest] = bucket.filter(
-      (key) => raiseDrillsWeighted[key] >= weight
-    )
+  for (let i = cap; i > 0; i -= 1) {
+    const [drill, ...rest] = getWeightedDrills(bucket, weight)
 
     // It's kinda not what I intended, but it seems to work
     // so it happens that there is only one drill with weight == 1 for now,
@@ -58,9 +65,8 @@ function getRaiseDrills(
     // Still it's kinda "hacky" right now,
     // and probably won't work if I add new drills
     const newWeight = raiseDrillsWeighted[drill]
-    if (newWeight < 3) {
-      weight = newWeight + 1
-    }
+
+    weight = Math.min(newWeight + 1, 3)
 
     drills.push(drill)
 
@@ -79,6 +85,7 @@ function getRaiseDrills(
 }
 
 const singleBulletTargetsSwitchingDependentDrills = new Set([
+  DrillCategory.SingleBulletTargetsSwitching,
   DrillCategory.SingleBulletFlicking,
   DrillCategory.LowBurstTargetsSwitching,
 ])
@@ -88,45 +95,34 @@ const generalDrills = [
   DrillCategory.RecoilControlLadder,
   DrillCategory.TargetsRecoil,
   DrillCategory.WholeMagDummy,
-  DrillCategory.SingleBulletTargetsSwitching,
   DrillCategory.Bowl,
   DrillCategory.SingleBulletFlickingMicro,
   ...singleBulletTargetsSwitchingDependentDrills.values(),
 ]
 
-function addTargetsSwitchingIfNecessary(drills: DrillCategory[]) {
-  if (
-    intersection(drills, [
-      ...singleBulletTargetsSwitchingDependentDrills.values(),
-    ]).length === 0
-  ) {
-    return drills
-  }
-
-  return uniq(
-    drills.flatMap((drill) => {
-      if (singleBulletTargetsSwitchingDependentDrills.has(drill)) {
-        return [DrillCategory.SingleBulletTargetsSwitching, drill]
+function splitBySet(bucket: DrillCategory[], splitter: Set<DrillCategory>) {
+  return bucket.reduce(
+    (acc, category) => {
+      if (splitter.has(category)) {
+        acc.inSet.push(category)
+      } else {
+        acc.regular.push(category)
       }
-      return [drill]
-    })
+      return acc
+    },
+    {
+      regular: [],
+      inSet: [],
+    }
   )
 }
 
 function splitToMobilizeAndPotentiate(drills: DrillCategory[]) {
   let mid = Math.ceil(drills.length / 2) - 1
 
-  // Do not split targets switching pair
-  if (
-    drills[mid] === DrillCategory.SingleBulletTargetsSwitching &&
-    singleBulletTargetsSwitchingDependentDrills.has(drills[mid + 1])
-  ) {
-    mid = mid + 1
-  }
-
   return {
-    mobilize: drills.slice(0, mid),
-    potentiate: drills.slice(mid),
+    mobilize: drills.slice(0, mid).flatMap(identity),
+    potentiate: drills.slice(mid).flatMap(identity),
   }
 }
 
@@ -145,29 +141,20 @@ function processGeneralDrills(
     )
   )
 
-  const { regular, withTargetsSwitching } = bucket.slice(0, 4).reduce(
-    (acc, category) => {
-      if (singleBulletTargetsSwitchingDependentDrills.has(category)) {
-        acc.withTargetsSwitching.push(category)
-      } else {
-        acc.regular.push(category)
-      }
-      return acc
-    },
-    {
-      regular: [],
-      withTargetsSwitching: [],
-    }
+  const { regular, inSet } = splitBySet(
+    bucket.slice(0, singleBulletTargetsSwitchingDependentDrills.size + 2),
+    singleBulletTargetsSwitchingDependentDrills
   )
 
-  const long = addTargetsSwitchingIfNecessary(
-    shuffle([...regular, withTargetsSwitching]).flatMap((it) =>
-      Array.isArray(it) ? it : [it]
-    )
-  )
+  const long = shuffle([
+    ...regular,
+    inSet.length > 0
+      ? uniq([DrillCategory.SingleBulletTargetsSwitching, ...inSet])
+      : [],
+  ])
 
-  const short = long.slice(0, 2)
-  const mid = long.slice(0, 3)
+  const short = long.slice(0, -2)
+  const mid = long.slice(0, -1)
 
   return {
     short: splitToMobilizeAndPotentiate(short),
@@ -176,7 +163,10 @@ function processGeneralDrills(
   }
 }
 
-function getCategoriesForLevel(level: Levels) {
+export function getCategoriesForLevel(
+  level: Levels,
+  drillsCategoriesMap: DrillsCategoriesMap
+) {
   return Object.keys(drillsCategoriesMap).reduce<DrillCategory[]>(
     (acc, category: DrillCategory) => {
       const drills = drillsCategoriesMap[category]
@@ -199,7 +189,10 @@ function getCategoriesForLevel(level: Levels) {
   )
 }
 
-function getDrillsForLevel(level: Levels) {
+function getDrillsForLevel(
+  level: Levels,
+  drillsCategoriesMap: DrillsCategoriesMap
+) {
   return (category: DrillCategory) => {
     return drillsCategoriesMap[category].filter((drill) => {
       return drill.levels.has(level)
@@ -217,12 +210,15 @@ function getRoutine(
   mobilizeCategories: DrillCategory[],
   potentiateCategories: DrillCategory[],
   level: Levels,
-  nextLevel: Levels
+  nextLevel: Levels,
+  drillsCategoriesMap: DrillsCategoriesMap
 ): Routine {
-  const getDrills = getDrillsForLevel(level)
+  const getDrills = getDrillsForLevel(level, drillsCategoriesMap)
   const raise = raiseCategories.flatMap(getDrills)
   const mobilize = mobilizeCategories.flatMap(getDrills)
-  const potentiate = potentiateCategories.flatMap(getDrillsForLevel(nextLevel))
+  const potentiate = potentiateCategories.flatMap(
+    getDrillsForLevel(nextLevel, drillsCategoriesMap)
+  )
 
   const totalDuration = sum(
     [...common, ...raise, ...mobilize, ...potentiate].map(
@@ -239,55 +235,70 @@ function getRoutine(
   }
 }
 
-export function generateRoutines(
-  level: Levels,
-  prevRoutine: Routine,
-  date: string
-): RoutinesOfTheDay {
-  const categoriesForLevel = getCategoriesForLevel(level)
-  const nextLevel =
-    levelsArray[findIndex(levelsArray, (it) => it === level) + 1]
-  const categoriesForNextLevel = getCategoriesForLevel(nextLevel)
+export function getRoutinesOfTheDayGenerator(
+  drillsCategoriesMap: DrillsCategoriesMap,
+  drillsTable: DrillsMap
+) {
+  return function generateRoutines(
+    level: Levels,
+    prevRoutine: Routine,
+    date: string
+  ): RoutinesOfTheDay {
+    const categoriesForLevel = getCategoriesForLevel(level, drillsCategoriesMap)
+    const nextLevel = getNextLevel(level)
 
-  const raise = getRaiseDrills(
-    uniq(prevRoutine.raise.map((key) => drillsTable[key].category)),
-    categoriesForLevel
-  )
+    const categoriesForNextLevel = getCategoriesForLevel(
+      nextLevel,
+      drillsCategoriesMap
+    )
 
-  const { short, mid, long } = processGeneralDrills(
-    raise,
-    uniq(prevRoutine.mobilize.map((key) => drillsTable[key].category)),
-    uniq(prevRoutine.potentiate.map((key) => drillsTable[key].category)),
-    intersection(categoriesForLevel, categoriesForNextLevel)
-  )
+    const raise = getRaiseDrills(
+      getBucketForRaiseDrills(
+        uniq(prevRoutine.raise.map((key) => drillsTable[key].category)),
+        categoriesForLevel
+      ),
+      // We want to have from 2 to 4 drills in raise stage
+      2 + random(2)
+    )
 
-  const common = drillsCategoriesMap[DrillCategory.BasicMovement]
-
-  return {
-    date,
-    [DurationLevels.Short]: getRoutine(
-      common,
+    const { short, mid, long } = processGeneralDrills(
       raise,
-      short.mobilize,
-      short.potentiate,
-      level,
-      nextLevel
-    ),
-    [DurationLevels.Medium]: getRoutine(
-      common,
-      raise,
-      mid.mobilize,
-      mid.potentiate,
-      level,
-      nextLevel
-    ),
-    [DurationLevels.Long]: getRoutine(
-      common,
-      raise,
-      long.mobilize,
-      long.potentiate,
-      level,
-      nextLevel
-    ),
+      uniq(prevRoutine.mobilize.map((key) => drillsTable[key].category)),
+      uniq(prevRoutine.potentiate.map((key) => drillsTable[key].category)),
+      intersection(categoriesForLevel, categoriesForNextLevel)
+    )
+
+    const common = drillsCategoriesMap[DrillCategory.BasicMovement]
+
+    return {
+      date,
+      [DurationLevels.Short]: getRoutine(
+        common,
+        raise,
+        short.mobilize,
+        short.potentiate,
+        level,
+        nextLevel,
+        drillsCategoriesMap
+      ),
+      [DurationLevels.Medium]: getRoutine(
+        common,
+        raise,
+        mid.mobilize,
+        mid.potentiate,
+        level,
+        nextLevel,
+        drillsCategoriesMap
+      ),
+      [DurationLevels.Long]: getRoutine(
+        common,
+        raise,
+        long.mobilize,
+        long.potentiate,
+        level,
+        nextLevel,
+        drillsCategoriesMap
+      ),
+    }
   }
 }

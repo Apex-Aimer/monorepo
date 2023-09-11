@@ -1,9 +1,16 @@
 import flatMap from 'lodash/flatMap'
 
-import { DrillCategory, RoutineDrill, processDrills } from './processing'
-import { DurationLevels, Routine, RoutinesOfTheDay } from './types'
+import { processDrills } from './processing'
+import {
+  DurationLevels,
+  RoutinesOfTheDay,
+  DrillsCategoriesMap,
+  DrillCategory,
+  RoutineDrill,
+  DrillsMap,
+} from './types'
 
-export const drillsCategoriesMap: Record<DrillCategory, RoutineDrill[]> = {
+export const drillsCategoriesMap: DrillsCategoriesMap = {
   [DrillCategory.BasicMovement]: processDrills(
     DrillCategory.BasicMovement,
     require('./drills/basic-movement.md')
@@ -128,12 +135,13 @@ export const drillsCategoriesMap: Record<DrillCategory, RoutineDrill[]> = {
   ),
 }
 
-export const drillsTable: Record<string, RoutineDrill> = flatMap(
-  drillsCategoriesMap
-).reduce((acc, drill) => {
-  acc[drill.key] = drill
-  return acc
-}, {})
+export const drillsTable: DrillsMap = flatMap(drillsCategoriesMap).reduce(
+  (acc, drill) => {
+    acc[drill.key] = drill
+    return acc
+  },
+  {}
+)
 
 export const emptyRoutines: RoutinesOfTheDay = {
   date: '',

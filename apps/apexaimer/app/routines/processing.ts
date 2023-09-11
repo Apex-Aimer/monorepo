@@ -1,9 +1,11 @@
 import { Image } from 'react-native'
-import findIndex from 'lodash/findIndex'
 
 // @ts-expect-error
 import stub from '../../assets/simple_movement.mp4'
+
+import { DrillCategory, DrillType, RoutineDrill } from './types'
 import { ModificationT } from '../components/ModificationBadge'
+import { Levels, getAllSuitableLevels } from './levels'
 
 type MDContent = string
 interface MDDrillMetadata {
@@ -13,59 +15,6 @@ interface MDDrillMetadata {
   modifications: string[]
   levels: string
   videoCloudflareID?: string
-}
-
-export enum DrillType {
-  Movement,
-  Tracking,
-  Recoil,
-  Precision,
-}
-
-export const enum Levels {
-  Rookie = 'rookie',
-  Iron = 'iron',
-  Bronze = 'bronze',
-  Silver = 'silver',
-  Gold = 'gold',
-  Platinum = 'platinum',
-  Diamond = 'diamond',
-  Ascendant = 'ascendant',
-  Master = 'master',
-  Predator = 'predator',
-}
-
-export const enum DrillCategory {
-  BasicMovement = 'basic-movement',
-  Bowl = 'bowl',
-  DummyOneClip = 'dummy-one-clip',
-  DummyOneClipSmoke = 'dummy-one-clip-smoke',
-  DummyTrackingADS = 'dummy-tracking-ads',
-  DummyTrackingNoADS = 'dummy-tracking-noads',
-  DummyWalkArounds = 'dummy-walk-arounds',
-  SingleBulletTargetsSwitching = 'single-bullet-targets-switching',
-  SingleBulletFlicking = 'single-bullet-flicking',
-  SingleBulletFlickingMicro = 'single-bullet-flicking-micro',
-  LowBurstTargetsSwitching = 'low-burst-targets-switching',
-  RecoilControlLadder = 'recoil-control-ladder',
-  TargetsRecoil = 'targets-recoil',
-  TargetsTracking = 'targets-tracking',
-  TurnAroundTargetBurst = 'turn-around-target-burst',
-  WholeMagDummy = 'whole-mag-dummy',
-}
-
-export interface RoutineDrill {
-  key: string
-  category: DrillCategory
-  type: DrillType
-  duration: number
-  description: string
-  modifications: ModificationT[]
-  levels: Set<Levels>
-  instructions: MDContent
-  // uri
-  videoUri: string
-  thumbnail?: string
 }
 
 function getTypeFromMetadata(metadata: MDDrillMetadata) {
@@ -108,19 +57,6 @@ function getLevelFromMetadata(level: string) {
   }
 }
 
-export const levelsArray = [
-  Levels.Rookie,
-  Levels.Iron,
-  Levels.Bronze,
-  Levels.Silver,
-  Levels.Gold,
-  Levels.Platinum,
-  Levels.Diamond,
-  Levels.Ascendant,
-  Levels.Master,
-  Levels.Predator,
-]
-
 function getLevelsFromMetadata(metadata: MDDrillMetadata, filename: string) {
   if (metadata.levels == null) {
     throw `Incorrect levels metadata for drill - ${filename}`
@@ -140,12 +76,7 @@ function getLevelsFromMetadata(metadata: MDDrillMetadata, filename: string) {
     return new Set([start])
   }
 
-  return new Set(
-    levelsArray.slice(
-      findIndex(levelsArray, (i) => i === start),
-      findIndex(levelsArray, (i) => i === end) + 1
-    )
-  )
+  return new Set(getAllSuitableLevels(start, end))
 }
 
 interface RawDrill {
@@ -181,7 +112,7 @@ function processDrill(
     category,
     type: getTypeFromMetadata(metadata),
     description: metadata.description,
-    modifications: (metadata.modifications ?? []).sort(
+    modifications: ((metadata.modifications ?? []) as ModificationT[]).sort(
       (a, b) => a.length - b.length
     ),
     levels: getLevelsFromMetadata(metadata, filename),

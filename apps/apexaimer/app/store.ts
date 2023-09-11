@@ -7,8 +7,8 @@ import {
   getPersistedStore,
 } from './components/Persistor/createPersistor'
 import { emptyRoutines } from './routines/routines'
-import { Levels } from './routines/processing'
 import { DurationLevels, RAMPStage } from './routines/types'
+import { Levels } from './routines/levels'
 
 // --- User ---
 

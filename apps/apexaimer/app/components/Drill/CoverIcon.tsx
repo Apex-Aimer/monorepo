@@ -5,7 +5,7 @@ import RecoilIcon from './RecoilIcon'
 import TrackingIcon from './TrackingIcon'
 import PrecisionIcon from './PrecisionIcon'
 import MovementIcon from './MovementIcon'
-import { DrillType } from '../../routines/processing'
+import { DrillType } from '../../routines/types'
 
 interface CoverIconProps {
   type: DrillType
