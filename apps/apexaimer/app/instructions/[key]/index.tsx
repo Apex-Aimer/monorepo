@@ -32,8 +32,7 @@ import {
   getModificationByLabel,
   getModificationByType,
 } from '../../components/ModificationBadge'
-import { DrillType } from '../../routines/processing'
-import { RAMPStage } from '../../routines/types'
+import { DrillType, RAMPStage } from '../../routines/types'
 
 const DRILL_TYPE_DESCRIPTION = {
   [DrillType.Movement]: {

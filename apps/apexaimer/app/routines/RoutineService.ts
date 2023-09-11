@@ -1,9 +1,14 @@
 import { format } from 'date-fns'
 
-import { drillsTable, emptyRoutines } from './routines'
+import { drillsCategoriesMap, drillsTable, emptyRoutines } from './routines'
 import { DurationLevels } from './types'
-import { Levels } from './processing'
-import { generateRoutines } from './generation'
+import { getRoutinesOfTheDayGenerator } from './generation'
+import { Levels } from './levels'
+
+export const generateRoutines = getRoutinesOfTheDayGenerator(
+  drillsCategoriesMap,
+  drillsTable
+)
 
 export class RoutineService {
   private static __instance: RoutineService

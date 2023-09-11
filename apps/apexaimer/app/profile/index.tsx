@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react'
 import { Link, Stack } from 'expo-router'
-import { ScrollView, Text, View, Share } from 'react-native'
+import { ScrollView, Text, View, Share, TouchableOpacity } from 'react-native'
 import { StarIcon, UserGroupIcon } from 'react-native-heroicons/solid'
 import { nativeApplicationVersion } from 'expo-application'
 import { EnvelopeIcon } from 'react-native-heroicons/outline'
@@ -19,7 +20,7 @@ import { RedditIcon } from './icons/Reddit'
 import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
 import { useUserName } from '../store'
 import { Avatar } from '../components/Avatar'
-import { useEffect, useState } from 'react'
+import { ManyTapsTouchable } from './components/ManyTapsTouchable'
 
 async function sendUsMail() {
   const supportMail = 'support@apexaimer.com'
@@ -121,6 +122,8 @@ export default function ProfileScreen() {
   const name = useUserName()
   const canRequestReview = useCanRequestReview()
   const canShare = useCanShare()
+
+  const [showHidden, setShowHidden] = useState(false)
 
   return (
     <>
@@ -239,8 +242,26 @@ export default function ProfileScreen() {
             ]}
           />
         </View>
+        {showHidden && (
+          <View style={styles.sectionContainer}>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>ADDITIONAL</Text>
+            </View>
+            <SettingsSection
+              rows={[
+                {
+                  label: 'Advanced',
+                  icon: { external: false },
+                  href: '/profile/hidden/',
+                },
+              ]}
+            />
+          </View>
+        )}
         <View style={styles.footer}>
-          <ApexAimerThemedLogo width={200} />
+          <ManyTapsTouchable onPress={() => setShowHidden(true)}>
+            <ApexAimerThemedLogo width={200} />
+          </ManyTapsTouchable>
           <Text style={styles.footerVersion}>{nativeApplicationVersion}</Text>
           <Text style={styles.footerCaption}>
             © {new Date().getFullYear()} ApexAimer. All Rights Reserved.
