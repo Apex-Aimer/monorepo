@@ -37,6 +37,8 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
     }, [persistedStore])
   }
 
+  const isPersistorReady = { current: false }
+
   function useIsInitialStateReady() {
     const [isReady, setIsReady] = useState(false)
     const setters = useRef({})
@@ -67,6 +69,7 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
         })
 
         setIsReady(true)
+        isPersistorReady.current = true
       })()
     }, [setters])
 
@@ -76,5 +79,6 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
   return {
     usePersistor,
     useIsInitialStateReady,
+    isPersistorReady,
   }
 }

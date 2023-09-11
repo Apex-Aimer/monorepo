@@ -15,13 +15,12 @@ import { SettingsSection } from '../SettingsSection'
 import { Select } from '../Select'
 import { useRecoilState } from 'recoil'
 import { PrimaryButton } from '../../components/PrimaryButton'
-import { preferredAppColorScheme } from '../../store'
+import { level as levelSelector } from '../../store'
+import { Levels } from '../../routines/levels'
 
-function AppearanceBottomSheetContent() {
+function LevelSelectorBottomSheetContent() {
   const styles = useAppStyles(themedStyles)
-  const [appColorScheme, setAppColorScheme] = useRecoilState(
-    preferredAppColorScheme
-  )
+  const [level, setLevel] = useRecoilState(levelSelector)
 
   const { bottom } = useSafeAreaInsets()
 
@@ -31,12 +30,19 @@ function AppearanceBottomSheetContent() {
     <View style={styles.appearanceSelectContainer}>
       <Select
         items={[
-          { value: 'light', label: 'Light' },
-          { value: 'dark', label: 'Dark' },
-          { value: 'system', label: 'System' },
+          { value: Levels.Rookie, label: 'Rookie' },
+          { value: Levels.Iron, label: 'Iron' },
+          { value: Levels.Bronze, label: 'Bronze' },
+          { value: Levels.Silver, label: 'Silver' },
+          { value: Levels.Gold, label: 'Gold' },
+          { value: Levels.Platinum, label: 'Platinum' },
+          { value: Levels.Diamond, label: 'Diamond' },
+          { value: Levels.Ascendant, label: 'Ascendant' },
+          { value: Levels.Master, label: 'Master' },
+          { value: Levels.Predator, label: 'Predator' },
         ]}
-        initialItem={appColorScheme}
-        onChange={setAppColorScheme}
+        initialItem={level}
+        onChange={setLevel}
       />
       <View
         style={[styles.appearanceDoneButtonWrapper, { paddingBottom: bottom }]}
@@ -47,10 +53,10 @@ function AppearanceBottomSheetContent() {
   )
 }
 
-export default function ProfileDetailsScreen() {
+export default function HiddenSettingsScreen() {
   const styles = useAppStyles(themedStyles)
 
-  const drillTypeSheetRef = useRef<BottomSheetModal>(null)
+  const sheetRef = useRef<BottomSheetModal>(null)
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -70,7 +76,7 @@ export default function ProfileDetailsScreen() {
     <>
       <Stack.Screen
         options={{
-          title: 'Settings',
+          title: 'Advanced',
           headerLeft,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
@@ -82,10 +88,10 @@ export default function ProfileDetailsScreen() {
         <SettingsSection
           rows={[
             {
-              label: 'Appearance',
+              label: 'Difficulty level',
               icon: { external: false },
               onPress() {
-                drillTypeSheetRef.current?.expand()
+                sheetRef.current?.expand()
               },
             },
           ]}
@@ -93,18 +99,18 @@ export default function ProfileDetailsScreen() {
       </View>
       <Portal>
         <BottomSheet
-          ref={drillTypeSheetRef}
+          ref={sheetRef}
           index={-1}
-          snapPoints={['40%']}
+          snapPoints={['40%', '80%']}
           enablePanDownToClose
           onClose={() => {
-            drillTypeSheetRef.current?.close()
+            sheetRef.current?.close()
           }}
           backdropComponent={renderBackdrop}
           backgroundStyle={styles.sheet}
           handleIndicatorStyle={styles.sheetHandleIndicatorStyle}
         >
-          <AppearanceBottomSheetContent />
+          <LevelSelectorBottomSheetContent />
         </BottomSheet>
       </Portal>
     </>

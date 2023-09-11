@@ -27,11 +27,6 @@ export const avatar = atom<Avatar | null>({
   default: null,
 })
 
-const level = atom<Levels>({
-  key: 'level',
-  default: Levels.Iron,
-})
-
 export function useUserName() {
   return useRecoilValue(name)
 }
@@ -43,21 +38,46 @@ export const routineIntensityLevel = atom({
   default: DurationLevels.Medium,
 })
 
+let updateRoutinesOfTheDay: (level: Levels) => void
+
 export const routinesOfTheDay = atom({
   key: 'routinesOfTheDay',
   default: emptyRoutines,
   effects: [
-    ({ setSelf }) => {
+    ({ setSelf, node }) => {
+      updateRoutinesOfTheDay = (level: Levels) => {
+        function update() {
+          return RoutineService.sharedInstance.getRoutinesOfTheDay(level)
+        }
+
+        update().then(setSelf)
+      }
+
       async function init() {
         const store = (await getPersistedStore()) ?? {}
 
         return await RoutineService.sharedInstance.getRoutinesOfTheDay(
-          store[level.key] ?? Levels.Iron,
-          store['routinesOfTheDay']
+          store['level'] ?? Levels.Iron,
+          store[node.key]
         )
       }
 
       setSelf(init())
+    },
+  ],
+})
+
+export const level = atom<Levels>({
+  key: 'level',
+  default: Levels.Iron,
+  effects: [
+    ({ onSet }) => {
+      onSet((newLevel) => {
+        if (!isPersistorReady.current) {
+          return
+        }
+        updateRoutinesOfTheDay(newLevel)
+      })
     },
   ],
 })
@@ -147,10 +167,11 @@ export const preferredAppColorScheme = atom<AppColorSchemeName>({
 
 // Persistence
 
-export const { usePersistor, useIsInitialStateReady } = createPersistor(
-  name,
-  avatar,
-  preferredAppColorScheme,
-  routineIntensityLevel,
-  level
-)
+export const { usePersistor, useIsInitialStateReady, isPersistorReady } =
+  createPersistor(
+    name,
+    avatar,
+    preferredAppColorScheme,
+    routineIntensityLevel,
+    level
+  )
