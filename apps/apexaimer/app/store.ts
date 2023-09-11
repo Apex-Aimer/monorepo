@@ -173,5 +173,6 @@ export const { usePersistor, useIsInitialStateReady, isPersistorReady } =
     avatar,
     preferredAppColorScheme,
     routineIntensityLevel,
-    level
+    level,
+    routinesOfTheDay
   )
