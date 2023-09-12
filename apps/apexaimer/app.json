@@ -12,19 +12,20 @@
       "resizeMode": "contain",
       "backgroundColor": "#282624"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.apexaimer",
-      "deploymentTarget": "14.0"
+      "deploymentTarget": "14.0",
+      "googleServicesFile": "./configs/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#282624"
-      }
+      },
+      "googleServicesFile": "./configs/google-services.json",
+      "package": "com.apexaimer"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -43,6 +44,16 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to personalize your experience (i.e. choose an avatar)."
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
       ]
     ],
