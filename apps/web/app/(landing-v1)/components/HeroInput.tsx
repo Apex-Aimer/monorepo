@@ -22,7 +22,7 @@ function HeroInputButton({ children, isLoading, onPress }: ButtonProps) {
   return (
     <button
       className={cx(
-        'flex cursor-pointer select-none items-center rounded-r-2xl bg-white px-6',
+        'bg-bg-primary-inverted flex cursor-pointer select-none items-center rounded-r-2xl px-6',
         'hover:bg-gray-200'
       )}
       onClick={onPress}
@@ -36,7 +36,7 @@ function HeroInputButton({ children, isLoading, onPress }: ButtonProps) {
           visible={true}
         />
       ) : (
-        <span className="font-sans text-base text-black">{children}</span>
+        <span className="font-sans text-lg text-black">{children}</span>
       )}
     </button>
   )
@@ -55,15 +55,15 @@ export function HeroInput({
       <div className="flex h-[3.75rem] flex-row">
         <div
           className={cx(
-            'flex flex-1 items-center rounded-l-2xl border  bg-black px-4',
+            'bg-bg-primary flex flex-1 items-center rounded-l-2xl  border px-4',
             !!error ? 'border-red-500 border-r-white' : 'border-white'
           )}
         >
           <input
             placeholder={placeholder}
             className={cx(
-              'w-full appearance-none bg-transparent font-sans text-base text-white outline-none',
-              'placeholder:text-white placeholder:opacity-50',
+              'text-text-primary w-full appearance-none bg-transparent font-sans text-lg outline-none',
+              'placeholder:text-text-primary placeholder:opacity-50',
               !!error && 'placeholder:text-red-500 placeholder:opacity-100'
             )}
             onFocus={onFocus}

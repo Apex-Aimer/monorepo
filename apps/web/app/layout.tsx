@@ -1,3 +1,4 @@
+import 'tailwind-custom/theme.css'
 import './globals.css'
 
 import cx from 'clsx'
@@ -34,7 +35,7 @@ export default function RootLayout({
       lang="en"
       className={cx(fontRubik.variable, fontInter.variable, 'dark')}
     >
-      <body className="antialiased dark:bg-black">
+      <body className="dark:bg-bg-primary antialiased">
         <Providers>
           {children}
           <SnowplowTracker />
