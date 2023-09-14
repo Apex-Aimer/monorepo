@@ -57,7 +57,7 @@ export function HeroPhoneMockupDesktop() {
   return (
     <div
       className={cx(
-        'relative hidden flex-1 flex-col-reverse items-stretch justify-center overflow-hidden pt-16',
+        'relative hidden flex-[1.3] flex-col-reverse items-stretch justify-center overflow-hidden pt-16',
         'lg:flex lg:aspect-video lg:max-w-7xl lg:flex-row'
       )}
     >
@@ -73,6 +73,7 @@ export function HeroPhoneMockupDesktop() {
           className="scale-150"
         />
         <div className="to-bg-primary absolute inset-0 bg-[radial-gradient(circle_at_bottom,_var(--tw-gradient-stops))] from-transparent from-0% to-85%" />
+        <div className={cx('absolute inset-0', 'bg-phone-h-gradient')} />
       </div>
       <PhoneMockup />
       <div className="user to-bg-primary pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent from-80%" />

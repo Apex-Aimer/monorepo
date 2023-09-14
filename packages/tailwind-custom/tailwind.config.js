@@ -100,6 +100,9 @@ module.exports = {
         'line-accent-disabled': 'var(--color-line-accent-disabled)',
         backdrop: 'var(--color-backdrop)',
       },
+      backgroundImage: {
+        'phone-h-gradient': `linear-gradient(to right, var(--color-bg-primary) 0%,transparent 25%,transparent 80%,var(--color-bg-primary) 100%)`,
+      },
     },
   },
 }
