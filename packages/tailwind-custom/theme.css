@@ -1,0 +1,35 @@
+@tailwind base;
+
+@layer base {
+    :root {
+        /* dynamic */
+        --color-bg-primary: #F4F5EF;
+        --color-bg-primary-inverted: #282624;
+        --color-bg-accent: #FFFFFF;
+        --color-bg-accent-inverted: #424242;
+        --color-line: #828282;
+        --color-line-disabled: #80828282;
+        --color-text-primary: #282624;
+        --color-text-primary-inverted: #FFFFFF;
+        --color-backdrop: #28262466;
+        /* static */
+        --color-accent-primary: #FF5722;
+        --color-accent-secondary: #FF9800;
+        --color-icon-primary: #FFFFFF;
+        --color-line-accent: #FF5722;
+        --color-line-accent-disabled: #80FF5722;
+    }
+
+    :root[class~="dark"] {
+        /* dynamic */
+        --color-bg-primary: #282624;
+        --color-bg-primary-inverted: #F4F5EF;
+        --color-bg-accent: #424242;
+        --color-bg-accent-inverted: #FFFFFF;
+        --color-line: #828282;
+        --color-line-disabled: #80D0C9C9;
+        --color-text-primary: #FFFFFF;
+        --color-text-primary-inverted: #282624;
+        --color-backdrop: #00000066;
+    }
+}

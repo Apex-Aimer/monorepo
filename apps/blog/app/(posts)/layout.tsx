@@ -66,7 +66,7 @@ export default async function Layout({ children }) {
 
       <div>{children}</div>
 
-      <Footer copyright="ApexAimer" container={Container} />
+      <Footer copyright="ApexAimer" container={Container} hasBorder />
     </>
   )
 }

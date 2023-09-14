@@ -55,10 +55,7 @@ export function Header({ left = [], right = [], container }: NavbarProps) {
       <nav>
         <>
           <div
-            className={cx(
-              'flex flex-nowrap gap-10',
-              'md:flex-wrap md:justify-between'
-            )}
+            className={cx('flex flex-nowrap justify-between', 'md:flex-wrap')}
           >
             <div
               className={cx(
@@ -68,7 +65,7 @@ export function Header({ left = [], right = [], container }: NavbarProps) {
             >
               {left.map(mapMenuItems)}
             </div>
-            <div className="flex shrink-0 grow-0 basis-[200px]">
+            <div className="flex shrink-0 grow-0 basis-[150px] min-[500px]:basis-[200px]">
               <HeaderLogo />
             </div>
             <div

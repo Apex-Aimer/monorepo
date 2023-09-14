@@ -8,7 +8,7 @@ export function HeaderContainer({
   return (
     <div
       className={clsx(
-        'mx-auto max-w-screen-xl px-8 py-5 lg:py-8 xl:px-5',
+        'mx-auto max-w-screen-xl py-5 md:px-8 lg:py-8 xl:px-5',
         className
       )}
     >
