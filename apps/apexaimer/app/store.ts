@@ -1,13 +1,10 @@
 import { atom, selector, selectorFamily, useRecoilValue } from 'recoil'
-import { ColorSchemeName } from 'react-native'
+import { AppState, ColorSchemeName } from 'react-native'
 
 import { RoutineService } from './routines/RoutineService'
-import {
-  createPersistor,
-  getPersistedStore,
-} from './components/Persistor/createPersistor'
+import { createPersistor } from './components/Persistor/createPersistor'
 import { emptyRoutines } from './routines/routines'
-import { DurationLevels, RAMPStage } from './routines/types'
+import { DurationLevels, RAMPStage, RoutinesOfTheDay } from './routines/types'
 import { Levels } from './routines/levels'
 
 // --- User ---
@@ -38,23 +35,32 @@ export const routineIntensityLevel = atom({
   default: DurationLevels.Medium,
 })
 
-let updateRoutinesOfTheDay: (level: Levels) => void
+let updateRoutinesOfTheDay: (
+  level: Levels,
+  prevRoutines?: RoutinesOfTheDay
+) => void
 
 export const routinesOfTheDay = atom({
   key: 'routinesOfTheDay',
   default: emptyRoutines,
   effects: [
-    ({ setSelf, node }) => {
-      updateRoutinesOfTheDay = (level: Levels) => {
+    ({ setSelf, node, onSet, getPromise }) => {
+      updateRoutinesOfTheDay = (
+        level: Levels,
+        prevRoutines?: RoutinesOfTheDay
+      ) => {
         function update() {
-          return RoutineService.sharedInstance.getRoutinesOfTheDay(level)
+          return RoutineService.sharedInstance.getRoutinesOfTheDay(
+            level,
+            prevRoutines
+          )
         }
 
         update().then(setSelf)
       }
 
       async function init() {
-        const store = (await getPersistedStore()) ?? {}
+        const store = (await isPersistorReady.promise) ?? {}
 
         return await RoutineService.sharedInstance.getRoutinesOfTheDay(
           store['level'] ?? Levels.Iron,
@@ -63,6 +69,23 @@ export const routinesOfTheDay = atom({
       }
 
       setSelf(init())
+
+      const focusSub = AppState.addEventListener('change', async (status) => {
+        if (status !== 'active') {
+          return
+        }
+        if (!isPersistorReady.current) {
+          return
+        }
+        updateRoutinesOfTheDay(
+          await getPromise(level),
+          await getPromise(routinesOfTheDay)
+        )
+      })
+
+      return () => {
+        focusSub.remove()
+      }
     },
   ],
 })
@@ -82,9 +105,53 @@ export const level = atom<Levels>({
   ],
 })
 
-export const isRoutineOfTheDayCompleted = atom({
+const routineOfTheDayCompletionsMap = atom({
+  key: 'routineOfTheDayCompletionsMap',
+  default: {
+    [RoutineService.sharedInstance.getRoutineOfTheDayDate()]: false,
+  },
+  effects: [
+    ({ setSelf, getPromise, node }) => {
+      const focusSub = AppState.addEventListener('change', async (status) => {
+        if (status !== 'active') {
+          return
+        }
+        if (!isPersistorReady.current) {
+          return
+        }
+
+        const current = await getPromise(node)
+
+        if (current[RoutineService.sharedInstance.getRoutineOfTheDayDate()]) {
+          return
+        }
+
+        setSelf({
+          [RoutineService.sharedInstance.getRoutineOfTheDayDate()]: false,
+        })
+      })
+
+      return () => {
+        focusSub.remove()
+      }
+    },
+  ],
+})
+
+export const isRoutineOfTheDayCompleted = selector({
   key: 'isRoutineOfTheDayCompleted',
-  default: false,
+  set: ({ set }, completed) => {
+    set(routineOfTheDayCompletionsMap, {
+      [RoutineService.sharedInstance.getRoutineOfTheDayDate()]: completed,
+    })
+  },
+  get: ({ get }) => {
+    return (
+      get(routineOfTheDayCompletionsMap)[
+        RoutineService.sharedInstance.getRoutineOfTheDayDate()
+      ] || false
+    )
+  },
 })
 
 interface RoutinePresentation {
@@ -174,5 +241,6 @@ export const { usePersistor, useIsInitialStateReady, isPersistorReady } =
     preferredAppColorScheme,
     routineIntensityLevel,
     level,
-    routinesOfTheDay
+    routineOfTheDayCompletionsMap,
+    { atom: routinesOfTheDay, readonly: true }
   )
