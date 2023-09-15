@@ -71,6 +71,8 @@ export function createPersistor(
 
         if (savedStore == null) {
           setIsReady(true)
+          isPersistorReady.current = true
+          resolvePersistorReady({})
           return
         }
 
