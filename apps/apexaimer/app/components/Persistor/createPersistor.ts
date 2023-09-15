@@ -19,14 +19,17 @@ export async function getPersistedStore() {
   }
 }
 
-export function createPersistor(...atoms: RecoilState<any>[]) {
+export function createPersistor(
+  ...atoms: (RecoilState<any> | { atom: RecoilState<any>; readonly: boolean })[]
+) {
   const persistanceSelector = selector({
     key: 'persistor',
     get: ({ get }) =>
-      atoms.reduce(
-        (acc, atom) => Object.assign(acc, { [atom.key]: get(atom) }),
-        {} as Record<string, string>
-      ),
+      atoms.reduce((acc, atomLike) => {
+        let atom: RecoilState<any> =
+          'atom' in atomLike ? atomLike.atom : atomLike
+        return Object.assign(acc, { [atom.key]: get(atom) })
+      }, {} as Record<string, string>),
   })
 
   function usePersistor() {
@@ -37,7 +40,14 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
     }, [persistedStore])
   }
 
-  const isPersistorReady = { current: false }
+  const persistedStore = getPersistedStore()
+  let resolvePersistorReady: (store: Record<string, any>) => void
+  const isPersistorReady = {
+    current: false,
+    promise: new Promise((res) => {
+      resolvePersistorReady = res
+    }),
+  }
 
   function useIsInitialStateReady() {
     const [isReady, setIsReady] = useState(false)
@@ -45,6 +55,10 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
 
     for (let i = 0; i < atoms.length; i += 1) {
       const atom = atoms[i]
+
+      if ('readonly' in atom) {
+        continue
+      }
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const setInitialValue = useSetRecoilState(atom)
 
@@ -53,14 +67,16 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
 
     useEffect(() => {
       ;(async () => {
-        const savedStore = await getPersistedStore()
+        const savedStore = await persistedStore
 
         if (savedStore == null) {
           setIsReady(true)
           return
         }
 
-        atoms.forEach((atom) => {
+        atoms.forEach((atomLike) => {
+          let atom: RecoilState<any> =
+            'atom' in atomLike ? atomLike.atom : atomLike
           if (savedStore[atom.key] == null) {
             return
           }
@@ -70,6 +86,7 @@ export function createPersistor(...atoms: RecoilState<any>[]) {
 
         setIsReady(true)
         isPersistorReady.current = true
+        resolvePersistorReady(savedStore)
       })()
     }, [setters])
 

@@ -20,8 +20,12 @@ export class RoutineService {
     return this.__instance
   }
 
+  getRoutineOfTheDayDate() {
+    return format(new Date(), 'yyyy-MM-dd')
+  }
+
   async getRoutinesOfTheDay(level: Levels, prevRoutines = emptyRoutines) {
-    const date = format(new Date(), 'yyyy-mm-dd')
+    const date = this.getRoutineOfTheDayDate()
 
     if (date === prevRoutines.date) {
       return prevRoutines
