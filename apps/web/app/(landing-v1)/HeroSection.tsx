@@ -98,7 +98,7 @@ export default function HeroSection() {
       >
         <div className="bg-bg-primary relative flex-[1_0_0%] " />
         <div className="flex max-w-screen-xl flex-[1_1_100%] flex-col lg:flex-row">
-          <div className="flex flex-1 flex-col gap-16 px-10 pb-10 pt-20">
+          <div className="flex flex-1 flex-col gap-16 px-10 pb-10 pt-10">
             <HeroTitle />
             <div className="hidden max-w-[480px] lg:block">
               <HeroSubInput />

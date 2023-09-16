@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 import cx from 'clsx'
 
 import { HeaderLogo } from './HeaderLogo'
+import { HeaderMobileButton, HeaderMobileSection } from './HeaderMobile'
 
 interface MenuItem {
   label: string
@@ -57,29 +58,20 @@ export function Header({ left = [], right = [], container }: NavbarProps) {
           <div
             className={cx('flex flex-nowrap justify-between', 'md:flex-wrap')}
           >
-            <div
-              className={cx(
-                'flex w-auto flex-1 flex-row items-center justify-end',
-                'md:hidden md:w-full md:justify-start'
-              )}
-            >
-              {left.map(mapMenuItems)}
-            </div>
-            <div className="flex shrink-0 grow-0 basis-[150px] min-[500px]:basis-[200px]">
+            <div className="flex shrink-0 grow-0 basis-[150px]">
               <HeaderLogo />
             </div>
             <div
               className={cx(
-                'flex w-auto flex-1 flex-row items-center justify-start',
-                'md:hidden md:w-full'
+                'hidden w-auto flex-1 flex-row items-center justify-end',
+                'md:flex md:w-full'
               )}
             >
-              {right.map(mapMenuItems)}
-            </div>
-            <div className={cx('hidden flex-row items-center', 'md:flex')}>
               {all.map(mapMenuItems)}
             </div>
+            <HeaderMobileButton />
           </div>
+          <HeaderMobileSection>{all.map(mapMenuItems)}</HeaderMobileSection>
         </>
       </nav>
     </Container>
