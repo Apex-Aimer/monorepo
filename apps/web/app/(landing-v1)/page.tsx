@@ -1,6 +1,40 @@
 import { Header, Footer } from 'ui'
 import HeroSection from './HeroSection'
 import { HeaderContainer } from './HeaderContainer'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Warm-ups to reach your peak in Apex Legends',
+  description:
+    'Get better doing warm-ups every day before playing Apex Legends with our mobile app',
+  keywords: [
+    'Apex Legends',
+    'firing range',
+    'warm-up',
+    'aim',
+    'recoil control',
+    'aim tracking',
+    'aim precision',
+    'Apex Legends movement',
+  ],
+  creator: 'Aleksei Savelev',
+  openGraph: {
+    images: [
+      {
+        url: `https://${process.env.MAIN_WEB_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/cd92743c-7765-4a9a-6a83-6b5dd7908e00/public`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ApexAimer',
+    description: 'Warm-ups to reach your peak in Apex Legends',
+    creator: '@TheApexAimer',
+    images: [
+      `https://${process.env.MAIN_WEB_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/cd92743c-7765-4a9a-6a83-6b5dd7908e00/public`,
+    ],
+  },
+}
 
 export default function Page() {
   return (

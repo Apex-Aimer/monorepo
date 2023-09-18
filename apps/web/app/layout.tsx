@@ -10,9 +10,12 @@ import { SnowplowTracker } from 'analytics/SnowplowTracker'
 
 export const metadata: Metadata = {
   // TODO
-  title: 'ApexAimer',
+  title: {
+    template: '%s | ApexAimer',
+    default: 'Main page',
+  },
   // TODO
-  description: 'ApexAimer app',
+  description: 'ApexAimer mobile app',
 }
 
 const fontRubik = Rubik({
