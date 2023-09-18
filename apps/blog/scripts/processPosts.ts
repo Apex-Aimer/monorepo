@@ -57,6 +57,7 @@ ${posts
 
 export interface IBlogPostMeta {
   title: string;
+  description: string;
   date: string;
   lastModDate?: string;
   cover: string;

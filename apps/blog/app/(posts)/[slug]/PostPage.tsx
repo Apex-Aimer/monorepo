@@ -22,7 +22,7 @@ export function PostPage({ post }: { post: IBlogPost }) {
               </div>
             )}
 
-            <h1 className="text-text-primary mb-3 mt-2 text-center font-sans text-3xl font-semibold tracking-tight dark:text-white lg:text-4xl lg:leading-snug">
+            <h1 className="text-text-primary mb-3 mt-2 text-center font-sans text-3xl font-semibold tracking-tight lg:text-4xl lg:leading-snug">
               {meta.draft && (
                 <span role="img" aria-label="roadwork sign">
                   🚧{' '}
@@ -37,7 +37,7 @@ export function PostPage({ post }: { post: IBlogPost }) {
               )}
             </h1>
 
-            <div className="mt-3 flex justify-center space-x-3 text-gray-500 ">
+            <div className="text-line mt-3 flex justify-center space-x-3">
               <div className="flex items-center gap-3">
                 <div>
                   <div className="flex items-center space-x-2 text-sm">
@@ -46,7 +46,7 @@ export function PostPage({ post }: { post: IBlogPost }) {
                         <dt className="sr-only">Published on</dt>
                         <dd>
                           <time
-                            className="text-gray-500 dark:text-gray-400"
+                            className="text-line"
                             dateTime={meta.lastModDate || meta.date}
                           >
                             {format(
@@ -81,7 +81,7 @@ export function PostPage({ post }: { post: IBlogPost }) {
               <figcaption className="mx-auto max-w-screen-md pl-1 pt-2">
                 <span
                   dangerouslySetInnerHTML={{ __html: meta.coverCredits }}
-                  className="font-sans text-[11px] text-slate-400 dark:text-slate-600"
+                  className="text-line-disabled font-sans text-[11px]"
                 />
               </figcaption>
             )}

@@ -9,13 +9,18 @@ import { Providers } from './providers'
 import { SnowplowTracker } from 'analytics/SnowplowTracker'
 
 export const metadata: Metadata = {
-  // TODO
   title: {
     template: '%s | ApexAimer',
     default: 'Main page',
   },
-  // TODO
   description: 'ApexAimer mobile app',
+  metadataBase: new URL(`https://${process.env.MAIN_WEB_PROD_DOMAIN}`),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+    },
+  },
 }
 
 const fontRubik = Rubik({
@@ -38,7 +43,7 @@ export default function RootLayout({
       lang="en"
       className={cx(fontRubik.variable, fontInter.variable, 'dark')}
     >
-      <body className="dark:bg-bg-primary antialiased">
+      <body className="bg-bg-primary antialiased">
         <Providers>
           {children}
           <SnowplowTracker />

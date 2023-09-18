@@ -22,7 +22,7 @@ function MenuItem({
   return (
     <Link
       href={href}
-      key={`${label}${index}`}
+      key={label}
       className="px-5 py-2 text-sm font-medium text-gray-600 hover:text-blue-500 dark:text-gray-400"
       target={external ? '_blank' : ''}
       rel={external ? 'noopener' : ''}
@@ -38,7 +38,7 @@ function MenuItem({
 }
 
 const mapMenuItems = (item: MenuItem, index: number) => (
-  <MenuItem {...item} index={index} />
+  <MenuItem {...item} key={item.label} index={index} />
 )
 
 interface NavbarProps {

@@ -25,7 +25,7 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
       >
         <div
           className={cx(
-            ' overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105   dark:bg-gray-800'
+            'overflow-hidden rounded-md bg-gray-100 transition-all hover:scale-105 dark:bg-gray-800'
           )}
         >
           <Link
@@ -42,11 +42,6 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
             {meta.cover != null ? (
               <Image
                 src={meta.cover}
-                // {...(post.mainImage.blurDataURL && {
-                //   placeholder: 'blur',
-                //   blurDataURL: post.mainImage.blurDataURL,
-                // })}
-                // TODO
                 alt={meta.coverAlt}
                 priority={preloadImage ? true : false}
                 className="object-cover transition-all"
@@ -70,18 +65,17 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
               className={cx(
                 'text-xl',
                 'line-clamp-2 font-medium  tracking-normal',
-                'text-text-primary  mt-2  dark:text-white'
+                'text-text-primary mt-2'
               )}
             >
               <Link href={`/${post.slug}`}>
                 <span
-                  className="bg-gradient-to-r from-green-200 to-green-100 bg-[length:0px_10px] bg-left-bottom
+                  className="to-accent-secondary-dimmed from-accent-primary-dimmed bg-gradient-to-r bg-[length:0px_10px] bg-left-bottom
       bg-no-repeat
+      drop-shadow-md
       transition-[background-size]
       duration-500
-      hover:bg-[length:100%_3px]
-      group-hover:bg-[length:100%_10px]
-      dark:from-purple-800 dark:to-purple-900"
+      hover:bg-[length:100%_3px] group-hover:bg-[length:100%_10px]"
                 >
                   {meta.title}
                 </span>
@@ -90,7 +84,7 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
 
             <div className="hidden">
               {meta.summary && (
-                <p className="mt-2 line-clamp-3 text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-line mt-2 line-clamp-3 text-sm">
                   <Link href={`/${post.slug}`} legacyBehavior>
                     {meta.summary}
                   </Link>
@@ -98,7 +92,7 @@ export function PostList({ post, aspect, minimal, preloadImage }: Props) {
               )}
             </div>
 
-            <div className="mt-3 flex items-center space-x-3 text-gray-500 dark:text-gray-400">
+            <div className="text-line mt-3 flex items-center space-x-3">
               <time
                 className="truncate text-sm"
                 dateTime={meta.lastModDate || meta.date}

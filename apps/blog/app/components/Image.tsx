@@ -28,11 +28,5 @@ export function Image({ src, ...rest }: ImageProps) {
     }
   }
 
-  return (
-    <NextImage
-      src={src}
-      // loader={cloudflareLoader}
-      {...rest}
-    />
-  )
+  return <NextImage src={src} {...rest} />
 }

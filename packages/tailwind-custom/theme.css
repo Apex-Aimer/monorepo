@@ -12,6 +12,8 @@
         --color-text-primary: #282624;
         --color-text-primary-inverted: #FFFFFF;
         --color-backdrop: #28262466;
+        --color-accent-primary-dimmed: #FF57224D;
+        --color-accent-secondary-dimmed: #FF98004D;
         /* static */
         --color-accent-primary: #FF5722;
         --color-accent-secondary: #FF9800;
@@ -31,5 +33,7 @@
         --color-text-primary: #FFFFFF;
         --color-text-primary-inverted: #282624;
         --color-backdrop: #00000066;
+        --color-accent-primary-dimmed: #FF5722CC;
+        --color-accent-secondary-dimmed: #FF9800CC;
     }
 }

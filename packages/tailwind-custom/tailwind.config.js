@@ -95,6 +95,8 @@ module.exports = {
         'text-primary-inverted': 'var(--color-text-primary-inverted)',
         'accent-primary': 'var(--color-accent-primary)',
         'accent-secondary': 'var(--color-accent-secondary)',
+        'accent-primary-dimmed': 'var(--color-accent-primary-dimmed)',
+        'accent-secondary-dimmed': 'var(--color-accent-secondary-dimmed)',
         'icon-primary': 'var(--color-icon-primary)',
         'line-accent': 'var(--color-line-accent)',
         'line-accent-disabled': 'var(--color-line-accent-disabled)',
