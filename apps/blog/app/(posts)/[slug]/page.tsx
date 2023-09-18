@@ -1,7 +1,7 @@
 import { allBlogPosts } from 'mdx/generated'
 import { notFound } from 'next/navigation'
 import { PostPage } from './PostPage'
-import { Metadata, ResolvedMetadata } from 'next'
+import { Metadata, ResolvingMetadata } from 'next'
 
 export async function generateStaticParams() {
   return allBlogPosts.map((post) => ({
@@ -19,7 +19,7 @@ interface Props {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvedMetadata
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   const post = getPostBySlug(params.slug)
   return {
@@ -33,7 +33,7 @@ export async function generateMetadata(
       ],
     },
     twitter: {
-      ...parent.twitter,
+      ...(await parent).twitter,
       title: post.meta.title,
       description: post.meta.description,
       images: [
