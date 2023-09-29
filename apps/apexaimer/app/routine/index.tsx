@@ -1,6 +1,12 @@
 import { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Stack, router } from 'expo-router'
-import { FlatList, StyleSheet, TextStyle, View } from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { useRecoilValue } from 'recoil'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { StatusBar } from 'expo-status-bar'
@@ -11,6 +17,9 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import Tts from 'react-native-tts'
+import { SpeakerWaveIcon, SpeakerXMarkIcon } from 'react-native-heroicons/solid'
+import noop from 'lodash/noop'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { headerLeft } from '../components/HeaderBackButton'
@@ -21,6 +30,7 @@ import { SCREEN_CTA_HEIGHT } from '../components/ScreenCTA'
 import { AnimatedCircleGradientProgressBar } from '../components/CircleGradientProgressBar'
 import { RoutinCTAWithTimer } from '../components/RoutinCTAWithTimer'
 import { FadeInView } from '../components/FadeInView'
+import { drillsVoiceOverTable } from '../routines/routines'
 
 const DrillTimer = memo(function DrillTimerComp({
   id,
@@ -58,74 +68,131 @@ const DrillTimer = memo(function DrillTimerComp({
 function DrillInstructionVideo({ id }: { id: string }) {
   const activeDrill = useRecoilValue(routineDrill(id))
 
-  return <InstructionVideo uri={activeDrill.videoUri} />
+  return (
+    <InstructionVideo
+      thumbnail={activeDrill.thumbnail}
+      uri={activeDrill.videoUri}
+    />
+  )
 }
 
-function Routine() {
+Tts.setDefaultLanguage('en-US')
+Tts.setDefaultVoice('com.apple.ttsbundle.Samantha-compact')
+Tts.setDefaultRate(0.53)
+// @ts-ignore
+Tts.setIgnoreSilentSwitch('ignore')
+Tts.setDucking(true)
+Tts.addEventListener('tts-start', noop)
+Tts.addEventListener('tts-progress', noop)
+Tts.addEventListener('tts-finish', noop)
+Tts.addEventListener('tts-error', noop)
+Tts.addEventListener('tts-cancel', noop)
+
+function useDrillVoiceOver(id: string, hasVoiceOver: boolean) {
+  useEffect(() => {
+    if (!hasVoiceOver) {
+      return
+    }
+
+    const voiceOverContent = drillsVoiceOverTable[id]
+
+    Tts.getInitStatus().then(() => {
+      Tts.speak(voiceOverContent)
+    })
+
+    return () => {
+      Tts.stop()
+    }
+  }, [id, hasVoiceOver])
+}
+
+const RoutineList = memo(function RoutineListComp({
+  activeDrillIndex,
+  setActiveDrillIndex,
+}: {
+  activeDrillIndex: number
+  setActiveDrillIndex: (i: number) => void
+}) {
+  const styles = useAppStyles(themedStyles)
+  const { bottom } = useSafeAreaInsets()
+
+  const { routine } = useRecoilValue(routineOfTheDayRunData)
+
+  const listRef = useRef<FlatList<(typeof routine.data)[number]>>(null)
+
+  return (
+    <FlatList
+      ref={listRef}
+      ListHeaderComponent={
+        <View style={styles.durationWrapper}>
+          <View style={styles.routineStartArrow}>
+            <ArrowUturnDownIcon
+              size={24}
+              color={
+                (StyleSheet.flatten(styles.durationText) as TextStyle).color
+              }
+            />
+          </View>
+        </View>
+      }
+      data={routine.data}
+      renderItem={({ item, index }) => {
+        const active = index === activeDrillIndex
+        const hasContinuation = index !== routine.data.length - 1
+        return (
+          <FadeInView delay={index * 200}>
+            <Drill
+              id={item.drillKey}
+              hasContinuation={hasContinuation}
+              active={active}
+            >
+              {active && (
+                <DrillTimer
+                  id={item.drillKey}
+                  onEnd={() => {
+                    if (!hasContinuation) {
+                      return
+                    }
+
+                    listRef.current?.scrollToIndex({
+                      index: activeDrillIndex,
+                      animated: true,
+                    })
+                    setActiveDrillIndex(activeDrillIndex + 1)
+                  }}
+                />
+              )}
+            </Drill>
+          </FadeInView>
+        )
+      }}
+      // TODO: on real content there won't be a need for index
+      keyExtractor={(item, index) => `${item.drillKey}:${index}`}
+      contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
+    />
+  )
+})
+
+function Routine({ hasVoiceOver }: { hasVoiceOver: boolean }) {
   const styles = useAppStyles(themedStyles)
   const { routine, duration } = useRecoilValue(routineOfTheDayRunData)
 
   const [activeDrillIndex, setActiveDrillIndex] = useState(0)
 
-  const { bottom } = useSafeAreaInsets()
+  const id = routine.data[activeDrillIndex].drillKey
 
-  const listRef = useRef<FlatList<(typeof routine.data)[number]>>(null)
+  useDrillVoiceOver(id, hasVoiceOver)
 
   return (
     <>
       <View style={styles.wrapper}>
         {/* TODO: loading fallback */}
         <Suspense fallback={null}>
-          <DrillInstructionVideo id={routine.data[activeDrillIndex].drillKey} />
+          <DrillInstructionVideo id={id} />
         </Suspense>
-        <FlatList
-          ref={listRef}
-          ListHeaderComponent={
-            <View style={styles.durationWrapper}>
-              <View style={styles.routineStartArrow}>
-                <ArrowUturnDownIcon
-                  size={24}
-                  color={
-                    (StyleSheet.flatten(styles.durationText) as TextStyle).color
-                  }
-                />
-              </View>
-            </View>
-          }
-          data={routine.data}
-          renderItem={({ item, index }) => {
-            const active = index === activeDrillIndex
-            const hasContinuation = index !== routine.data.length - 1
-            return (
-              <FadeInView delay={index * 200}>
-                <Drill
-                  id={item.drillKey}
-                  hasContinuation={hasContinuation}
-                  active={active}
-                >
-                  {active && (
-                    <DrillTimer
-                      id={item.drillKey}
-                      onEnd={() => {
-                        if (!hasContinuation) {
-                          return
-                        }
-
-                        listRef.current?.scrollToIndex({
-                          index: activeDrillIndex,
-                          animated: true,
-                        })
-                        setActiveDrillIndex(activeDrillIndex + 1)
-                      }}
-                    />
-                  )}
-                </Drill>
-              </FadeInView>
-            )
-          }}
-          // TODO: on real content there won't be a need for index
-          keyExtractor={(item, index) => `${item.drillKey}:${index}`}
-          contentContainerStyle={{ paddingBottom: bottom + SCREEN_CTA_HEIGHT }}
+        <RoutineList
+          activeDrillIndex={activeDrillIndex}
+          setActiveDrillIndex={setActiveDrillIndex}
         />
       </View>
       <RoutinCTAWithTimer
@@ -140,6 +207,7 @@ function Routine() {
 
 export default function RoutineScreen() {
   const styles = useAppStyles(themedStyles)
+  const [hasVoiceOver, setHasVoiceOver] = useState(false)
 
   return (
     <>
@@ -148,13 +216,43 @@ export default function RoutineScreen() {
         options={{
           title: null,
           headerLeft,
+          headerRight: () => {
+            if (hasVoiceOver) {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    setHasVoiceOver(false)
+                  }}
+                >
+                  <SpeakerWaveIcon
+                    color={
+                      StyleSheet.flatten(styles.voiceOverActive).backgroundColor
+                    }
+                  />
+                </TouchableOpacity>
+              )
+            }
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setHasVoiceOver(true)
+                }}
+              >
+                <SpeakerXMarkIcon
+                  color={
+                    StyleSheet.flatten(styles.voiceOverInactive).backgroundColor
+                  }
+                />
+              </TouchableOpacity>
+            )
+          },
           headerTransparent: true,
           contentStyle: styles.bg,
           headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
       <Suspense fallback={null}>
-        <Routine />
+        <Routine hasVoiceOver={hasVoiceOver} />
       </Suspense>
     </>
   )
@@ -166,6 +264,12 @@ const themedStyles = AppStyleSheet.create({
   },
   tint: {
     backgroundColor: 'icon primary',
+  },
+  voiceOverActive: {
+    backgroundColor: 'icon primary',
+  },
+  voiceOverInactive: {
+    backgroundColor: 'line',
   },
   wrapper: {
     flex: 1,

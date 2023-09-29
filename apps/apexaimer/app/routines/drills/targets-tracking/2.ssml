@@ -1,0 +1,5 @@
+Now, it's time for Targets tracking.
+
+Track a moving target from the mid range.
+
+Don't try to guess it's path, work on quick recover after the target changed direction.

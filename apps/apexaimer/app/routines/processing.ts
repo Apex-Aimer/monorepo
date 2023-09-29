@@ -123,6 +123,9 @@ function processDrill(
   }
 }
 
-export function processDrills(category: DrillCategory, ...files: RawDrill[]) {
+export function processDrills(
+  category: DrillCategory,
+  ...files: [RawDrill, string][]
+) {
   return files.map<RoutineDrill>(processDrill.bind(null, category))
 }

@@ -1,5 +1,6 @@
 const upstreamTransformer = require('metro-react-native-babel-transformer')
 const yaml = require('yaml-front-matter')
+const fs = require('fs')
 
 // props: { filename: string, src: string }
 function transform(props) {
@@ -25,6 +26,20 @@ function transform(props) {
     props.src = `
 export const filename = "${filename}";
 export const metadata = ${JSON.stringify(metadata)};
+
+const content = ${JSON.stringify(content)};
+export default content`
+  }
+
+  if (props.filename.match(/\.ssml$/)) {
+    const filename = props.filename
+      .replace(/.*\/([\w\d\-]+\/[\w\d\-]+).ssml$/, '$1')
+      .replace('/', '-')
+
+    const content = props.src.trim().replace(/^\n+/, '').replace(/\n+$/, '')
+
+    props.src = `
+export const filename = "${filename}";
 
 const content = ${JSON.stringify(content)};
 export default content`

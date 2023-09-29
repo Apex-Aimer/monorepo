@@ -27,6 +27,7 @@ config.resolver.assetExts.push(
 )
 
 config.resolver.sourceExts.push('md')
+config.resolver.sourceExts.push('ssml')
 
 config.transformer.babelTransformerPath = require.resolve('./transformer.js')
 
