@@ -10,7 +10,7 @@ export function FAQ() {
       )}
     >
       <div className="bg-bg-primary flex-[1_0_0%] " />
-      <div className="flex max-w-screen-md flex-[1_1_100%] flex-col gap-7">
+      <div className="flex max-w-screen-md flex-[1_1_100%] flex-col gap-7 px-7">
         <h2 className="text-text-primary font-prime text-center text-3xl">
           FAQ
         </h2>
