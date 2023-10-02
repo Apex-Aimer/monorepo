@@ -92,7 +92,7 @@ export function HeroPhoneMockup() {
 
 export default function HeroSection() {
   return (
-    <div>
+    <section>
       <div
         className={cx('bg-bg-primary relative flex flex-row overflow-hidden')}
       >
@@ -113,6 +113,6 @@ export default function HeroSection() {
           <HeroSubInput />
         </div>
       </div>
-    </div>
+    </section>
   )
 }

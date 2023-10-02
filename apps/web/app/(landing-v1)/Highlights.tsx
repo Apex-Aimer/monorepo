@@ -1,6 +1,7 @@
-import cx from 'clsx'
-import { CloudflareImage } from '../components/CloudflareImage'
 import { ReactNode } from 'react'
+import cx from 'clsx'
+
+import { CloudflareImage } from '../components/CloudflareImage'
 
 function Highlight({
   title,
@@ -39,7 +40,7 @@ function Highlight({
 
 export function Highlights() {
   return (
-    <div
+    <section
       className={cx(
         'bg-bg-primary flex flex-row overflow-hidden pt-20 md:pt-32'
       )}
@@ -81,6 +82,6 @@ export function Highlights() {
         />
       </div>
       <div className="bg-bg-primary flex-[1_0_0%]" />
-    </div>
+    </section>
   )
 }

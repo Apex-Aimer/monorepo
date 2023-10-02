@@ -3,6 +3,7 @@ import HeroSection from './HeroSection'
 import { HeaderContainer } from './HeaderContainer'
 import { Metadata } from 'next'
 import { Highlights } from './Highlights'
+import { FAQ } from './FAQ'
 
 export const metadata: Metadata = {
   title: 'Warm-ups to reach your peak in Apex Legends',
@@ -58,6 +59,7 @@ export default function Page() {
       />
       <HeroSection />
       <Highlights />
+      <FAQ />
       <Footer copyright="ApexAimer" container={HeaderContainer} />
     </>
   )
