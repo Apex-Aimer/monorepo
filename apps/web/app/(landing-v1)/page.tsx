@@ -2,6 +2,10 @@ import { Header, Footer } from 'ui'
 import HeroSection from './HeroSection'
 import { HeaderContainer } from './HeaderContainer'
 import { Metadata } from 'next'
+import { Highlights } from './Highlights'
+import { FAQ } from './FAQ'
+import { DottedBG } from './components/DottedBG'
+import { HeroSubInput } from './components/HeroSubscriptionInput'
 
 export const metadata: Metadata = {
   title: 'Warm-ups to reach your peak in Apex Legends',
@@ -56,6 +60,11 @@ export default function Page() {
         container={HeaderContainer}
       />
       <HeroSection />
+      <Highlights />
+      <FAQ />
+      <DottedBG className="max-w-screen-md px-7 py-12 md:py-28">
+        <HeroSubInput />
+      </DottedBG>
       <Footer copyright="ApexAimer" container={HeaderContainer} />
     </>
   )

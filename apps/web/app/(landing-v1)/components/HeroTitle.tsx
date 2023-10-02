@@ -3,22 +3,22 @@ import cx from 'clsx'
 function HeroEasiestHighlighter({ className }: { className: string }) {
   return (
     <svg
-      viewBox="0 0 321 19"
+      viewBox="0 0 257 12"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
       <path
-        d="M320.445 6.41692C318.649 13.081 313.762 13.1761 309.694 13.4688C291.241 14.7778 272.773 16.3671 254.292 16.5507C228.619 16.821 202.91 16.429 177.263 15.38C154.702 14.4646 132.334 14.7957 109.916 17.7095C99.4351 19.0711 88.7291 18.1728 78.1994 15.2745C55.7847 9.11199 33.3405 9.52339 11.0674 16.5053C5.82697 18.1415 1.13164 15.6614 0.80721 10.9235C0.671675 8.86506 2.6743 5.07809 4.25056 4.78134C13.8253 2.95078 23.5208 1.54809 33.2462 0.666805C48.0068 -0.667166 62.6814 0.734154 76.9913 4.44871C90.8915 8.0575 104.725 6.92781 118.667 5.36828C143.109 2.63085 167.554 4.19301 192.049 5.09735C220.002 6.12674 247.99 5.9356 275.966 5.98267C288.836 6.01089 301.718 5.29499 314.602 5.07099C316.479 5.04292 318.381 5.90134 320.46 6.40368L320.445 6.41692Z"
-        fill="url(#paint0_linear_417_680)"
+        d="M256.497 3.26961C255.199 7.29269 251.289 7.36761 248.039 7.55862C233.295 8.41398 218.545 9.43831 203.756 9.61544C183.212 9.87071 162.624 9.7269 142.073 9.18686C123.994 8.71626 106.096 8.99628 88.2121 10.8331C79.851 11.6915 71.2624 11.1885 62.7732 9.47957C44.7022 5.84585 26.7449 6.17452 9.06193 10.4628C4.90137 11.4678 1.09109 9.98991 0.732386 7.13542C0.580881 5.89523 2.10478 3.60551 3.36032 3.42098C10.9863 2.28322 18.7179 1.40291 26.4844 0.836754C38.2719 -0.0203529 50.0477 0.771485 61.5799 2.95889C72.7819 5.08401 83.8316 4.35337 94.9591 3.36325C114.467 1.62542 134.067 2.47906 153.693 2.93604C176.09 3.45595 198.49 3.24008 220.884 3.16784C231.188 3.13856 241.484 2.66074 251.792 2.47939C253.294 2.45572 254.835 2.96628 256.509 3.26158L256.497 3.26961Z"
+        fill="url(#paint0_linear_493_1089)"
       />
       <defs>
         <linearGradient
-          id="paint0_linear_417_680"
-          x1="1.19753"
-          y1="3.05189"
-          x2="319.76"
-          y2="19.7471"
+          id="paint0_linear_493_1089"
+          x1="0.880338"
+          y1="2.38958"
+          x2="256.228"
+          y2="11.3065"
           gradientUnits="userSpaceOnUse"
         >
           <stop stop-color="#FF5722" />
@@ -45,7 +45,7 @@ function HeroWarmUpsHighlighter({ className }: { className: string }) {
       <defs>
         <linearGradient
           id="paint0_linear_417_681"
-          x1="-6.74238e-07"
+          x1="0"
           y1="25.2"
           x2="149"
           y2="25.2"
@@ -59,45 +59,117 @@ function HeroWarmUpsHighlighter({ className }: { className: string }) {
   )
 }
 
+function HeroALHighlighter({ className }: { className: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 184 9"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M180.725 1.54795C184.213 2.85175 183.652 3.79432 179.84 4.68553C169.856 7.01863 158.364 7.08708 147.11 7.54707C143.683 7.68634 140.16 7.62486 136.775 7.82405C130.766 8.17113 124.742 7.72699 120.094 6.44059C113.093 4.5105 106.246 5.21962 99.4757 5.68793C89.7789 6.35805 80.305 7.39256 70.7477 8.27496C61.621 9.11644 57.0368 8.27775 51.7469 5.17764C50.7115 4.57308 47.1387 4.05876 45.3018 4.23654C35.4571 5.16773 25.7663 6.31683 16.0474 7.42778C13.7362 7.68875 11.6357 8.18476 9.31073 8.41321C5.26355 8.81068 3.046 7.80886 1.63476 6.57896C0.223616 5.34369 1.01501 4.33518 4.67472 3.97399C17.1609 2.73379 29.591 1.41727 42.2033 0.346066C50.2383 -0.336917 57.9299 -0.213424 62.2219 3.41809C62.8007 3.91245 66.663 4.25429 68.6713 4.11178C81.9544 3.1868 95.0845 1.99549 108.409 1.15732C112.267 0.912594 117.236 1.10155 120.575 1.84318C127.925 3.47267 135.424 3.96407 143.394 3.72654C153.141 3.43395 162.876 3.08731 172.554 2.64286C175.221 2.52261 177.695 1.96855 180.74 1.5482L180.725 1.54795Z"
+        fill="url(#paint0_linear_501_1165)"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_501_1165"
+          x1="1.01153"
+          y1="3.54256"
+          x2="182.984"
+          y2="6.71888"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#FF5722" />
+          <stop offset="1" stop-color="#FF9800" />
+        </linearGradient>
+      </defs>
+    </svg>
+  )
+}
+
+function HeroArrow({ className }: { className: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 27 30"
+      fill="none"
+      className={className}
+    >
+      <path
+        d="M10.6137 6.35238C11.4745 5.24018 12.3498 4.30611 12.9568 3.24283C13.2491 2.73656 13.3082 1.72175 12.9825 1.39581C12.5115 0.930432 11.5614 0.616597 10.8613 0.707185C8.62325 0.998753 6.36563 1.36136 4.19657 1.98195C2.91247 2.3472 1.73305 3.19061 0.613335 3.96131C0.323081 4.15985 0.298657 4.94468 0.400527 5.40254C0.89218 7.64279 1.48799 9.85825 2.00102 12.095C2.27611 13.2963 3.13434 13.882 4.19818 13.1571C5.28467 12.4197 6.01775 11.2043 6.98398 10.2716C7.38269 9.88465 8.03629 9.41431 8.48731 9.4733C9.43083 9.59337 10.3653 9.96403 11.225 10.3659C15.6 12.3989 19.8134 14.6735 22.2927 18.8871C23.0051 20.0969 23.494 21.4768 23.8156 22.8446C24.2375 24.6282 23.4541 26.1431 21.9359 27.3262C21.695 27.5112 21.3685 27.6845 21.2697 27.9248C21.0999 28.3442 21.0788 28.8123 20.9961 29.26C21.4762 29.2744 22.0458 29.4612 22.427 29.2767C24.82 28.1106 26.4004 25.984 26.4648 23.2916C26.5761 18.7104 24.4029 15.1197 20.7957 12.4941C17.9973 10.4551 14.8286 8.86952 11.8232 7.0843C11.4098 6.84119 11.0017 6.58763 10.607 6.34629L10.6137 6.35238Z"
+        fill="url(#paint0_linear_501_1164)"
+      />
+      <defs>
+        <linearGradient
+          id="paint0_linear_501_1164"
+          x1="23.4692"
+          y1="12.4433"
+          x2="4.56431"
+          y2="19.2643"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stop-color="#FF5722" />
+          <stop offset="1" stop-color="#FF9800" />
+        </linearGradient>
+      </defs>
+    </svg>
+  )
+}
+
 export function HeroTitle() {
   return (
     <div className="flex flex-col gap-6">
-      <span
+      <h2
         className={cx(
-          '"text-text-primary font-prime inline-block text-center text-[2rem] font-black leading-[2.4rem] tracking-normal',
+          '"text-text-primary font-prime inline-block text-center text-[2rem] font-extrabold leading-[2.4rem] tracking-normal',
           'lg:text-left lg:text-[3.1rem] lg:leading-[3.3rem]'
         )}
       >
-        <span className="relative inline-block">
-          <span className="relative z-20">The easiest</span>
-          <HeroEasiestHighlighter
-            className={cx(
-              'absolute bottom-[-0.1rem] left-[-0.25rem] right-[-0.8rem] z-10',
-              'lg:bottom-[-0.36rem]'
-            )}
-          />
-        </span>{' '}
-        way to
-        <br />
-        <span className="text-[#FFBD70]">enjoy</span> every match
-        <br />
-        in Apex Legends
-      </span>
-      <span
+        Be <span className="text-[#FFBD70]">ready</span> for a fight
+      </h2>
+      <h1
         className={cx(
-          'text-text-primary font-prime inline-block text-center text-lg font-normal tracking-normal',
+          'text-text-primary font-prime inline-block text-center text-2xl font-medium tracking-normal',
           'lg:text-left lg:text-3xl lg:font-medium'
         )}
       >
-        Get better doing{' '}
         <span className="relative inline-block">
-          <span className="relative z-20">warm-ups</span>
-          <HeroWarmUpsHighlighter className="absolute left-0 right-0 top-[2px] z-10" />
+          <span className="relative z-20">There is a reason</span>
+          <HeroEasiestHighlighter
+            className={cx(
+              'absolute bottom-[-0.1rem] left-[0.1rem] z-10',
+              'lg:bottom-[-0.15rem] lg:left-0'
+            )}
+          />
         </span>{' '}
-        every
+        why <br className="lg:hidden" /> pro players
+        <br className="hidden lg:inline" /> warm up.
+        <br className="lg:hidden" /> Download and see for
         <br />
-        day before the game
-      </span>
+        <span className="relative inline-block">
+          <span className="relative z-20">yourself.</span>
+          <HeroWarmUpsHighlighter className="absolute left-0 right-0 top-[2px] z-10" />
+        </span>
+      </h1>
+      <h3
+        className={cx(
+          'text-line font-prime inline-block text-center text-xl font-medium tracking-normal',
+          'lg:text-left lg:text-2xl lg:font-medium'
+        )}
+      >
+        Made specially for <br className="lg:hidden" />
+        <span className="relative inline-block">
+          <span className="relative z-20">Apex Legends</span>
+          <HeroALHighlighter
+            className={cx(
+              'absolute bottom-[-0.1rem] left-[-0.3rem] right-[-0.3rem] z-10',
+              'lg:bottom-[-0.2rem] lg:left-0'
+            )}
+          />
+          <HeroArrow className="absolute right-[-1.8rem] top-[0.1rem] h-8 w-5 lg:top-[0.3rem]" />
+        </span>
+      </h3>
     </div>
   )
 }

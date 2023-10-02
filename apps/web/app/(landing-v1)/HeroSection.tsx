@@ -7,7 +7,7 @@ import { HeroTitle } from './components/HeroTitle'
 
 function PhoneMockup() {
   return (
-    <div className="relative flex w-full max-w-[356px] overflow-hidden md:w-[80%] lg:aspect-auto lg:w-[60%] lg:max-w-none">
+    <div className="relative flex w-full max-w-[356px] overflow-hidden md:w-[80%] lg:aspect-auto lg:w-[60%] lg:max-w-none xl:w-[50%]">
       <div className="absolute inset-0">
         <PhoneMockupSVG className="aspect-[0.49] w-full" />
       </div>
@@ -92,13 +92,13 @@ export function HeroPhoneMockup() {
 
 export default function HeroSection() {
   return (
-    <div>
+    <section>
       <div
         className={cx('bg-bg-primary relative flex flex-row overflow-hidden')}
       >
         <div className="bg-bg-primary relative flex-[1_0_0%] " />
         <div className="flex max-w-screen-xl flex-[1_1_100%] flex-col lg:flex-row">
-          <div className="flex flex-1 flex-col gap-16 px-10 pb-10 pt-10">
+          <div className="flex flex-1 flex-col gap-16 px-6 pb-10 pt-10 lg:px-10">
             <HeroTitle />
             <div className="hidden max-w-[480px] lg:block">
               <HeroSubInput />
@@ -113,6 +113,6 @@ export default function HeroSection() {
           <HeroSubInput />
         </div>
       </div>
-    </div>
+    </section>
   )
 }
