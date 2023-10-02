@@ -120,15 +120,15 @@ function HeroArrow({ className }: { className: string }) {
 export function HeroTitle() {
   return (
     <div className="flex flex-col gap-6">
-      <span
+      <h2
         className={cx(
           '"text-text-primary font-prime inline-block text-center text-[2rem] font-extrabold leading-[2.4rem] tracking-normal',
           'lg:text-left lg:text-[3.1rem] lg:leading-[3.3rem]'
         )}
       >
         Be <span className="text-[#FFBD70]">ready</span> for a fight
-      </span>
-      <span
+      </h2>
+      <h1
         className={cx(
           'text-text-primary font-prime inline-block text-center text-2xl font-medium tracking-normal',
           'lg:text-left lg:text-3xl lg:font-medium'
@@ -151,8 +151,8 @@ export function HeroTitle() {
           <span className="relative z-20">yourself.</span>
           <HeroWarmUpsHighlighter className="absolute left-0 right-0 top-[2px] z-10" />
         </span>
-      </span>
-      <span
+      </h1>
+      <h3
         className={cx(
           'text-line font-prime inline-block text-center text-xl font-medium tracking-normal',
           'lg:text-left lg:text-2xl lg:font-medium'
@@ -169,7 +169,7 @@ export function HeroTitle() {
           />
           <HeroArrow className="absolute right-[-1.8rem] top-[0.1rem] h-8 w-5 lg:top-[0.3rem]" />
         </span>
-      </span>
+      </h3>
     </div>
   )
 }
