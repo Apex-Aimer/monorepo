@@ -18,7 +18,7 @@ export function AccordionItem({
         type="checkbox"
         name={`accordion-${id}`}
         id={id}
-        checked={initiallyOpen}
+        defaultChecked={initiallyOpen}
       />
       <label
         htmlFor={id}
