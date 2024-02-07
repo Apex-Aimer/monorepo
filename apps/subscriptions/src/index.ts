@@ -1,5 +1,5 @@
-import { decodeNotificationPayload, isDecodedNotificationDataPayload, isDecodedNotificationSummaryPayload } from 'app-store-server-api';
 import { Hono } from 'hono';
+import { decodeNotificationPayload } from './decoding';
 
 type Bindings = {
 	DB: D1Database;
@@ -27,26 +27,26 @@ app.get('/subscriptions/:transaction/has-access', async (c) => {
 
 const APP_BUNDLE_ID = 'com.apexaimer';
 
-app.post('/subscriptions/handle', async (c) => {
-	const payload = await decodeNotificationPayload(await c.req.text());
+app.post('/subscriptions/apple/handle', async (c) => {
+	const { signedPayload } = await c.req.json<{ signedPayload: string }>();
 
-	if (payload.data?.bundleId !== APP_BUNDLE_ID) {
-		// Pass the notification
-		return new Response(null, { status: 200 });
-	}
+	try {
+		const payload = await decodeNotificationPayload(signedPayload);
 
-	// Notifications can contain either a data field or a summary field but never both.
-	// Use the provided type guards to determine which is present.
-	if (isDecodedNotificationDataPayload(payload)) {
-		// payload is of type DecodedNotificationDataPayload
 		console.log(payload);
+
+		if (payload.data?.bundleId !== APP_BUNDLE_ID) {
+			// Pass the notification
+			return new Response(null, { status: 200 });
+		}
+	} catch {
+		// no-op
 	}
 
-	if (isDecodedNotificationSummaryPayload(payload)) {
-		// payload is of type DecodedNotificationSummaryPayload
-		console.log(payload);
-	}
+	return new Response(null, { status: 200 });
+});
 
+app.post('/subscriptions/android/handle', async (c) => {
 	return new Response(null, { status: 200 });
 });
 

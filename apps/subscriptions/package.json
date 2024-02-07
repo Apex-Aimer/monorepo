@@ -15,6 +15,7 @@
 		"wrangler": "^3.0.0"
 	},
 	"dependencies": {
+		"@peculiar/x509": "^1.9.7",
 		"app-store-server-api": "^0.13.2",
 		"hono": "^3.12.11"
 	}
