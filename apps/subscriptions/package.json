@@ -1,0 +1,21 @@
+{
+	"name": "subscriptions",
+	"version": "0.0.0",
+	"private": true,
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev",
+		"test": "vitest --run"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20240129.0",
+		"typescript": "^5.0.4",
+		"vitest": "^1.2.2",
+		"wrangler": "^3.0.0"
+	},
+	"dependencies": {
+		"app-store-server-api": "^0.13.2",
+		"hono": "^3.12.11"
+	}
+}
