@@ -16,7 +16,6 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.apexaimer",
-      "deploymentTarget": "14.0",
       "googleServicesFile": "./configs/GoogleService-Info.plist",
       "config": {
         "usesNonExemptEncryption": false
@@ -39,7 +38,8 @@
         "expo-build-properties",
         {
           "ios": {
-            "deploymentTarget": "14.0"
+            "deploymentTarget": "15.0",
+            "useFrameworks": "static"
           }
         }
       ],
@@ -51,14 +51,7 @@
       ],
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "useFrameworks": "static"
-          }
-        }
-      ]
+      "react-native-iap"
     ],
     "experiments": {
       "typedRoutes": true

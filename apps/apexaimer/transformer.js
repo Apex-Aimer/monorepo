@@ -1,6 +1,6 @@
 const upstreamTransformer = require('metro-react-native-babel-transformer')
+// const upstreamTransformer = require('@expo/metro-config/babel-transformer')
 const yaml = require('yaml-front-matter')
-const fs = require('fs')
 
 // props: { filename: string, src: string }
 function transform(props) {

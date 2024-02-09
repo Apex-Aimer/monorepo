@@ -3,10 +3,10 @@
   "scripts": {
     "build": "dotenv -- turbo run build",
     "blog:build": "dotenv -- turbo run build --filter ApexAimerBlog",
-    "dev": "dotenv -e ./.env.local -- turbo run dev",
-    "blog:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerBlog",
-    "web:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerWeb",
-    "native:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerNative",
+    "dev": "dotenv -f ./.env.local -- turbo run dev",
+    "blog:dev": "dotenv -f ./.env.local -- turbo run dev --filter ApexAimerBlog",
+    "web:dev": "dotenv -f ./.env.local -- turbo run dev --filter ApexAimerWeb",
+    "native:dev": "dotenv -f ./.env.local -- turbo run dev --filter ApexAimerNative",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "blog:deploy": "",
@@ -26,5 +26,8 @@
     "apps/*",
     "packages/*"
   ],
+  "resolutions": {
+    "@expo/config-plugins": "~7.2.2"
+  },
   "license": "AGPL-3.0-only"
 }

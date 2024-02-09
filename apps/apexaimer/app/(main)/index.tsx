@@ -21,7 +21,6 @@ import {
   isRoutineOfTheDayCompleted,
   routineIntensityLevel,
   routineOfTheDay,
-  useIsInitialStateReady,
   useUserName,
 } from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
@@ -31,8 +30,8 @@ import { DrillInfoCard } from './DrillInfoCard'
 import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
-import { Persistor } from '../components/Persistor/Persistor'
 import { DurationLevels } from '../routines/types'
+import { InAppTest } from './InAppTest'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -188,17 +187,11 @@ SplashScreen.preventAutoHideAsync()
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
 
-  const ready = useIsInitialStateReady()
-
   useEffect(() => {
-    if (ready) {
-      return
-    }
-
     setTimeout(() => {
       SplashScreen.hideAsync()
     })
-  }, [ready])
+  }, [])
 
   return (
     <>
@@ -206,7 +199,7 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => <ProfileButton />,
-          headerRight: () => null,
+          headerRight: () => <InAppTest />,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,
@@ -216,7 +209,6 @@ export default function MainScreen() {
       <Suspense fallback={null}>
         <Routine />
       </Suspense>
-      {ready && <Persistor />}
     </>
   )
 }

@@ -7,6 +7,7 @@ import { RecoilRoot } from 'recoil'
 import { ThemeProvider, useThemeColors } from './components/ThemeProvider'
 import { FontsProvider } from './components/FontsProvider'
 import { ThemedStatusBar } from './components/ThemedStatusBar'
+import { InAppSubscriptions } from './components/InAppSubscriptions/InAppSubscriptions'
 
 function BG({ children }: PropsWithChildren) {
   const theme = useThemeColors()
@@ -28,6 +29,7 @@ export default function RootLayout() {
               </BG>
             </PortalProvider>
           </ThemeProvider>
+          <InAppSubscriptions />
         </RecoilRoot>
       </FontsProvider>
     </>
