@@ -3,10 +3,12 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
+		"create-db": "wrangler d1 create app-subscriptions",
 		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
-		"start": "wrangler dev",
-		"test": "vitest --run"
+		"start": "wrangler dev --local",
+		"test": "vitest --run",
+		"setup": "wrangler d1 execute app-subscriptions --file ./setup.sql --local"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20240129.0",
@@ -17,6 +19,8 @@
 	"dependencies": {
 		"@peculiar/x509": "^1.9.7",
 		"app-store-server-api": "^0.13.2",
-		"hono": "^3.12.11"
+		"hono": "^3.12.11",
+		"kysely": "^0.27.2",
+		"kysely-d1": "^0.3.0"
 	}
 }

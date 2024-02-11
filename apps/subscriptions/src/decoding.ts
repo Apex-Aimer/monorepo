@@ -17,10 +17,7 @@ import { X509Certificate } from '@peculiar/x509';
 // 	return decodeJWS(info, rootCertFingerprint);
 // }
 
-export async function decodeNotificationPayload(
-	payload: string,
-	rootCertFingerprint?: string
-): Promise</*DecodedNotificationPayload*/ any> {
+export async function decodeNotificationPayload<T = any>(payload: string, rootCertFingerprint?: string): Promise<T> {
 	return decodeJWS(payload, rootCertFingerprint);
 }
 

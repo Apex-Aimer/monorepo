@@ -9,7 +9,7 @@ const API_HOST =
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   process.env.NODE_ENV === 'production'
     ? 'https://api.apexaimer.com'
-    : 'https://ac4a-103-89-79-154.ngrok-free.app'
+    : 'https://0aaa-103-89-79-154.ngrok-free.app'
 
 export class InAppSubscriptionsService {
   private static __instance: InAppSubscriptionsService
@@ -38,10 +38,6 @@ export class InAppSubscriptionsService {
   }
 
   async buyPremium(product: InAppPremiumProducts) {
-    const subscriptions = await getSubscriptions({
-      skus: [InAppPremiumProducts.Monthly],
-    })
-
     return requestSubscription({
       sku: product,
     })
