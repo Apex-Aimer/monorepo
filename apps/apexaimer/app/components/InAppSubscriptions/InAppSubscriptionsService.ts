@@ -5,12 +5,6 @@ export enum InAppPremiumProducts {
   Monthly = 'regular_monthly',
 }
 
-const API_HOST =
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  process.env.NODE_ENV === 'production'
-    ? 'https://api.apexaimer.com'
-    : 'https://0aaa-103-89-79-154.ngrok-free.app'
-
 export class InAppSubscriptionsService {
   private static __instance: InAppSubscriptionsService
   static get sharedInstance() {
@@ -23,15 +17,18 @@ export class InAppSubscriptionsService {
 
   async checkServerAccess(originalTransactionId: string) {
     try {
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
+      const apiHost = process.env.EXPO_PUBLIC_API_HOST
       const res = await fetch(
-        `${API_HOST}/subscriptions/${originalTransactionId}/has-access`
+        `${apiHost}/subscriptions/${originalTransactionId}/has-access`
       )
 
       if (res.status === 200) {
         return true
       }
-    } catch {
+    } catch (err) {
       // no-op
+      console.log(err.message)
     }
 
     return false
