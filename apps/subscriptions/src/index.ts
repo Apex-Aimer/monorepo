@@ -30,18 +30,24 @@ app.get('/subscriptions/:root-token/has-access', async (c) => {
 		dialect: new D1Dialect({ database: c.env.DB }),
 	});
 
-	const rootToken = c.req.param('root-token');
+	try {
+		const rootToken = c.req.param('root-token');
 
-	const result = await db.selectFrom('Subscriptions').selectAll().where('id', '=', rootToken).executeTakeFirst();
+		const result = await db.selectFrom('Subscriptions').selectAll().where('id', '=', rootToken).executeTakeFirst();
 
-	if (result == null) {
-		return c.json({ message: 'Subscription Not Found', ok: false }, 404);
+		if (result == null) {
+			return c.json({ message: 'Subscription Not Found', ok: false }, 404);
+		}
+
+		if (Date.now() > result.ends_at) {
+			return c.json({ message: 'Subscription Not Found', ok: false }, 404);
+		}
+		return c.json({ message: 'Subscription Found', ok: true }, 200);
+	} catch (err) {
+		if (err instanceof Error) {
+			return c.json({ message: 'Error', details: err.message, ok: false }, 500);
+		}
 	}
-
-	if (Date.now() > result.ends_at) {
-		return c.json({ message: 'Subscription Not Found', ok: false }, 404);
-	}
-	return c.json({ message: 'Subscription Found', ok: true }, 200);
 });
 
 const APP_BUNDLE_ID = 'com.apexaimer';

@@ -10,25 +10,25 @@ resource "cloudflare_record" "api" {
   proxied = true
 }
 
-resource "cloudflare_d1_database" "subscriptions" {
+resource "cloudflare_d1_database" "apexaimer-app-subscriptions" {
   account_id = var.cloudflare_account_id
-  name       = "subscriptions-database"
+  name       = "apexaimer-app-subscriptions"
 }
 
-resource "cloudflare_worker_script" "subscriptions" {
+resource "cloudflare_worker_script" "apexaimer-app-subscriptions-worker" {
   account_id = var.cloudflare_account_id
-  name       = "subscriptions"
-  content    = file("script.js") // TODO
+  name       = "apexaimer-app-subscriptions-worker"
+  content    = file("../../apps/subscriptions/dist/index.js")
+  module     = true
 
   d1_database_binding {
-    database_id = cloudflare_d1_database.database_id
-    name        = cloudflare_d1_database.name
+    database_id = cloudflare_d1_database.apexaimer-app-subscriptions.id
+    name        = "DB"
   }
 }
 
-
-resource "cloudflare_worker_route" "subscriptions" {
+resource "cloudflare_worker_route" "apexaimer-app-subscriptions" {
   zone_id     = var.cloudflare_zone_id
   pattern     = "api.apexaimer.com/subscriptions/*"
-  script_name = cloudflare_worker_script.subscriptions
+  script_name = cloudflare_worker_script.apexaimer-app-subscriptions-worker.name
 }
