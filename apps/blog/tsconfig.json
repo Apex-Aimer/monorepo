@@ -8,9 +8,7 @@
       }
     ],
     "paths": {
-      "mdx/generated": [
-        "./.mdx/generated"
-      ]
+      "mdx/generated": ["./.mdx/generated"]
     }
   },
   "include": [
@@ -20,7 +18,5 @@
     ".next/types/**/*.ts",
     ".mdx/generated"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

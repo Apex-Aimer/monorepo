@@ -31,7 +31,7 @@ import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { DurationLevels } from '../routines/types'
-import { InAppTest } from './InAppTest'
+import { useGeneralPaywallScreen } from '../components/GeneralPaywall'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -182,10 +182,25 @@ function ProfileButton() {
   )
 }
 
+function PaywallButton({ onPress }: { onPress(): void }) {
+  const styles = useAppStyles(themedStyles)
+  return (
+    <Button
+      style={styles.profileRow}
+      activeOpacity={0.6}
+      haptic="selection"
+      onPress={onPress}
+    >
+      <Text style={styles.profileText}>Paywall</Text>
+    </Button>
+  )
+}
+
 SplashScreen.preventAutoHideAsync()
 
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
+  const { openPaywall } = useGeneralPaywallScreen()
 
   useEffect(() => {
     setTimeout(() => {
@@ -199,7 +214,7 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => <ProfileButton />,
-          headerRight: () => <InAppTest />,
+          headerRight: () => <PaywallButton onPress={openPaywall} />,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,
