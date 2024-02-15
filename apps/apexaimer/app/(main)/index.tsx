@@ -31,7 +31,6 @@ import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { DurationLevels } from '../routines/types'
-import { useGeneralPaywallScreen } from '../components/GeneralPaywall'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -200,7 +199,6 @@ SplashScreen.preventAutoHideAsync()
 
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
-  const { openPaywall } = useGeneralPaywallScreen()
 
   useEffect(() => {
     setTimeout(() => {
@@ -214,7 +212,7 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => <ProfileButton />,
-          headerRight: () => <PaywallButton onPress={openPaywall} />,
+          headerRight: null,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,

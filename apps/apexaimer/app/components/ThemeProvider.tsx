@@ -39,6 +39,10 @@ interface ThemedColorsPalette {
   'paywall plan not-active badge': ColorValue
   'paywall bg gradient': [ColorValue, ColorValue]
   'paywall header cover gradient': [ColorValue, ColorValue]
+  'profile paywall stroke gradient': [ColorValue, ColorValue]
+  'profile paywall bg gradient': [ColorValue, ColorValue]
+  'profile paywall bg': ColorValue
+  'profile paywall restore': ColorValue
   'range badge': ColorValue
   'player movement badge': ColorValue
   'dummy movement badge': ColorValue
@@ -112,6 +116,13 @@ const lightColors: ThemedColorsPalette = {
   ],
   'paywall plan active badge gradient': ['#FF810D', '#FF9204'],
   'paywall plan not-active badge': colorWithOpacity('#FDD6A8', 0.6),
+  'profile paywall stroke gradient': ['#FF5722', '#FF9800'],
+  'profile paywall bg gradient': [
+    `rgba(255,255,255,0.7)`,
+    `rgba(255,255,255,0.5)`,
+  ],
+  'profile paywall bg': `rgba(253,214,168,0.3)`,
+  'profile paywall restore': '#FF9800',
 }
 
 const darkColors: ThemedColorsPalette = {
@@ -159,6 +170,10 @@ const darkColors: ThemedColorsPalette = {
   ],
   'paywall plan active badge gradient': ['#FF810D', '#FF9204'],
   'paywall plan not-active badge': colorWithOpacity('#FFBD70', 0.7),
+  'profile paywall stroke gradient': ['#FFBD70', '#FFBD70'],
+  'profile paywall bg gradient': [`rgba(255,255,255,0)`, `rgba(255,255,255,0)`],
+  'profile paywall bg': `rgba(255,255,255,0)`,
+  'profile paywall restore': '#D0C9C9',
 }
 
 const staticColors: StaticColorsPalette = {

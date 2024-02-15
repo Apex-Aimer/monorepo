@@ -1,9 +1,4 @@
-import {
-  getSubscriptions,
-  initConnection,
-  requestSubscription,
-  setup,
-} from 'react-native-iap'
+import { initConnection, requestSubscription, setup } from 'react-native-iap'
 
 export enum InAppPremiumProducts {
   Yearly = 'regular_yearly',

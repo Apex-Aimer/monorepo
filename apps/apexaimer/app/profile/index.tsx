@@ -21,6 +21,7 @@ import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
 import { useUserName } from '../store'
 import { Avatar } from '../components/Avatar'
 import { ManyTapsTouchable } from './components/ManyTapsTouchable'
+import { GoPremium } from './components/GoPremium'
 
 async function sendUsMail() {
   const supportMail = 'support@apexaimer.com'
@@ -142,6 +143,7 @@ export default function ProfileScreen() {
           <Avatar size={80} />
           <Text style={styles.profileText}>{name}</Text>
         </View>
+        <GoPremium />
         <View style={styles.sectionContainer}>
           <View style={styles.sectionTitleContainer}>
             <Text style={styles.sectionTitle}>PERSONALIZE</Text>
