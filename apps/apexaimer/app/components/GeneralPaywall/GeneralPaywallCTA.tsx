@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowRightIcon } from 'react-native-heroicons/solid'
@@ -10,15 +10,21 @@ import {
 } from '../ThemeProvider'
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import { Button } from '../Button'
+import { InAppSubscriptionsService } from '../InAppSubscriptions/InAppSubscriptionsService'
+import { useRecoilState } from 'recoil'
+import { busyPaying } from './store'
+import { noop } from 'lodash'
 
 interface Props {
+  currentProductId: string
   onBack(): void
 }
 
-export function GeneralPaywallCTA({ onBack }: Props) {
+export function GeneralPaywallCTA({ currentProductId, onBack }: Props) {
   const theme = useThemeColors()
   const styles = useAppStyles(themedStyles)
   const { bottom } = useSafeAreaInsets()
+  const [isBusyPaying, setBusyPaying] = useRecoilState(busyPaying)
 
   return (
     <LinearGradient
@@ -46,20 +52,59 @@ export function GeneralPaywallCTA({ onBack }: Props) {
         pointerEvents="box-none"
       />
       <View style={styles.inner}>
-        <Button onPress={() => {}} haptic="impactLight">
+        <Button
+          disabled={isBusyPaying}
+          onPress={async () => {
+            try {
+              setBusyPaying(true)
+              await InAppSubscriptionsService.sharedInstance.buyPremium(
+                currentProductId
+              )
+
+              onBack()
+            } catch {
+              // no-op
+            } finally {
+              setBusyPaying(false)
+            }
+          }}
+          haptic="impactLight"
+        >
           <LinearGradient
             colors={theme['primary gradient'] as string[]}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={styles.buttonWrapper}
           >
-            <View style={styles.buttonInner}>
+            <View
+              style={[
+                styles.buttonInner,
+                isBusyPaying && styles.buttonInnerBusy,
+              ]}
+            >
               <Text style={styles.buttonContinueLabel}>Continue</Text>
               <Text style={styles.buttonCancelLabel}>Cancel anytime</Text>
             </View>
+            {isBusyPaying && (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  styles.buttonInnerIndicatorWrapper,
+                ]}
+              >
+                <ActivityIndicator
+                  color={styles.buttonInnerIndicator.backgroundColor}
+                />
+              </View>
+            )}
           </LinearGradient>
         </Button>
-        <Button style={styles.backButton} haptic="selection" onPress={onBack}>
+        <Button
+          style={[styles.backButton, isBusyPaying && styles.backButtonBusy]}
+          disabled={isBusyPaying}
+          haptic="selection"
+          onPress={isBusyPaying ? noop : onBack}
+        >
           <ArrowRightIcon
             size={16}
             color={theme['line']}
@@ -98,6 +143,16 @@ const themedStyles = AppStyleSheet.create({
     gap: 3,
     alignItems: 'center',
   },
+  buttonInnerBusy: {
+    opacity: 0,
+  },
+  buttonInnerIndicatorWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonInnerIndicator: {
+    backgroundColor: 'text light',
+  },
   buttonContinueLabel: {
     fontFamily: 'rubik 600',
     fontSize: 18,
@@ -119,6 +174,9 @@ const themedStyles = AppStyleSheet.create({
     fontFamily: 'rubik 600',
     fontSize: 14,
     color: 'line',
+  },
+  backButtonBusy: {
+    opacity: 0.5,
   },
 })
 

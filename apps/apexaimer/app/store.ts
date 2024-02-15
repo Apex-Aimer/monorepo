@@ -47,7 +47,7 @@ export const routinesOfTheDay = atom({
   key: 'routinesOfTheDay',
   default: emptyRoutines,
   effects: [
-    ({ setSelf, node, onSet, getPromise }) => {
+    ({ setSelf, node, getPromise }) => {
       updateRoutinesOfTheDay = (
         level: Levels,
         prevRoutines?: RoutinesOfTheDay
@@ -63,12 +63,6 @@ export const routinesOfTheDay = atom({
       }
 
       async function init() {
-        console.log(
-          JSON.stringify({
-            sdf: getPersistedStorageData(level.key),
-            xcv: getPersistedStorageData(node.key),
-          })
-        )
         return await RoutineService.sharedInstance.getRoutinesOfTheDay(
           getPersistedStorageData(level.key) ?? Levels.Iron,
           getPersistedStorageData(node.key)

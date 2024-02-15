@@ -3,8 +3,7 @@ import { atom, useSetRecoilState, useRecoilValue } from 'recoil'
 
 export const isGeneralPaywallShown = atom({
   key: 'isGeneralPaywallShown',
-  // default: false,
-  default: true
+  default: false,
 })
 
 export function useGeneralPaywallScreen() {
@@ -16,3 +15,8 @@ export function useGeneralPaywallScreen() {
     }, [setIsGeneralPaywallShown]),
   }
 }
+
+export const busyPaying = atom({
+  key: 'generalPaywallBusyPaying',
+  default: false,
+})

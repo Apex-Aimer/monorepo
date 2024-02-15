@@ -13,11 +13,14 @@ import {
 } from 'react-native-iap'
 
 import { iapHasPremium, iapRootToken } from '../../createIapStore'
+import { InAppSubscriptionsService } from './InAppSubscriptionsService'
 
 const iapConnected = atom({
   key: 'iapConnected',
   default: false,
 })
+
+const connection = initConnection()
 
 function InAppSubscriptionsComp() {
   const [isConnected, setConnected] = useRecoilState(iapConnected)
@@ -25,7 +28,7 @@ function InAppSubscriptionsComp() {
   const setRootToken = useSetRecoilState(iapRootToken)
 
   useEffect(() => {
-    initConnection()
+    InAppSubscriptionsService.sharedInstance.connection
       .then((value) => {
         setConnected(value)
       })

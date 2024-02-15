@@ -1,19 +1,30 @@
-import { getSubscriptions, requestSubscription } from 'react-native-iap'
+import {
+  getSubscriptions,
+  initConnection,
+  requestSubscription,
+  setup,
+} from 'react-native-iap'
 
 export enum InAppPremiumProducts {
   Yearly = 'regular_yearly',
   Monthly = 'regular_monthly',
+  Weekly = 'regular_weekly',
 }
 
 export class InAppSubscriptionsService {
   private static __instance: InAppSubscriptionsService
   static get sharedInstance() {
     if (this.__instance == null) {
+      setup({ storekitMode: 'STOREKIT2_MODE' })
+
       this.__instance = new InAppSubscriptionsService()
+      this.__instance.connection = initConnection()
     }
 
     return this.__instance
   }
+
+  public connection: Promise<boolean>
 
   async checkServerAccess(originalTransactionId: string) {
     try {
@@ -34,7 +45,7 @@ export class InAppSubscriptionsService {
     return false
   }
 
-  async buyPremium(product: InAppPremiumProducts) {
+  async buyPremium(product: string) {
     return requestSubscription({
       sku: product,
     })

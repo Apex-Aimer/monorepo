@@ -9,6 +9,15 @@ import {
   GENERAL_PAYWALL_CTA_HEIGHT,
   GeneralPaywallCTA,
 } from './GeneralPaywallCTA'
+import { atom, useRecoilValue } from 'recoil'
+import {
+  InAppPremiumProducts,
+  InAppSubscriptionsService,
+} from '../InAppSubscriptions/InAppSubscriptionsService'
+import { Product, getProducts } from 'react-native-iap'
+import { PaywallSubPrice } from '../Paywall/PaywallSubPrice'
+import { PaywallDiscountSubPrice } from '../Paywall/PaywallDiscountSubPrice'
+import { busyPaying } from './store'
 
 enum Plans {
   Yearly,
@@ -20,9 +29,63 @@ interface Props {
   close(): void
 }
 
+interface Subs {
+  yearly: Product
+  monthly: Product
+  weekly: Product
+}
+
+const subs = atom<Partial<Subs>>({
+  key: 'generalPaywallSubs',
+  default: null,
+  effects: [
+    ({ setSelf }) => {
+      async function init() {
+        const isConnected = await InAppSubscriptionsService.sharedInstance
+          .connection
+
+        if (!isConnected) {
+          return null
+        }
+
+        const products = await getProducts({
+          skus: [
+            InAppPremiumProducts.Yearly,
+            InAppPremiumProducts.Monthly,
+            InAppPremiumProducts.Weekly,
+          ],
+        })
+
+        const subs: Subs = {
+          yearly: products.find(
+            ({ productId }) => productId === InAppPremiumProducts.Yearly
+          ),
+          monthly: products.find(
+            ({ productId }) => productId === InAppPremiumProducts.Monthly
+          ),
+          weekly: products.find(
+            ({ productId }) => productId === InAppPremiumProducts.Weekly
+          ),
+        }
+
+        return subs
+      }
+
+      setSelf(init())
+    },
+  ],
+})
+
+function getYearlyDiscount(monthlyPrice: number) {
+  return ((Math.floor(monthlyPrice * 12) - 1) * 100 + 99) / 100
+}
+
 export function GeneralPaywallScreen({ close }: Props) {
   const styles = useAppStyles(themedStyles)
-  const [activePlan, setActivePlan] = useState(Plans.Yearly)
+  const resolvedSubs = useRecoilValue(subs)
+  const { yearly, monthly, weekly } = resolvedSubs
+  const isBusyPaying = useRecoilValue(busyPaying)
+  const [activePlan, setActivePlan] = useState<keyof Subs>('yearly')
 
   return (
     <>
@@ -35,49 +98,62 @@ export function GeneralPaywallScreen({ close }: Props) {
           </Text>
         </View>
         <View style={styles.plansContainer}>
+          {yearly && (
+            <PaywallPlan
+              active={activePlan === 'yearly'}
+              busy={isBusyPaying}
+              badge="Save 40%"
+              onChange={() => {
+                setActivePlan('yearly')
+              }}
+            >
+              <View style={styles.planDescriptionContainer}>
+                <Text style={styles.planTitle}>Yearly</Text>
+              </View>
+              <View style={styles.planPricesContainer}>
+                <PaywallSubPrice {...yearly} suffix="/year" />
+                <PaywallDiscountSubPrice
+                  {...monthly}
+                  calculateDiscount={getYearlyDiscount}
+                  suffix="/year"
+                />
+              </View>
+            </PaywallPlan>
+          )}
           <PaywallPlan
-            active={activePlan === Plans.Yearly}
-            badge="Save 40%"
+            active={activePlan === 'monthly'}
+            busy={isBusyPaying}
             onChange={() => {
-              setActivePlan(Plans.Yearly)
-            }}
-          >
-            <View style={styles.planDescriptionContainer}>
-              <Text style={styles.planTitle}>Yearly</Text>
-            </View>
-            <View style={styles.planPricesContainer}>
-              <Text style={styles.planPrice}>19.99/year</Text>
-            </View>
-          </PaywallPlan>
-          <PaywallPlan
-            active={activePlan === Plans.Monthly}
-            onChange={() => {
-              setActivePlan(Plans.Monthly)
+              setActivePlan('monthly')
             }}
           >
             <View style={styles.planDescriptionContainer}>
               <Text style={styles.planTitle}>Monthly</Text>
             </View>
             <View style={styles.planPricesContainer}>
-              <Text style={styles.planPrice}>2.99/month</Text>
+              <PaywallSubPrice {...monthly} suffix="/month" />
             </View>
           </PaywallPlan>
           <PaywallPlan
-            active={activePlan === Plans.Weekly}
+            active={activePlan === 'weekly'}
+            busy={isBusyPaying}
             onChange={() => {
-              setActivePlan(Plans.Weekly)
+              setActivePlan('weekly')
             }}
           >
             <View style={styles.planDescriptionContainer}>
               <Text style={styles.planTitle}>Weekly</Text>
             </View>
             <View style={styles.planPricesContainer}>
-              <Text style={styles.planPrice}>0.75/week</Text>
+              <PaywallSubPrice {...weekly} suffix="/week" />
             </View>
           </PaywallPlan>
         </View>
       </PaywallContainer>
-      <GeneralPaywallCTA onBack={close} />
+      <GeneralPaywallCTA
+        onBack={close}
+        currentProductId={resolvedSubs[activePlan].productId}
+      />
     </>
   )
 }
@@ -138,6 +214,7 @@ const themedStyles = AppStyleSheet.create({
   },
   planPricesContainer: {
     flexDirection: 'column',
+    alignItems: 'flex-end',
     gap: 8,
   },
   planPrice: {

@@ -14,6 +14,9 @@ export const themedStyles = AppStyleSheet.create({
     shadowRadius: 10,
     shadowOpacity: 1,
   },
+  planBusy: {
+    opacity: 0.5,
+  },
   planContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -50,11 +50,18 @@ function PlanBadge({
 
 interface PlanProps extends PropsWithChildren {
   active: boolean
+  busy: boolean
   onChange(): void
   badge?: string
 }
 
-export function PaywallPlan({ active, badge, onChange, children }: PlanProps) {
+export function PaywallPlan({
+  active,
+  busy,
+  badge,
+  onChange,
+  children,
+}: PlanProps) {
   const styles = useAppStyles(themedStyles)
   const scale = useSharedValue(1)
 
@@ -63,7 +70,7 @@ export function PaywallPlan({ active, badge, onChange, children }: PlanProps) {
   }, [])
 
   const tapGesture = Gesture.Tap()
-    .enabled(!active)
+    .enabled(!active && !busy)
     .shouldCancelWhenOutside(true)
     .onBegin(() => {
       runOnJS(onStartHaptic)()
@@ -82,7 +89,7 @@ export function PaywallPlan({ active, badge, onChange, children }: PlanProps) {
 
   return (
     <GestureDetector gesture={tapGesture}>
-      <Animated.View style={[styles.plan, style]}>
+      <Animated.View style={[styles.plan, busy && styles.planBusy, style]}>
         <PlanDecorations active={active} />
         <View style={styles.planContent}>{children}</View>
         {badge && <PlanBadge active={active}>{badge}</PlanBadge>}

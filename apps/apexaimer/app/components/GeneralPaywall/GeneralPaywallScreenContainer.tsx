@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, Suspense } from 'react'
 import { View, StyleSheet, TextStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Animated, {
@@ -44,7 +44,9 @@ function GeneralPaywallScreenContainer() {
     <Animated.View
       style={[styles.container, StyleSheet.absoluteFillObject, animatedStyle]}
     >
-      <GeneralPaywallScreen close={fadeOut} />
+      <Suspense fallback={null}>
+        <GeneralPaywallScreen close={fadeOut} />
+      </Suspense>
       <View style={[styles.header, { top }]}>
         <Button
           style={styles.headerButton}
