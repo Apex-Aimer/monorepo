@@ -97,10 +97,8 @@ function Underlay() {
 
 export function GoPremium() {
   const styles = useAppStyles(themedStyles)
-  const hasPremium = useRecoilValue(iapHasPremium)
+  const [hasPremium, setHasPremium] = useRecoilState(iapHasPremium)
   const { openPaywall } = useGeneralPaywallScreen()
-
-  const setHasPremium = useSetRecoilState(iapHasPremium)
   const setRootToken = useSetRecoilState(iapRootToken)
 
   const [isBusy, setBusy] = useRecoilState(busyRestore)
@@ -143,6 +141,16 @@ export function GoPremium() {
         ios: purchase.originalTransactionIdentifierIOS,
         android: purchase.purchaseToken,
       })
+
+      const hasAccess =
+        await InAppSubscriptionsService.sharedInstance.checkServerAccess(
+          rootToken
+        )
+
+      if (!hasAccess) {
+        Alert.alert('Restore Unsuccessful', `Your subscription has expired`)
+        return
+      }
 
       setRootToken(rootToken)
       setHasPremium(true)

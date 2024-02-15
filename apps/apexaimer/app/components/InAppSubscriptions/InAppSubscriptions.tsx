@@ -20,8 +20,6 @@ const iapConnected = atom({
   default: false,
 })
 
-const connection = initConnection()
-
 function InAppSubscriptionsComp() {
   const [isConnected, setConnected] = useRecoilState(iapConnected)
   const setHasPremium = useSetRecoilState(iapHasPremium)
