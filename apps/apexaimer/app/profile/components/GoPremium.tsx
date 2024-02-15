@@ -1,5 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import {
+  ActivityIndicator,
+  Alert,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import { useDerivedValue, useSharedValue } from 'react-native-reanimated'
+import { getAvailablePurchases, getProducts } from 'react-native-iap'
 import {
   Canvas,
   LinearGradient,
@@ -7,14 +15,25 @@ import {
   RoundedRect,
   vec,
 } from '@shopify/react-native-skia'
-import { useRecoilValue } from 'recoil'
+import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useCallback } from 'react'
+import { noop } from 'lodash'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
-import { iapHasPremium } from '../../createIapStore'
+import { iapHasPremium, iapRootToken } from '../../createIapStore'
 import { useThemeColors } from '../../components/ThemeProvider'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { Button } from '../../components/Button'
 import { useGeneralPaywallScreen } from '../../components/GeneralPaywall'
+import {
+  InAppPremiumProducts,
+  InAppSubscriptionsService,
+} from '../../components/InAppSubscriptions/InAppSubscriptionsService'
+
+const busyRestore = atom({
+  key: 'goPremiumBusyRestore',
+  default: false,
+})
 
 function Underlay() {
   const theme = useThemeColors()
@@ -81,6 +100,61 @@ export function GoPremium() {
   const hasPremium = useRecoilValue(iapHasPremium)
   const { openPaywall } = useGeneralPaywallScreen()
 
+  const setHasPremium = useSetRecoilState(iapHasPremium)
+  const setRootToken = useSetRecoilState(iapRootToken)
+
+  const [isBusy, setBusy] = useRecoilState(busyRestore)
+
+  const onRestore = useCallback(async () => {
+    try {
+      setBusy(true)
+
+      const isConnected = await InAppSubscriptionsService.sharedInstance
+        .connection
+
+      if (!isConnected) {
+        return
+      }
+
+      await getProducts({
+        skus: [
+          InAppPremiumProducts.Yearly,
+          InAppPremiumProducts.Monthly,
+          InAppPremiumProducts.Weekly,
+        ],
+      })
+
+      const availablePurchases = await getAvailablePurchases({
+        onlyIncludeActiveItems: true,
+        alsoPublishToEventListener: false,
+      })
+
+      if (!availablePurchases.length) {
+        Alert.alert(
+          'Restore Unsuccessful',
+          `We couldn't find any previous purchases`
+        )
+        return
+      }
+
+      const [purchase] = availablePurchases
+
+      const rootToken = Platform.select({
+        ios: purchase.originalTransactionIdentifierIOS,
+        android: purchase.purchaseToken,
+      })
+
+      setRootToken(rootToken)
+      setHasPremium(true)
+
+      Alert.alert('Restore Successful', 'You successfully restored purchase')
+    } catch {
+      // no-op
+    } finally {
+      setBusy(false)
+    }
+  }, [setBusy, setHasPremium, setRootToken])
+
   if (hasPremium) {
     return null
   }
@@ -93,13 +167,34 @@ export function GoPremium() {
           <Text style={styles.title}>Go Premium</Text>
           <Text style={styles.description}>Enjoy ads-less experience</Text>
         </View>
-        <PrimaryButton onPress={openPaywall}>
-          <View style={styles.buttonLabelWrapper}>
+        <PrimaryButton onPress={isBusy ? noop : openPaywall}>
+          <View
+            style={[
+              styles.buttonLabelWrapper,
+              isBusy && styles.buttonLabelWrapperBusy,
+            ]}
+          >
             <Text style={styles.buttonLabel}>Upgrade</Text>
           </View>
+          {isBusy && (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                styles.buttonInnerIndicatorWrapper,
+              ]}
+            >
+              <ActivityIndicator
+                color={styles.buttonInnerIndicator.backgroundColor}
+              />
+            </View>
+          )}
         </PrimaryButton>
         <View style={styles.textsContainer}>
-          <Button>
+          <Button
+            style={[styles.restoreButton, isBusy && styles.restoreButtonBusy]}
+            onPress={onRestore}
+            disabled={isBusy}
+          >
             <Text style={styles.restoreButtonLabel}>Restore purchase</Text>
           </Button>
         </View>
@@ -137,10 +232,26 @@ const themedStyles = AppStyleSheet.create({
   buttonLabelWrapper: {
     paddingVertical: 6,
   },
+  buttonLabelWrapperBusy: {
+    opacity: 0,
+  },
   buttonLabel: {
     fontFamily: 'rubik 500',
     fontSize: 18,
     color: 'text light',
+  },
+  buttonInnerIndicatorWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonInnerIndicator: {
+    backgroundColor: 'text light',
+  },
+  restoreButton: {
+    paddingHorizontal: 20,
+  },
+  restoreButtonBusy: {
+    opacity: 0.5,
   },
   restoreButtonLabel: {
     fontFamily: 'rubik 600',

@@ -1,6 +1,7 @@
 import { MMKV } from 'react-native-mmkv'
 import { AtomEffect, DefaultValue } from 'recoil'
 
+// export const defaultStorage = createMockMMKV()
 export const defaultStorage = new MMKV()
 
 export function getPersistedStorageData(key: string) {
