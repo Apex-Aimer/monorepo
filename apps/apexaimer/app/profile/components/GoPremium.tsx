@@ -15,8 +15,8 @@ import {
   RoundedRect,
   vec,
 } from '@shopify/react-native-skia'
-import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { useCallback } from 'react'
+import { atom, useRecoilState, useSetRecoilState } from 'recoil'
+import { memo, useCallback } from 'react'
 import { noop } from 'lodash'
 
 import { AppStyleSheet, useAppStyles } from '../../components/useAppStyles'
@@ -35,7 +35,7 @@ const busyRestore = atom({
   default: false,
 })
 
-function Underlay() {
+const Underlay = memo(function UnderlayDecoration() {
   const theme = useThemeColors()
   const width = useSharedValue(0)
   const height = useSharedValue(0)
@@ -93,7 +93,7 @@ function Underlay() {
       </RoundedRect>
     </Canvas>
   )
-}
+})
 
 export function GoPremium() {
   const styles = useAppStyles(themedStyles)
