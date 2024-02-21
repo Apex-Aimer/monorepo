@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import { atom, useSetRecoilState } from 'recoil'
+import { atom, useRecoilValue } from 'recoil'
 import { useHeaderHeight } from '@react-navigation/elements'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
@@ -12,6 +12,7 @@ import {
 import { useThemeColors } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { OnboardingScreenCTA } from './components/OnboardingScreenCTA'
+import { stats as statsAtom } from './UsernameScreen'
 
 interface StatProps {
   label: string
@@ -40,6 +41,7 @@ export function StatsConfirmationScreen() {
   const fadeOut = useOnboardingFadeOut()
   const { bottom } = useSafeAreaInsets()
   const headerHeight = useHeaderHeight()
+  const stats = useRecoilValue(statsAtom)
 
   return (
     <View
@@ -54,26 +56,27 @@ export function StatsConfirmationScreen() {
       <View style={styles.content}>
         <View style={styles.userDetails}>
           <OnboardingFadeInOutView fadeInDelay={200}>
+            {/* TODO */}
             <Avatar size={80} />
           </OnboardingFadeInOutView>
           <OnboardingFadeInOutView fadeInDelay={250}>
-            <Text style={styles.username}>Username</Text>
+            <Text style={styles.username}>{stats.username}</Text>
           </OnboardingFadeInOutView>
         </View>
         <View style={styles.contentRow}>
           <OnboardingFadeInOutView fadeInDelay={300}>
-            <Stat label="Level" value="350" />
+            <Stat label="Level" value={stats.level.toString()} />
           </OnboardingFadeInOutView>
           <OnboardingFadeInOutView fadeInDelay={350}>
-            <Stat label="Rank" value="Gold IV" />
+            <Stat label="Rank" value={stats.rank} />
           </OnboardingFadeInOutView>
         </View>
         <View style={styles.contentRow}>
           <OnboardingFadeInOutView fadeInDelay={400}>
-            <Stat label="KD ratio" value="0.6" />
+            <Stat label="KD ratio" value={stats.kdRatio} />
           </OnboardingFadeInOutView>
           <OnboardingFadeInOutView fadeInDelay={450}>
-            <Stat label="Kills" value="1000" />
+            <Stat label="Kills" value={stats.kills} />
           </OnboardingFadeInOutView>
         </View>
       </View>

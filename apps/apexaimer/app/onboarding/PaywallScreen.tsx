@@ -14,6 +14,7 @@ import { PaywallSubPrice } from '../components/Paywall/PaywallSubPrice'
 import { PaywallPlan } from '../components/Paywall/PaywallPlan'
 import { PaywallDiscountSubPrice } from '../components/Paywall/PaywallDiscountSubPrice'
 import { PAYWALL_CTA_HEIGHT, PaywallScreenCTA } from './PaywallScreenCTA'
+import { OnboardingFadeInOutView } from './components/OnboardingFadeInOutView'
 
 export function PaywallScreen() {
   const styles = useAppStyles(themedStyles)
@@ -27,71 +28,82 @@ export function PaywallScreen() {
   return (
     <>
       <PaywallContainer bottomInset={PAYWALL_CTA_HEIGHT}>
-        <View style={styles.titleContainer}>
+        <OnboardingFadeInOutView
+          style={styles.titleContainer}
+          fadeInDelay={200}
+        >
           <Text style={styles.title}>Ready to Begin?</Text>
           <Text style={styles.description}>
             Select the way it’s comfortable for you to warm-up. Explore the app
             before you buy or sign up for constant improvement right now. It’s
             up to you.
           </Text>
-        </View>
+        </OnboardingFadeInOutView>
         <View style={styles.plansContainer}>
-          <PaywallPlan
-            active={activePlan === 'yearly'}
-            busy={isBusyPaying}
-            badge="Save 40%"
-            onChange={() => {
-              setActivePlan('yearly')
-            }}
-          >
-            <View style={styles.planDescriptionContainer}>
-              <Text style={styles.planTitle}>Yearly</Text>
-              <Text style={styles.planDescription}>No ads</Text>
-            </View>
-            <View style={styles.planPricesContainer}>
-              <PaywallSubPrice {...yearly} suffix="/year" />
-              <PaywallDiscountSubPrice
-                {...monthly}
-                calculateDiscount={getYearlyDiscount}
-                suffix="/year"
-              />
-            </View>
-          </PaywallPlan>
-          <PaywallPlan
-            active={activePlan === 'monthly'}
-            busy={isBusyPaying}
-            onChange={() => {
-              setActivePlan('monthly')
-            }}
-          >
-            <View style={styles.planDescriptionContainer}>
-              <Text style={styles.planTitle}>Monthly</Text>
-              <Text style={styles.planDescription}>No ads</Text>
-            </View>
-            <View style={styles.planPricesContainer}>
-              <PaywallSubPrice {...monthly} suffix="/month" />
-            </View>
-          </PaywallPlan>
-          <PaywallPlan
-            active={activePlan === 'free'}
-            busy={isBusyPaying}
-            onChange={() => {
-              setActivePlan('free')
-            }}
-          >
-            <View style={styles.planDescriptionContainer}>
-              <Text style={styles.planTitle}>With ads</Text>
-            </View>
-            <View style={styles.planPricesContainer}>
-              <Text style={styles.planFree}>Free</Text>
-            </View>
-          </PaywallPlan>
+          <OnboardingFadeInOutView fadeInDelay={300}>
+            <PaywallPlan
+              active={activePlan === 'yearly'}
+              busy={isBusyPaying}
+              badge="Save 40%"
+              onChange={() => {
+                setActivePlan('yearly')
+              }}
+            >
+              <View style={styles.planDescriptionContainer}>
+                <Text style={styles.planTitle}>Yearly</Text>
+                <Text style={styles.planDescription}>No ads</Text>
+              </View>
+              <View style={styles.planPricesContainer}>
+                <PaywallSubPrice {...yearly} suffix="/year" />
+                <PaywallDiscountSubPrice
+                  {...monthly}
+                  calculateDiscount={getYearlyDiscount}
+                  suffix="/year"
+                />
+              </View>
+            </PaywallPlan>
+          </OnboardingFadeInOutView>
+          <OnboardingFadeInOutView fadeInDelay={400}>
+            <PaywallPlan
+              active={activePlan === 'monthly'}
+              busy={isBusyPaying}
+              onChange={() => {
+                setActivePlan('monthly')
+              }}
+            >
+              <View style={styles.planDescriptionContainer}>
+                <Text style={styles.planTitle}>Monthly</Text>
+                <Text style={styles.planDescription}>No ads</Text>
+              </View>
+              <View style={styles.planPricesContainer}>
+                <PaywallSubPrice {...monthly} suffix="/month" />
+              </View>
+            </PaywallPlan>
+          </OnboardingFadeInOutView>
+          <OnboardingFadeInOutView fadeInDelay={500}>
+            <PaywallPlan
+              active={activePlan === 'free'}
+              busy={isBusyPaying}
+              onChange={() => {
+                setActivePlan('free')
+              }}
+            >
+              <View style={styles.planDescriptionContainer}>
+                <Text style={styles.planTitle}>With ads</Text>
+              </View>
+              <View style={styles.planPricesContainer}>
+                <Text style={styles.planFree}>Free</Text>
+              </View>
+            </PaywallPlan>
+          </OnboardingFadeInOutView>
         </View>
       </PaywallContainer>
-      <PaywallScreenCTA
-        isFree={activePlan === 'free'}
-        currentProductId={resolvedSubs[activePlan]?.productId}
-      />
+      <OnboardingFadeInOutView fadeInDelay={600}>
+        <PaywallScreenCTA
+          isFree={activePlan === 'free'}
+          currentProductId={resolvedSubs[activePlan]?.productId}
+        />
+      </OnboardingFadeInOutView>
     </>
   )
 }

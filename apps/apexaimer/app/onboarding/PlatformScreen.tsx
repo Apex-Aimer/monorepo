@@ -13,6 +13,7 @@ import {
 } from './components/OnboardingFadeInOutView'
 import { useThemeColors } from '../components/ThemeProvider'
 import { Button } from '../components/Button'
+import { Platforms } from './ALStatsService'
 
 interface IconProps {
   size: number
@@ -84,12 +85,6 @@ function Option({ onPress, children }: OptionProps) {
   )
 }
 
-enum Platforms {
-  PS,
-  Xbox,
-  PC,
-}
-
 export const platform = atom<Platforms>({
   key: 'onboardingPlatform',
   default: null,
@@ -118,7 +113,7 @@ export function PlatformScreen() {
         <OnboardingFadeInOutView fadeInDelay={200}>
           <Option
             onPress={() => {
-              setPlatform(Platforms.PS)
+              setPlatform(Platforms.Playstation)
               fadeOut()
             }}
           >
