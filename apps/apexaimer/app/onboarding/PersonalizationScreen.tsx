@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { View, StyleSheet, Text, Image } from 'react-native'
 import { useHeaderHeight } from '@react-navigation/elements'
 import Animated, {
   Easing,
@@ -10,11 +10,14 @@ import Animated, {
 } from 'react-native-reanimated'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowRightIcon } from 'react-native-heroicons/solid'
+import Rive, { Fit, LoopMode, RiveRef } from 'rive-react-native'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { useThemeColors } from '../components/ThemeProvider'
 import { OnboardingScreenCTA } from './components/OnboardingScreenCTA'
 import { useOnboardingFadeOut } from './components/OnboardingFadeInOutView'
+// @ts-ignore
+import GeneratingPersonalizationAnimation from '../../assets/generatingpersonalization.riv'
 
 interface LoaderProgressProps {
   onEnd(): void
@@ -66,9 +69,40 @@ export function PersonalizationScreen() {
     setLoaded(true)
   }, [])
 
+  const riveRef = useRef<RiveRef>(null)
+
   return (
     <View style={[styles.container, { paddingTop: headerHeight }]}>
       <View style={styles.inner}>
+        <View style={styles.loadingAnimation}>
+          <Rive
+            ref={riveRef}
+            url={
+              Image.resolveAssetSource(GeneratingPersonalizationAnimation).uri
+            }
+            artboardName="banner"
+            style={styles.loadingAnimation}
+            autoplay={true}
+            onPause={() => {
+              riveRef.current?.play()
+            }}
+            fit={Fit.Cover}
+            // onPause={() => {
+            //   bannerPlacement.value = withDelay(
+            //     200,
+            //     withTiming(
+            //       1,
+            //       {
+            //         duration: 500,
+            //       },
+            //       () => {
+            //         runOnJS(onEnd)()
+            //       }
+            //     )
+            //   )
+            // }}
+          />
+        </View>
         {isLoaded ? (
           <Text style={styles.description}>
             Difficulty level doesn’t represent your skill level,{'\n'}it should
@@ -106,6 +140,7 @@ const themedStyles = AppStyleSheet.create({
     paddingVertical: 36,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 20,
   },
   rail: {
     width: 220,
@@ -118,6 +153,7 @@ const themedStyles = AppStyleSheet.create({
     backgroundColor: 'bg inverted',
   },
   loadingContainer: {
+    minHeight: 24 * 3,
     gap: 6,
   },
   description: {
@@ -129,5 +165,9 @@ const themedStyles = AppStyleSheet.create({
   },
   ctaIcon: {
     backgroundColor: 'icon primary',
+  },
+  loadingAnimation: {
+    width: '100%',
+    aspectRatio: 2,
   },
 })
