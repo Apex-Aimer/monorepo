@@ -23,6 +23,7 @@ interface ThemedColorsPalette {
   'line disabled': ColorValue
   'text primary': ColorValue
   'text primary inverted': ColorValue
+  'text accent': ColorValue
   movement: ColorValue
   tracking: ColorValue
   recoil: ColorValue
@@ -47,6 +48,8 @@ interface ThemedColorsPalette {
   'player movement badge': ColorValue
   'dummy movement badge': ColorValue
   'critical hit badge': ColorValue
+  'onboarding progress rail gradient': [ColorValue, ColorValue]
+  'onboarding option gradient': [ColorValue, ColorValue]
 }
 
 interface StaticColorsPalette {
@@ -82,6 +85,7 @@ const lightColors: ThemedColorsPalette = {
   'line disabled': colorWithOpacity('#828282', 0.5),
   'text primary': '#282624',
   'text primary inverted': '#FFFFFF',
+  'text accent': '#FF9800',
   movement: '#D2A8FD',
   tracking: '#A8CAFD',
   recoil: '#FDD6A8',
@@ -123,6 +127,14 @@ const lightColors: ThemedColorsPalette = {
   ],
   'profile paywall bg': `rgba(253,214,168,0.3)`,
   'profile paywall restore': '#FF9800',
+  'onboarding progress rail gradient': [
+    `rgba(217,217,217,1)`,
+    `rgba(217,217,217,1)`,
+  ],
+  'onboarding option gradient': [
+    `rgba(255,255,255,0.5)`,
+    `rgba(255,255,255,1)`,
+  ],
 }
 
 const darkColors: ThemedColorsPalette = {
@@ -136,6 +148,7 @@ const darkColors: ThemedColorsPalette = {
   'line disabled': colorWithOpacity('#D0C9C9', 0.5),
   'text primary': '#FFFFFF',
   'text primary inverted': '#282624',
+  'text accent': '#FFBD70',
   movement: '#B670FF',
   tracking: '#75ACFF',
   recoil: '#FFBD70',
@@ -174,6 +187,11 @@ const darkColors: ThemedColorsPalette = {
   'profile paywall bg gradient': [`rgba(255,255,255,0)`, `rgba(255,255,255,0)`],
   'profile paywall bg': `rgba(255,255,255,0)`,
   'profile paywall restore': '#D0C9C9',
+  'onboarding progress rail gradient': [
+    `rgba(66,66,66,1)`,
+    `rgba(66,66,66,0.5)`,
+  ],
+  'onboarding option gradient': [`rgba(66,66,66,0.5)`, `rgba(66,66,66,1)`],
 }
 
 const staticColors: StaticColorsPalette = {

@@ -181,17 +181,15 @@ function ProfileButton() {
   )
 }
 
-function PaywallButton({ onPress }: { onPress(): void }) {
+function OnboardingButton() {
   const styles = useAppStyles(themedStyles)
+
   return (
-    <Button
-      style={styles.profileRow}
-      activeOpacity={0.6}
-      haptic="selection"
-      onPress={onPress}
-    >
-      <Text style={styles.profileText}>Paywall</Text>
-    </Button>
+    <Link href="/onboarding/" asChild>
+      <Button style={styles.profileRow} activeOpacity={0.6} haptic="selection">
+        <Text style={styles.profileText}>Onboarding</Text>
+      </Button>
+    </Link>
   )
 }
 
@@ -212,7 +210,7 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => <ProfileButton />,
-          headerRight: null,
+          headerRight: () => <OnboardingButton />,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,
