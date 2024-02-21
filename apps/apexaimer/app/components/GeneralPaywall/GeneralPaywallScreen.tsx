@@ -3,89 +3,32 @@ import { Text, View } from 'react-native'
 
 import { AppStyleSheet, useAppStyles } from '../useAppStyles'
 import { PaywallPlan } from '../Paywall/PaywallPlan'
-import { PAYWALL_HORIZONTAL_PADDING } from '../Paywall/PaywallPlan.styles'
 import { PaywallContainer } from '../Paywall/PaywallContainer'
 import {
   GENERAL_PAYWALL_CTA_HEIGHT,
   GeneralPaywallCTA,
 } from './GeneralPaywallCTA'
-import { atom, useRecoilValue } from 'recoil'
-import {
-  InAppPremiumProducts,
-  InAppSubscriptionsService,
-} from '../InAppSubscriptions/InAppSubscriptionsService'
-import { Product, getProducts } from 'react-native-iap'
+import { useRecoilValue } from 'recoil'
 import { PaywallSubPrice } from '../Paywall/PaywallSubPrice'
 import { PaywallDiscountSubPrice } from '../Paywall/PaywallDiscountSubPrice'
-import { busyPaying } from './store'
-
-enum Plans {
-  Yearly,
-  Monthly,
-  Weekly,
-}
+import {
+  GeneralSubscriptions,
+  busyPaying,
+  generalSubscriptions,
+  getYearlyDiscount,
+} from './store'
 
 interface Props {
   close(): void
 }
 
-interface Subs {
-  yearly: Product
-  monthly: Product
-  weekly: Product
-}
-
-const subs = atom<Partial<Subs>>({
-  key: 'generalPaywallSubs',
-  default: null,
-  effects: [
-    ({ setSelf }) => {
-      async function init() {
-        const isConnected = await InAppSubscriptionsService.sharedInstance
-          .connection
-
-        if (!isConnected) {
-          return null
-        }
-
-        const products = await getProducts({
-          skus: [
-            InAppPremiumProducts.Yearly,
-            InAppPremiumProducts.Monthly,
-            InAppPremiumProducts.Weekly,
-          ],
-        })
-
-        const subs: Subs = {
-          yearly: products.find(
-            ({ productId }) => productId === InAppPremiumProducts.Yearly
-          ),
-          monthly: products.find(
-            ({ productId }) => productId === InAppPremiumProducts.Monthly
-          ),
-          weekly: products.find(
-            ({ productId }) => productId === InAppPremiumProducts.Weekly
-          ),
-        }
-
-        return subs
-      }
-
-      setSelf(init())
-    },
-  ],
-})
-
-function getYearlyDiscount(monthlyPrice: number) {
-  return ((Math.floor(monthlyPrice * 12) - 1) * 100 + 99) / 100
-}
-
 export function GeneralPaywallScreen({ close }: Props) {
   const styles = useAppStyles(themedStyles)
-  const resolvedSubs = useRecoilValue(subs)
+  const resolvedSubs = useRecoilValue(generalSubscriptions)
   const { yearly, monthly, weekly } = resolvedSubs
   const isBusyPaying = useRecoilValue(busyPaying)
-  const [activePlan, setActivePlan] = useState<keyof Subs>('yearly')
+  const [activePlan, setActivePlan] =
+    useState<keyof GeneralSubscriptions>('yearly')
 
   return (
     <>
@@ -98,28 +41,26 @@ export function GeneralPaywallScreen({ close }: Props) {
           </Text>
         </View>
         <View style={styles.plansContainer}>
-          {yearly && (
-            <PaywallPlan
-              active={activePlan === 'yearly'}
-              busy={isBusyPaying}
-              badge="Save 40%"
-              onChange={() => {
-                setActivePlan('yearly')
-              }}
-            >
-              <View style={styles.planDescriptionContainer}>
-                <Text style={styles.planTitle}>Yearly</Text>
-              </View>
-              <View style={styles.planPricesContainer}>
-                <PaywallSubPrice {...yearly} suffix="/year" />
-                <PaywallDiscountSubPrice
-                  {...monthly}
-                  calculateDiscount={getYearlyDiscount}
-                  suffix="/year"
-                />
-              </View>
-            </PaywallPlan>
-          )}
+          <PaywallPlan
+            active={activePlan === 'yearly'}
+            busy={isBusyPaying}
+            badge="Save 40%"
+            onChange={() => {
+              setActivePlan('yearly')
+            }}
+          >
+            <View style={styles.planDescriptionContainer}>
+              <Text style={styles.planTitle}>Yearly</Text>
+            </View>
+            <View style={styles.planPricesContainer}>
+              <PaywallSubPrice {...yearly} suffix="/year" />
+              <PaywallDiscountSubPrice
+                {...monthly}
+                calculateDiscount={getYearlyDiscount}
+                suffix="/year"
+              />
+            </View>
+          </PaywallPlan>
           <PaywallPlan
             active={activePlan === 'monthly'}
             busy={isBusyPaying}
@@ -159,24 +100,6 @@ export function GeneralPaywallScreen({ close }: Props) {
 }
 
 const themedStyles = AppStyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  headerCover: {
-    width: '100%',
-    aspectRatio: 1.483,
-  },
-  headerCoverGradient: {
-    backgroundColor: 'bg',
-  },
-  content: {
-    backgroundColor: 'bg',
-    flexDirection: 'column',
-    gap: 32,
-    paddingTop: 30,
-    paddingHorizontal: PAYWALL_HORIZONTAL_PADDING,
-  },
   titleContainer: {
     flexDirection: 'column',
     gap: 14,

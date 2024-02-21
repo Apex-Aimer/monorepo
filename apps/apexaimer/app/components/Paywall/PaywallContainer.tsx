@@ -33,6 +33,7 @@ const themedStyles = AppStyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: 'bg',
   },
   content: {
     backgroundColor: 'bg',
