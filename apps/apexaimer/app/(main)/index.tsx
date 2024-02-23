@@ -19,6 +19,7 @@ import { Drill } from '../components/Drill/Drill'
 import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
 import {
   isRoutineOfTheDayCompleted,
+  level as levelAtom,
   routineIntensityLevel,
   routineOfTheDay,
   useUserName,
@@ -31,6 +32,7 @@ import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { DurationLevels } from '../routines/types'
+import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -181,13 +183,14 @@ function ProfileButton() {
   )
 }
 
-function OnboardingButton() {
+function LevelButton() {
   const styles = useAppStyles(themedStyles)
+  const level = useRecoilValue(levelAtom)
 
   return (
-    <Link href="/onboarding/" asChild>
+    <Link href="/choose-level/" asChild>
       <Button style={styles.profileRow} activeOpacity={0.6} haptic="selection">
-        <Text style={styles.profileText}>Onboarding</Text>
+        <DifficultyLevelIcon size={30} level={level} />
       </Button>
     </Link>
   )
@@ -210,7 +213,7 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => <ProfileButton />,
-          headerRight: () => <OnboardingButton />,
+          headerRight: () => <LevelButton />,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,
