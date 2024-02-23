@@ -50,6 +50,7 @@ interface ThemedColorsPalette {
   'critical hit badge': ColorValue
   'onboarding progress rail gradient': [ColorValue, ColorValue]
   'onboarding option gradient': [ColorValue, ColorValue]
+  'level option': ColorValue
 }
 
 interface StaticColorsPalette {
@@ -135,6 +136,7 @@ const lightColors: ThemedColorsPalette = {
     `rgba(255,255,255,0.5)`,
     `rgba(255,255,255,1)`,
   ],
+  'level option': '#FDD6A84D',
 }
 
 const darkColors: ThemedColorsPalette = {
@@ -192,6 +194,7 @@ const darkColors: ThemedColorsPalette = {
     `rgba(66,66,66,0.5)`,
   ],
   'onboarding option gradient': [`rgba(66,66,66,0.5)`, `rgba(66,66,66,1)`],
+  'level option': '#FDD6A800',
 }
 
 const staticColors: StaticColorsPalette = {

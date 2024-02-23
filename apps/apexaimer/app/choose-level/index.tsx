@@ -79,21 +79,30 @@ function Option({ children: label, level }: OptionProps) {
           />
         </Rect>
         {activeLevel === level && (
-          <RoundedRect
-            x={0}
-            y={0}
-            width={width}
-            height={height}
-            style="stroke"
-            strokeWidth={4}
-            r={15}
-          >
-            <LinearGradient
-              start={vec(0, 0)}
-              end={vec(width, height)}
-              colors={theme['primary gradient'] as string[]}
-            />
-          </RoundedRect>
+          <>
+            <Rect
+              x={0}
+              y={0}
+              width={width}
+              height={height}
+              color={theme['level option'] as string}
+            ></Rect>
+            <RoundedRect
+              x={0}
+              y={0}
+              width={width}
+              height={height}
+              style="stroke"
+              strokeWidth={4}
+              r={15}
+            >
+              <LinearGradient
+                start={vec(0, 0)}
+                end={vec(width, height)}
+                colors={theme['primary gradient'] as string[]}
+              />
+            </RoundedRect>
+          </>
         )}
       </Canvas>
       <Text style={styles.optionLabel}>{label}</Text>
