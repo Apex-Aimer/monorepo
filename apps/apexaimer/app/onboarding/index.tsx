@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { Stack } from 'expo-router'
+import { Stack, useNavigation } from 'expo-router'
 import { View } from 'react-native'
 import { atom, useRecoilState, useRecoilValue } from 'recoil'
 
@@ -17,8 +17,9 @@ import { PersonalizationScreen } from './PersonalizationScreen'
 import { PaywallScreen } from './PaywallScreen'
 import { TermsAndPrivacyScreen } from './TermsAndPrivacyScreen'
 import { persistAtom } from '../persistAtom'
+import { SplashScreen } from 'expo-router'
 
-enum OnboardingScreens {
+export enum OnboardingScreens {
   TermsAndPrivacy,
   Intro,
   Platform,
@@ -32,7 +33,7 @@ enum OnboardingScreens {
   Paywall,
 }
 
-const currentScreen = atom({
+export const currentOnboardingScreen = atom({
   key: 'onboardingStep',
   default: OnboardingScreens.TermsAndPrivacy,
   effects: [persistAtom],
@@ -60,7 +61,7 @@ const unseenProgress = new Set([
 ])
 
 function OnboardingScreenHeader() {
-  const screen = useRecoilValue(currentScreen)
+  const screen = useRecoilValue(currentOnboardingScreen)
   const steps = useMemo(() => new Set(Object.values(screens)).size, [])
 
   return (
@@ -71,14 +72,22 @@ function OnboardingScreenHeader() {
 }
 
 export default function OnboardingScreen() {
-  const [screen, setScreen] = useRecoilState(currentScreen)
+  const [screen, setScreen] = useRecoilState(currentOnboardingScreen)
 
-  useEffect(
-    () => () => {
-      setScreen(OnboardingScreens.TermsAndPrivacy)
-    },
-    [setScreen]
-  )
+  const navigation = useNavigation()
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('transitionEnd' as any, () => {
+      SplashScreen.hideAsync()
+    })
+
+    return () => {
+      unsubscribe
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
+      if (process.env.NODE_ENV === 'development') {
+        // setScreen(OnboardingScreens.TermsAndPrivacy)
+      }
+    }
+  }, [navigation, setScreen])
 
   return (
     <>

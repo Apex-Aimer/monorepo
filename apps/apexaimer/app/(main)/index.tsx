@@ -7,7 +7,7 @@ import {
   TextStyle,
   View,
 } from 'react-native'
-import { Link, SplashScreen, Stack, router } from 'expo-router'
+import { Link, SplashScreen, Stack, router, useRouter } from 'expo-router'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -33,6 +33,7 @@ import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { DurationLevels } from '../routines/types'
 import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
+import { OnboardingScreens, currentOnboardingScreen } from '../onboarding'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -200,12 +201,20 @@ SplashScreen.preventAutoHideAsync()
 
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
+  const onboardingScreen = useRecoilValue(currentOnboardingScreen)
+  const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => {
+      if (onboardingScreen !== OnboardingScreens.Paywall) {
+        router.push('/onboarding/')
+
+        return
+      }
+
       SplashScreen.hideAsync()
     })
-  }, [])
+  }, [onboardingScreen, router])
 
   return (
     <>
