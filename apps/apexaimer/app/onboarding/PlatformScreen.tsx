@@ -14,6 +14,7 @@ import {
 import { useThemeColors } from '../components/ThemeProvider'
 import { Button } from '../components/Button'
 import { Platforms } from './ALStatsService'
+import { persistAtom } from '../persistAtom'
 
 interface IconProps {
   size: number
@@ -88,6 +89,7 @@ function Option({ onPress, children }: OptionProps) {
 export const platform = atom<Platforms>({
   key: 'onboardingPlatform',
   default: null,
+  effects: [persistAtom],
 })
 
 export function PlatformScreen() {

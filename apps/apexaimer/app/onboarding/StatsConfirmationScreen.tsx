@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import { atom, useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHeaderHeight } from '@react-navigation/elements'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
@@ -13,6 +13,8 @@ import { useThemeColors } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { OnboardingScreenCTA } from './components/OnboardingScreenCTA'
 import { stats as statsAtom } from './UsernameScreen'
+import { ALStatsService } from './ALStatsService'
+import { level } from '../store'
 
 interface StatProps {
   label: string
@@ -42,6 +44,8 @@ export function StatsConfirmationScreen() {
   const { bottom } = useSafeAreaInsets()
   const headerHeight = useHeaderHeight()
   const stats = useRecoilValue(statsAtom)
+
+  const setLevel = useSetRecoilState(level)
 
   return (
     <View
@@ -83,6 +87,10 @@ export function StatsConfirmationScreen() {
       <OnboardingScreenCTA
         fadeInDelay={600}
         onPress={() => {
+          setLevel(
+            ALStatsService.sharedInstance.calculateDifficultyLevel(stats)
+          )
+
           fadeOut()
         }}
       >

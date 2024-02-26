@@ -11,6 +11,7 @@ import {
 } from './components/OnboardingFadeInOutView'
 import { useThemeColors } from '../components/ThemeProvider'
 import { Button } from '../components/Button'
+import { persistAtom } from '../persistAtom'
 
 interface OptionProps {
   children: string
@@ -35,7 +36,7 @@ function Option({ children: label, onPress }: OptionProps) {
   )
 }
 
-enum HowManyTimeYouPlay {
+export enum HowManyTimeYouPlay {
   lessHour,
   twoToThree,
   moreThanThree,
@@ -44,6 +45,7 @@ enum HowManyTimeYouPlay {
 export const howManyTimeYouPlay = atom<HowManyTimeYouPlay>({
   key: 'onboardingHowManyTimeYouPlay',
   default: null,
+  effects: [persistAtom],
 })
 
 export function HowManyTimeYouPlayScreenScreen() {

@@ -16,6 +16,7 @@ import { FinishScreen } from './FinishScreen'
 import { PersonalizationScreen } from './PersonalizationScreen'
 import { PaywallScreen } from './PaywallScreen'
 import { TermsAndPrivacyScreen } from './TermsAndPrivacyScreen'
+import { persistAtom } from '../persistAtom'
 
 enum OnboardingScreens {
   TermsAndPrivacy,
@@ -34,6 +35,7 @@ enum OnboardingScreens {
 const currentScreen = atom({
   key: 'onboardingStep',
   default: OnboardingScreens.TermsAndPrivacy,
+  effects: [persistAtom],
 })
 
 const screens = {

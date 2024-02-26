@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
-import { atom, useSetRecoilState } from 'recoil'
+import { atom, useRecoilValue, useSetRecoilState } from 'recoil'
 import { useHeaderHeight } from '@react-navigation/elements'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
@@ -11,6 +11,15 @@ import {
 } from './components/OnboardingFadeInOutView'
 import { useThemeColors } from '../components/ThemeProvider'
 import { Button } from '../components/Button'
+import { persistAtom } from '../persistAtom'
+import { useCallback } from 'react'
+import {
+  HowManyTimeYouPlay,
+  howManyTimeYouPlay,
+} from './HowManyTimeYouPlayScreen'
+import { GameModes, gameMode } from './GameModeScreen'
+import { DurationLevels } from '../routines/types'
+import { routineIntensityLevel } from '../store'
 
 interface OptionProps {
   children: string
@@ -38,6 +47,7 @@ function Option({ children: label, onPress }: OptionProps) {
 export const isSoloQueue = atom<boolean>({
   key: 'onboardingIsSoloQueue',
   default: null,
+  effects: [persistAtom],
 })
 
 export function SoloQueueScreen() {
@@ -46,6 +56,40 @@ export function SoloQueueScreen() {
   const { bottom } = useSafeAreaInsets()
   const headerHeight = useHeaderHeight()
   const setIsSoloQueue = useSetRecoilState(isSoloQueue)
+  const setRoutineIntensityLevel = useSetRecoilState(routineIntensityLevel)
+
+  const howManyTimePlays = useRecoilValue(howManyTimeYouPlay)
+  const gameModePlays = useRecoilValue(gameMode)
+
+  const calculateIntensity = useCallback(
+    (isSoloQueue: boolean) => {
+      const timePlaysModificator = {
+        [HowManyTimeYouPlay.lessHour]: 0,
+        [HowManyTimeYouPlay.twoToThree]: 1.5,
+        [HowManyTimeYouPlay.moreThanThree]: 3,
+      }[howManyTimePlays]
+
+      const gameModeModificator = {
+        [GameModes.Mixtape]: 0,
+        [GameModes.Pubs]: 1.5,
+        [GameModes.Ranked]: 3,
+      }[gameModePlays]
+
+      const aloneModificator = isSoloQueue ? 3 : 1.5
+
+      const intensity =
+        (timePlaysModificator + gameModeModificator + aloneModificator) / 3
+
+      if (intensity < 1) {
+        return DurationLevels.Short
+      }
+      if (intensity < 2) {
+        return DurationLevels.Medium
+      }
+      return DurationLevels.Long
+    },
+    [gameModePlays, howManyTimePlays]
+  )
 
   return (
     <View
@@ -63,8 +107,9 @@ export function SoloQueueScreen() {
         <OnboardingFadeInOutView fadeInDelay={200}>
           <Option
             onPress={() => {
-              setIsSoloQueue(true)
               fadeOut()
+              setIsSoloQueue(true)
+              setRoutineIntensityLevel(calculateIntensity(true))
             }}
           >
             Alone
@@ -73,8 +118,9 @@ export function SoloQueueScreen() {
         <OnboardingFadeInOutView fadeInDelay={250}>
           <Option
             onPress={() => {
-              setIsSoloQueue(false)
               fadeOut()
+              setIsSoloQueue(false)
+              setRoutineIntensityLevel(calculateIntensity(false))
             }}
           >
             With friends

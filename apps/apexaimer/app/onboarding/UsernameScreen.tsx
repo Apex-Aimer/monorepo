@@ -32,6 +32,7 @@ import {
   ALStatsService,
 } from './ALStatsService'
 import { platform as platformAtom } from './PlatformScreen'
+import { persistAtom } from '../persistAtom'
 
 interface CTAProps {
   loading: boolean
@@ -93,6 +94,7 @@ function CTA({ loading, disabled, onPress }: CTAProps) {
 export const stats = atom<ALStats>({
   key: 'onboardingStats',
   default: null,
+  effects: [persistAtom],
 })
 
 export function UsernameScreen() {
