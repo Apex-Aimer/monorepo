@@ -1,4 +1,4 @@
-import { PropsWithChildren, forwardRef } from 'react'
+import { PropsWithChildren, ReactNode, forwardRef } from 'react'
 import { TouchableOpacity, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -18,11 +18,16 @@ interface Props extends PropsWithChildren {
   delay?: number
   fadeInDelay?: number
   fadeOutDelay?: number
+  preButton?: ReactNode
+  postButton?: ReactNode
   onPress?(): void
 }
 
 export const OnboardingScreenCTA = forwardRef<TouchableOpacity, Props>(
-  function ScreenCTA({ delay, fadeInDelay, fadeOutDelay, ...props }, ref) {
+  function ScreenCTA(
+    { delay, fadeInDelay, fadeOutDelay, preButton, postButton, ...props },
+    ref
+  ) {
     const theme = useThemeColors()
     const styles = useAppStyles(themedStyles)
     const { bottom } = useSafeAreaInsets()
@@ -53,6 +58,7 @@ export const OnboardingScreenCTA = forwardRef<TouchableOpacity, Props>(
           pointerEvents="box-none"
         />
         <View style={styles.inner}>
+          {preButton}
           <OnboardingFadeInOutView
             delay={delay}
             fadeInDelay={fadeInDelay}
@@ -60,6 +66,7 @@ export const OnboardingScreenCTA = forwardRef<TouchableOpacity, Props>(
           >
             <PrimaryButton ref={ref} {...props} />
           </OnboardingFadeInOutView>
+          {postButton}
         </View>
       </LinearGradient>
     )
@@ -77,6 +84,7 @@ const themedStyles = AppStyleSheet.create({
   },
   inner: {
     alignItems: 'center',
+    gap: 15,
   },
 })
 

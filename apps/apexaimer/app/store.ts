@@ -7,6 +7,14 @@ import { DurationLevels, RAMPStage, RoutinesOfTheDay } from './routines/types'
 import { Levels } from './routines/levels'
 import { getPersistedStorageData, persistAtom } from './persistAtom'
 
+// --- Common ---
+
+export const hasAgreedToTermsAndPrivacy = atom({
+  key: 'hasAgreedToTermsAndPrivacy',
+  default: false,
+  effects: [persistAtom],
+})
+
 // --- User ---
 
 export const name = atom({

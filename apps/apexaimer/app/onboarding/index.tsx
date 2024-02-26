@@ -15,8 +15,10 @@ import { SoloQueueScreen } from './SoloQueueScreen'
 import { FinishScreen } from './FinishScreen'
 import { PersonalizationScreen } from './PersonalizationScreen'
 import { PaywallScreen } from './PaywallScreen'
+import { TermsAndPrivacyScreen } from './TermsAndPrivacyScreen'
 
 enum OnboardingScreens {
+  TermsAndPrivacy,
   Intro,
   Platform,
   Username,
@@ -31,10 +33,11 @@ enum OnboardingScreens {
 
 const currentScreen = atom({
   key: 'onboardingStep',
-  default: OnboardingScreens.Intro,
+  default: OnboardingScreens.TermsAndPrivacy,
 })
 
 const screens = {
+  [OnboardingScreens.TermsAndPrivacy]: 1,
   [OnboardingScreens.Intro]: 1,
   [OnboardingScreens.Platform]: 2,
   [OnboardingScreens.Username]: 3,
@@ -47,7 +50,8 @@ const screens = {
   [OnboardingScreens.Paywall]: 7,
 }
 
-const unseen = new Set([
+const unseenProgress = new Set([
+  OnboardingScreens.TermsAndPrivacy,
   OnboardingScreens.Personalization,
   OnboardingScreens.Finish,
   OnboardingScreens.Paywall,
@@ -58,7 +62,7 @@ function OnboardingScreenHeader() {
   const steps = useMemo(() => new Set(Object.values(screens)).size, [])
 
   return (
-    <View style={{ opacity: unseen.has(screen) ? 0 : 1 }}>
+    <View style={{ opacity: unseenProgress.has(screen) ? 0 : 1 }}>
       <OnboardingStepperProgress step={screens[screen]} steps={steps} />
     </View>
   )
@@ -69,7 +73,7 @@ export default function OnboardingScreen() {
 
   useEffect(
     () => () => {
-      setScreen(OnboardingScreens.Intro)
+      setScreen(OnboardingScreens.TermsAndPrivacy)
     },
     [setScreen]
   )
@@ -83,6 +87,15 @@ export default function OnboardingScreen() {
           headerTransparent: true,
         }}
       />
+      {screen === OnboardingScreens.TermsAndPrivacy && (
+        <OnboardingFadeInOutViewContainer
+          onChildrenFadedOut={() => {
+            setScreen(OnboardingScreens.Intro)
+          }}
+        >
+          <TermsAndPrivacyScreen />
+        </OnboardingFadeInOutViewContainer>
+      )}
       {screen === OnboardingScreens.Intro && (
         <OnboardingFadeInOutViewContainer
           onChildrenFadedOut={() => {
