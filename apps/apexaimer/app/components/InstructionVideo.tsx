@@ -6,7 +6,9 @@ import {
   documentDirectory,
   getInfoAsync,
 } from 'expo-file-system'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { MMKV } from 'react-native-mmkv'
+
+const videoStorage = new MMKV({ id: 'video-cache' })
 
 class Cache {
   private static STORAGE_KEY = 'INSTRUCTIONS_VIDEOS_CACHE'
@@ -53,7 +55,7 @@ class Cache {
 
   private async init() {
     try {
-      const json = await AsyncStorage.getItem(Cache.STORAGE_KEY)
+      const json = await videoStorage.getString(Cache.STORAGE_KEY)
       const entries = JSON.parse(json)
 
       const checkedEntries = await Promise.all(
@@ -96,7 +98,7 @@ class Cache {
           ...this.entries,
           [uri]: result.uri,
         }
-        AsyncStorage.setItem(Cache.STORAGE_KEY, JSON.stringify(this.entries))
+        videoStorage.set(Cache.STORAGE_KEY, JSON.stringify(this.entries))
       })
     } catch (e) {
       // no luck, trying to use network video

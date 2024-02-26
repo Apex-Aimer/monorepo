@@ -3,29 +3,31 @@
   "scripts": {
     "build": "dotenv -- turbo run build",
     "blog:build": "dotenv -- turbo run build --filter ApexAimerBlog",
-    "dev": "dotenv -e ./.env.local -- turbo run dev",
-    "blog:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerBlog",
-    "web:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerWeb",
-    "native:dev": "dotenv -e ./.env.local -- turbo run dev --filter ApexAimerNative",
+    "dev": "dotenv -f ./.env.local -- turbo run dev",
+    "blog:dev": "dotenv -f ./.env.local -- turbo run dev --filter ApexAimerBlog",
+    "web:dev": "dotenv -f ./.env.local -- turbo run dev --filter ApexAimerWeb",
+    "native:dev": "dotenv -f ./.env.local -- turbo run dev --filter ApexAimerNative",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "blog:deploy": "",
     "blog:deploy:local": "wrangler pages dev apps/blog/.vercel/output/static --ip '127.0.0.1'"
   },
   "devDependencies": {
-    "@turbo/gen": "^1.9.7",
+    "@turbo/gen": "^1.12.3",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "turbo": "latest",
-    "wrangler": "^3.1.2",
-    "dotenv-cli": "^7.2.1"
+    "wrangler": "^3.1.2"
   },
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
+  "resolutions": {
+    "@expo/config-plugins": "~7.2.2"
+  },
   "license": "AGPL-3.0-only"
 }

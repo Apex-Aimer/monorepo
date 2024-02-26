@@ -1,0 +1,15 @@
+name = "apex-aimer-subscriptions"
+main = "src/index.ts"
+compatibility_date = "2023-12-01"
+
+routes = [
+    { pattern = "api.apexaimer.com/subscriptions/*", zone_id = "7aa7071d7e3cd2857fa8599d423c4865" },
+]
+
+[build]
+upload.format = "modules"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "app-subscriptions"
+database_id = "e43ab336-b564-4d33-a26c-4d5bebb41010"

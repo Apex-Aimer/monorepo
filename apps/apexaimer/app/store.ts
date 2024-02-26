@@ -2,16 +2,25 @@ import { atom, selector, selectorFamily, useRecoilValue } from 'recoil'
 import { AppState, ColorSchemeName } from 'react-native'
 
 import { RoutineService } from './routines/RoutineService'
-import { createPersistor } from './components/Persistor/createPersistor'
 import { emptyRoutines } from './routines/routines'
 import { DurationLevels, RAMPStage, RoutinesOfTheDay } from './routines/types'
 import { Levels } from './routines/levels'
+import { getPersistedStorageData, persistAtom } from './persistAtom'
+
+// --- Common ---
+
+export const hasAgreedToTermsAndPrivacy = atom({
+  key: 'hasAgreedToTermsAndPrivacy',
+  default: false,
+  effects: [persistAtom],
+})
 
 // --- User ---
 
 export const name = atom({
   key: 'name',
   default: 'Legend',
+  effects: [persistAtom],
 })
 
 interface Avatar {
@@ -22,6 +31,7 @@ interface Avatar {
 export const avatar = atom<Avatar | null>({
   key: 'avatar',
   default: null,
+  effects: [persistAtom],
 })
 
 export function useUserName() {
@@ -33,6 +43,7 @@ export function useUserName() {
 export const routineIntensityLevel = atom({
   key: 'routineIntensityLevel',
   default: DurationLevels.Medium,
+  effects: [persistAtom],
 })
 
 let updateRoutinesOfTheDay: (
@@ -44,7 +55,7 @@ export const routinesOfTheDay = atom({
   key: 'routinesOfTheDay',
   default: emptyRoutines,
   effects: [
-    ({ setSelf, node, onSet, getPromise }) => {
+    ({ setSelf, node, getPromise }) => {
       updateRoutinesOfTheDay = (
         level: Levels,
         prevRoutines?: RoutinesOfTheDay
@@ -60,11 +71,9 @@ export const routinesOfTheDay = atom({
       }
 
       async function init() {
-        const store = (await isPersistorReady.promise) ?? {}
-
         return await RoutineService.sharedInstance.getRoutinesOfTheDay(
-          store['level'] ?? Levels.Iron,
-          store[node.key]
+          getPersistedStorageData(level.key) ?? Levels.Iron,
+          getPersistedStorageData(node.key)
         )
       }
 
@@ -72,9 +81,6 @@ export const routinesOfTheDay = atom({
 
       const focusSub = AppState.addEventListener('change', async (status) => {
         if (status !== 'active') {
-          return
-        }
-        if (!isPersistorReady.current) {
           return
         }
         updateRoutinesOfTheDay(
@@ -96,12 +102,10 @@ export const level = atom<Levels>({
   effects: [
     ({ onSet }) => {
       onSet((newLevel) => {
-        if (!isPersistorReady.current) {
-          return
-        }
         updateRoutinesOfTheDay(newLevel)
       })
     },
+    persistAtom,
   ],
 })
 
@@ -114,9 +118,6 @@ const routineOfTheDayCompletionsMap = atom({
     ({ setSelf, getPromise, node }) => {
       const focusSub = AppState.addEventListener('change', async (status) => {
         if (status !== 'active') {
-          return
-        }
-        if (!isPersistorReady.current) {
           return
         }
 
@@ -135,6 +136,7 @@ const routineOfTheDayCompletionsMap = atom({
         focusSub.remove()
       }
     },
+    persistAtom,
   ],
 })
 
@@ -230,17 +232,5 @@ export type AppColorSchemeName = ColorSchemeName | 'system'
 export const preferredAppColorScheme = atom<AppColorSchemeName>({
   key: 'appColorScheme',
   default: 'dark',
+  effects: [persistAtom],
 })
-
-// Persistence
-
-export const { usePersistor, useIsInitialStateReady, isPersistorReady } =
-  createPersistor(
-    name,
-    avatar,
-    preferredAppColorScheme,
-    routineIntensityLevel,
-    level,
-    routineOfTheDayCompletionsMap,
-    { atom: routinesOfTheDay, readonly: true }
-  )

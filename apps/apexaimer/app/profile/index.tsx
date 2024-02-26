@@ -3,7 +3,10 @@ import { Link, Stack } from 'expo-router'
 import { ScrollView, Text, View, Share, TouchableOpacity } from 'react-native'
 import { StarIcon, UserGroupIcon } from 'react-native-heroicons/solid'
 import { nativeApplicationVersion } from 'expo-application'
-import { EnvelopeIcon } from 'react-native-heroicons/outline'
+import {
+  CurrencyDollarIcon,
+  EnvelopeIcon,
+} from 'react-native-heroicons/outline'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import * as MailComposer from 'expo-mail-composer'
 import * as Linking from 'expo-linking'
@@ -21,6 +24,9 @@ import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
 import { useUserName } from '../store'
 import { Avatar } from '../components/Avatar'
 import { ManyTapsTouchable } from './components/ManyTapsTouchable'
+import { GoPremium } from './components/GoPremium'
+import { useRecoilValue } from 'recoil'
+import { iapHasPremium } from '../createIapStore'
 
 async function sendUsMail() {
   const supportMail = 'support@apexaimer.com'
@@ -122,6 +128,7 @@ export default function ProfileScreen() {
   const name = useUserName()
   const canRequestReview = useCanRequestReview()
   const canShare = useCanShare()
+  const hasPremium = useRecoilValue(iapHasPremium)
 
   const [showHidden, setShowHidden] = useState(false)
 
@@ -142,6 +149,7 @@ export default function ProfileScreen() {
           <Avatar size={80} />
           <Text style={styles.profileText}>{name}</Text>
         </View>
+        <GoPremium />
         <View style={styles.sectionContainer}>
           <View style={styles.sectionTitleContainer}>
             <Text style={styles.sectionTitle}>PERSONALIZE</Text>
@@ -223,6 +231,23 @@ export default function ProfileScreen() {
             ]}
           />
         </View>
+        {hasPremium && (
+          <View style={styles.sectionContainer}>
+            <View style={styles.sectionTitleContainer}>
+              <Text style={styles.sectionTitle}>SUBSCRIPTION</Text>
+            </View>
+            <SettingsSection
+              rows={[
+                {
+                  label: 'How to cancel a subscription',
+                  labelIcon: CurrencyDollarIcon,
+                  icon: { external: false },
+                  href: '/profile/unsubscribe-instructions',
+                },
+              ]}
+            />
+          </View>
+        )}
         <View style={styles.sectionContainer}>
           <View style={styles.sectionTitleContainer}>
             <Text style={styles.sectionTitle}>LEGAL</Text>

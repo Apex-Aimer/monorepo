@@ -7,16 +7,22 @@ import { useThemeColors } from './ThemeProvider'
 import { Button } from './Button'
 
 interface Props extends PropsWithChildren {
+  disabled?: boolean
   onPress?(): void
 }
 
 export const PrimaryButton = forwardRef<TouchableOpacity, Props>(
-  function PrimaryButton({ children, onPress }, ref) {
+  function PrimaryButton({ disabled, children, onPress }, ref) {
     const theme = useThemeColors()
     const styles = useAppStyles(themedStyles)
 
     return (
-      <Button ref={ref} onPress={onPress} haptic="impactLight">
+      <Button
+        ref={ref}
+        onPress={onPress}
+        haptic="impactLight"
+        disabled={disabled}
+      >
         <LinearGradient
           colors={theme['primary gradient'] as string[]}
           start={{ x: 0, y: 0.5 }}

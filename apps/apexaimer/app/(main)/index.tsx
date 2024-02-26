@@ -7,7 +7,7 @@ import {
   TextStyle,
   View,
 } from 'react-native'
-import { Link, SplashScreen, Stack, router } from 'expo-router'
+import { Link, SplashScreen, Stack, router, useRouter } from 'expo-router'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -19,9 +19,9 @@ import { Drill } from '../components/Drill/Drill'
 import { SCREEN_CTA_HEIGHT, ScreenCTA } from '../components/ScreenCTA'
 import {
   isRoutineOfTheDayCompleted,
+  level as levelAtom,
   routineIntensityLevel,
   routineOfTheDay,
-  useIsInitialStateReady,
   useUserName,
 } from '../store'
 import { PrimaryGradientText } from '../components/PrimaryGradientText'
@@ -31,8 +31,9 @@ import { DrillInfoCard } from './DrillInfoCard'
 import { useAppColorScheme } from '../components/ThemeProvider'
 import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
-import { Persistor } from '../components/Persistor/Persistor'
 import { DurationLevels } from '../routines/types'
+import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
+import { OnboardingScreens, currentOnboardingScreen } from '../onboarding'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -183,22 +184,37 @@ function ProfileButton() {
   )
 }
 
+function LevelButton() {
+  const styles = useAppStyles(themedStyles)
+  const level = useRecoilValue(levelAtom)
+
+  return (
+    <Link href="/choose-level/" asChild>
+      <Button style={styles.profileRow} activeOpacity={0.6} haptic="selection">
+        <DifficultyLevelIcon size={30} level={level} />
+      </Button>
+    </Link>
+  )
+}
+
 SplashScreen.preventAutoHideAsync()
 
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
-
-  const ready = useIsInitialStateReady()
+  const onboardingScreen = useRecoilValue(currentOnboardingScreen)
+  const router = useRouter()
 
   useEffect(() => {
-    if (ready) {
-      return
-    }
-
     setTimeout(() => {
+      if (onboardingScreen !== OnboardingScreens.Paywall) {
+        router.push('/onboarding/')
+
+        return
+      }
+
       SplashScreen.hideAsync()
     })
-  }, [ready])
+  }, [onboardingScreen, router])
 
   return (
     <>
@@ -206,7 +222,7 @@ export default function MainScreen() {
         options={{
           title: null,
           headerLeft: () => <ProfileButton />,
-          headerRight: () => null,
+          headerRight: () => <LevelButton />,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,
@@ -216,7 +232,6 @@ export default function MainScreen() {
       <Suspense fallback={null}>
         <Routine />
       </Suspense>
-      {ready && <Persistor />}
     </>
   )
 }

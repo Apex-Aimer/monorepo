@@ -85,7 +85,6 @@ Tts.setDucking(true)
 Tts.addEventListener('tts-start', noop)
 Tts.addEventListener('tts-progress', noop)
 Tts.addEventListener('tts-finish', noop)
-Tts.addEventListener('tts-error', noop)
 Tts.addEventListener('tts-cancel', noop)
 
 function useDrillVoiceOver(id: string, hasVoiceOver: boolean) {

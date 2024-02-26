@@ -73,3 +73,5 @@ terraform.rc
 # Expo
 .expo/
 dist/
+
+.vscode

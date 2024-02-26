@@ -7,6 +7,8 @@ import { RecoilRoot } from 'recoil'
 import { ThemeProvider, useThemeColors } from './components/ThemeProvider'
 import { FontsProvider } from './components/FontsProvider'
 import { ThemedStatusBar } from './components/ThemedStatusBar'
+import { InAppSubscriptions } from './components/InAppSubscriptions/InAppSubscriptions'
+import { GeneralPaywall } from './components/GeneralPaywall/GeneralPaywallScreenContainer'
 
 function BG({ children }: PropsWithChildren) {
   const theme = useThemeColors()
@@ -26,8 +28,10 @@ export default function RootLayout() {
               <BG>
                 <Stack />
               </BG>
+              <GeneralPaywall />
             </PortalProvider>
           </ThemeProvider>
+          <InAppSubscriptions />
         </RecoilRoot>
       </FontsProvider>
     </>

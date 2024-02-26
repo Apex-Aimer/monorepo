@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native'
+import { ScrollView } from 'react-native'
 import Markdown from 'react-native-simple-markdown-updated-dependencies'
 import { Stack } from 'expo-router'
 
@@ -75,7 +75,7 @@ const themedStyles = AppStyleSheet.create({
     fontFamily: 'rubik 500',
     fontSize: 18,
     lineHeight: 24,
-    paddingTop: 10,
+    paddingTop: 12,
   },
   text: {
     color: 'text primary',

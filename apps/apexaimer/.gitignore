@@ -46,3 +46,5 @@ expo-env.d.ts
 # Firebase configs
 configs/google-services.json
 configs/GoogleService-Info.plist
+
+.env*.local
