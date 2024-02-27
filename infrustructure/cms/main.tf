@@ -2,18 +2,24 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
+provider "null" {
+  # No configuration is required for the null provider
+}
+
 resource "cloudflare_workers_kv_namespace" "apexaimer-cms-kv-ns" {
   account_id = var.cloudflare_account_id
-  title      = "test-namespace"
+  title      = "apexaimer-cms-kv-ns"
+}
+
+locals {
+  CMS_R2_NAME      = "apexaimer-cms-r2"
+  CMS_PROJECT_NAME = "apexaimer-cms"
+  CMS_D1_NAME      = "apexaimer-cms-db"
 }
 
 resource "cloudflare_d1_database" "apexaimer-cms-db" {
   account_id = var.cloudflare_account_id
-  name       = "apexaimer-cms-sonicjs"
-}
-
-locals {
-  CMS_R2_NAME = "apexaimer-cms-r2"
+  name       = local.CMS_D1_NAME
 }
 
 resource "cloudflare_r2_bucket" "apexaimer-cms-r2" {
@@ -24,7 +30,7 @@ resource "cloudflare_r2_bucket" "apexaimer-cms-r2" {
 
 resource "cloudflare_pages_project" "apexaimer-cms" {
   account_id        = var.cloudflare_account_id
-  name              = "apexaimer-cms"
+  name              = local.CMS_PROJECT_NAME
   production_branch = "main"
 
   build_config {
@@ -65,9 +71,28 @@ resource "cloudflare_pages_project" "apexaimer-cms" {
   }
 }
 
+resource "null_resource" "deploy" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+
+  provisioner "local-exec" {
+    command = "cd ../../apps/cms && envsubst < wrangler.template.toml > wrangler.toml && yarn build && yarn up:prod && yarn deploy --project-name $PROJECT_NAME"
+
+    environment = {
+      PROJECT_NAME = local.CMS_PROJECT_NAME
+      CLOUDFLARE_ACCOUNT_ID = var.cloudflare_account_id
+      PROJECT_KV_ID = cloudflare_workers_kv_namespace.apexaimer-cms-kv-ns.id
+      PROJECT_D1_NAME = local.CMS_D1_NAME
+      PROJECT_D1_ID = cloudflare_d1_database.apexaimer-cms-db.id
+      PROJECT_R2_NAME = local.CMS_R2_NAME
+    }
+  }
+}
+
 resource "cloudflare_pages_domain" "apexaimer-cms-domain" {
   account_id   = var.cloudflare_account_id
-  project_name = "apexaimer-cms"
+  project_name = local.CMS_PROJECT_NAME
   domain       = var.cloudflare_cms_domain
 }
 
