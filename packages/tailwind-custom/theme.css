@@ -1,39 +1,39 @@
 @tailwind base;
 
 @layer base {
-    :root {
-        /* dynamic */
-        --color-bg-primary: #F4F5EF;
-        --color-bg-primary-inverted: #282624;
-        --color-bg-accent: #FFFFFF;
-        --color-bg-accent-inverted: #424242;
-        --color-line: #828282;
-        --color-line-disabled: #80828282;
-        --color-text-primary: #282624;
-        --color-text-primary-inverted: #FFFFFF;
-        --color-backdrop: #28262466;
-        --color-accent-primary-dimmed: #FF57224D;
-        --color-accent-secondary-dimmed: #FF98004D;
-        /* static */
-        --color-accent-primary: #FF5722;
-        --color-accent-secondary: #FF9800;
-        --color-icon-primary: #FFFFFF;
-        --color-line-accent: #FF5722;
-        --color-line-accent-disabled: #80FF5722;
-    }
+  :root {
+    /* dynamic */
+    --color-bg-primary: 244 245 239;
+    --color-bg-primary-inverted: 40 38 36;
+    --color-bg-accent: 255 255 255;
+    --color-bg-accent-inverted: 66 66 66;
+    --color-line: 130 130 130;
+    --color-line-disabled: 130 130 130 / 0.5;
+    --color-text-primary: 40 38 36;
+    --color-text-primary-inverted: 255 255 255;
+    --color-backdrop: 40 38 36 / 0.4;
+    --color-accent-primary-dimmed: 255 87 34 / 0.3;
+    --color-accent-secondary-dimmed: 255 152 0 / 0.3;
+    /* static */
+    --color-accent-primary: 255 87 34;
+    --color-accent-secondary: 255 152 0;
+    --color-icon-primary: 255 255 255;
+    --color-line-accent: 255 87 34;
+    --color-line-accent-disabled: 255 87 34 / 0.5;
+  }
 
-    :root[class~="dark"] {
-        /* dynamic */
-        --color-bg-primary: #282624;
-        --color-bg-primary-inverted: #F4F5EF;
-        --color-bg-accent: #424242;
-        --color-bg-accent-inverted: #FFFFFF;
-        --color-line: #828282;
-        --color-line-disabled: #D0C9C980;
-        --color-text-primary: #FFFFFF;
-        --color-text-primary-inverted: #282624;
-        --color-backdrop: #00000066;
-        --color-accent-primary-dimmed: #FF5722CC;
-        --color-accent-secondary-dimmed: #FF9800CC;
-    }
+  :root[class~='dark'] {
+    /* dynamic */
+    --color-bg-primary: 40 38 36;
+    --color-bg-primary-inverted: 244 245 239;
+    --color-bg-accent: 66 66 66;
+    --color-bg-accent-inverted: 255 255 255;
+    --color-line: 130 130 130;
+    --color-line-disabled: 208 201 201 / 0.5;
+    --color-text-primary: 255 255 255;
+    --color-text-primary-inverted: 40 38 36;
+    --color-backdrop: 0 0 0 / 0.4;
+    --color-accent-primary-dimmed: 255 87 34 / 0.8;
+    --color-accent-secondary-dimmed: 255 152 0 / 0.8;
+  }
 }

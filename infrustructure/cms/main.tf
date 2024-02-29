@@ -55,8 +55,12 @@ resource "cloudflare_pages_project" "apexaimer-cms" {
   deployment_configs {
     production {
       environment_variables = {
-        ENVIRONMENT = "production"
-        NODE_VERSION = "16"
+        ENVIRONMENT              = "production"
+        NODE_VERSION             = "16"
+        GITHUB_CLIENT_ID         = var.github_client_id
+        GITHUB_CLIENT_SECRET     = var.github_client_secret
+        CLOUDFLARE_CMS_API_TOKEN = var.cloudflare_cms_api_token
+        CLOUDFLARE_ACCOUNT_ID    = var.cloudflare_account_id
       }
       kv_namespaces = {
         KVDATA = cloudflare_workers_kv_namespace.apexaimer-cms-kv-ns.id

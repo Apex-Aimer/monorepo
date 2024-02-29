@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { Kysely } from 'kysely';
 import { D1Dialect } from 'kysely-d1';
+import type { D1Database } from '@cloudflare/workers-types';
 
 import { decodeNotificationPayload } from './decoding';
 import { SubscriptionNotification, SubscriptionSignedTransactionInfo } from './types';

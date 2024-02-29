@@ -8,6 +8,8 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
 
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+
     // packages
     '../../packages/ui/**/*.{js,ts,jsx,tsx}',
     '../../packages/analytics/**/*.{js,ts,jsx,tsx}',
@@ -85,22 +87,26 @@ module.exports = {
     },
     extend: {
       colors: {
-        'bg-primary': 'var(--color-bg-primary)',
-        'bg-primary-inverted': 'var(--color-bg-primary-inverted)',
-        'bg-accent': 'var(--color-bg-accent)',
-        'bg-accent-inverted': 'var(--color-bg-accent-inverted)',
-        line: 'var(--color-line)',
-        'line-disabled': 'var(--color-line-disabled)',
-        'text-primary': 'var(--color-text-primary)',
-        'text-primary-inverted': 'var(--color-text-primary-inverted)',
-        'accent-primary': 'var(--color-accent-primary)',
-        'accent-secondary': 'var(--color-accent-secondary)',
-        'accent-primary-dimmed': 'var(--color-accent-primary-dimmed)',
-        'accent-secondary-dimmed': 'var(--color-accent-secondary-dimmed)',
-        'icon-primary': 'var(--color-icon-primary)',
-        'line-accent': 'var(--color-line-accent)',
-        'line-accent-disabled': 'var(--color-line-accent-disabled)',
-        backdrop: 'var(--color-backdrop)',
+        'bg-primary': 'rgb(var(--color-bg-primary) / <alpha-value>)',
+        'bg-primary-inverted':
+          'rgb(var(--color-bg-primary-inverted) / <alpha-value>)',
+        'bg-accent': 'rgb(var(--color-bg-accent) / <alpha-value>)',
+        'bg-accent-inverted':
+          'rgb(var(--color-bg-accent-inverted) / <alpha-value>)',
+        line: 'rgb(var(--color-line) / <alpha-value>)',
+        'line-disabled': 'rgb(var(--color-line-disabled))',
+        'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
+        'text-primary-inverted':
+          'rgb(var(--color-text-primary-inverted) / <alpha-value>)',
+        'accent-primary': 'rgb(var(--color-accent-primary) / <alpha-value>)',
+        'accent-secondary':
+          'rgb(var(--color-accent-secondary) / <alpha-value>)',
+        'accent-primary-dimmed': 'rgb(var(--color-accent-primary-dimmed))',
+        'accent-secondary-dimmed': 'rgb(var(--color-accent-secondary-dimmed))',
+        'icon-primary': 'rgb(var(--color-icon-primary) / <alpha-value>)',
+        'line-accent': 'rgb(var(--color-line-accent) / <alpha-value>)',
+        'line-accent-disabled': 'rgb(var(--color-line-accent-disabled))',
+        backdrop: 'rgb(var(--color-backdrop))',
       },
       backgroundImage: {
         'phone-h-gradient': `linear-gradient(to right, var(--color-bg-primary) 0%,transparent 25%,transparent 80%,var(--color-bg-primary) 100%)`,

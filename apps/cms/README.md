@@ -1,281 +1,58 @@
-# SonicJs Headless CMS
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`c3`](https://developers.cloudflare.com/pages/get-started/c3).
 
-# Overview
-## SonicJs: Empowering Global API Performance with Cloudflare Workers
+## Getting Started
 
-Experience the power of SonicJs, a cutting-edge Headless CMS built on the robust Cloudflare Workers platform. SonicJs revolutionizes API performance, delivering an astounding average speed improvement of 🔥🔥🔥 6 times faster 🔥🔥🔥 than a standard node application.
+First, run the development server:
 
-Read the docs here [https://sonicjs.com]
-
-## How Fast is "Blazingly" Fast?
-
-| Platform      | Average Response Time | Difference |
-| ----------- | ----------- | ----------- |
-| Strapi      | 342.1ms       | - baseline - |
-| Node + Postgres   | 320.2ms        | 1.06x Faster|
-| SonicJs   | 52.7ms        | 6.4x Faster|
-
-The details of our performance benchmark here is available at
-[here](/performance-benchmarks). 
-
-# Prerequisites
-1. You will need a free Cloudflare account: [https://dash.cloudflare.com/sign-up](https://dash.cloudflare.com/sign-up)
-1. Install Wrangler CLI:
-```
-npm install -g wrangler
-```
-3. You will need to have four Cloudflare values during the first step of **Getting Started**:
-    * Cloudflare account id which is your 32 character id at the end of your [https://dash.cloudflare.com/](https://dash.cloudflare.com/) url
-    * For Cloudflare kv namespace id enter the following command in powershell as admin: 
-      ```
-      wrangler kv:namespace create sonicjs
-      ```
-    * Cloudflare kv namespace preview id enter the following command in powershell as admin: 
-      ```
-      wrangler kv:namespace create SonicJS --preview
-      ```
-    * Cloudflare database id enter the following command in powershell as admin: 
-      ```
-      wrangler d1 create SonicJS
-      ```
-If you receive the error:
-`wrangler.ps1 cannot be loaded because running scripts is disabled on this system.`
-
-Run this command on powershell as administrator and try running the wrangler commands from step 3:
-```
-Set-ExecutionPolicy RemoteSigned
-```
-If you already created a namespace and need to see your namespace id do:
-```
-wrangler kv:namespace list 
-```
-
-# Getting Started
-```
-npx create-sonicjs-app
-```
-
-Follow the installation script prompts to enter the required Cloudflare values.
-
-One last step; we need to run the migration scripts to create our database tables:
-```
-npm run up
-```
-
-Now you're ready to fire up SonicJs!
-```
+```bash
 npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Open the admin interface at:
-[http://localhost:8788](http://localhost:8788)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Check out https://sonicjs.com/getting-started for next steps.
+## Cloudflare integration
 
+Besides the `dev` script mentioned above `c3` has added a few extra scripts that allow you to integrate the application with the [Cloudflare Pages](https://pages.cloudflare.com/) environment, these are:
+  - `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
+  - `preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+  - `deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
 
-# Array Fields
+> __Note:__ while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md#recommended-workflow))
 
-Configure array fields by first telling drizzle that the field is an array field.
+### Bindings
 
-```js
-  tags: text("tags", { mode: "json" }).$type<string[]>(),
-```
-Then configure the field in the exported `fields` variable from a table file.
-```js
-export const fields: ApiConfig["fields"] = {
-  tags: {
-    type: "string[]",
-  },
-};
-```
+Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings/) are what allows you to interact with resources available in the Cloudflare Platform.
 
-# R2 File Upload 
+You can use bindings during development, when previewing locally your application and of course in the deployed application:
 
-## File fields
+- To use bindings in dev mode you need to define them in the `next.config.js` file under `setupDevBindings`, this mode uses the `next-dev` `@cloudflare/next-on-pages` submodule. For more details see its [documentation](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md).
 
-Configure file fields in the exported `fields` variable from a table file.
+- To use bindings in the preview mode you need to add them to the `pages:preview` script accordingly to the `wrangler pages dev` command. For more details see its [documentation](https://developers.cloudflare.com/workers/wrangler/commands/#dev-1) or the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
 
-You can configure which bucket to use to upload to as well as the path to store the file in the bucket when uploaded from that field.
+- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the  [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
 
-Picking an existing file is also an option on the form, it will list any other files in that same bucket and path.
+#### KV Example
 
-```js
-export const definition = {
-  id: text("id").primaryKey(),
-  title: text("title"),
-  body: text("body"),
-  userId: text("userId"),
-  image: text("image"),
-  images: text("images", { mode: "json" }).$type<string[]>(),
-  tags: text("tags", { mode: "json" }).$type<string[]>(),
-};
-export const fields: ApiConfig["fields"] = {
-  image: {
-    type: "file",
-    bucket: (ctx) => ctx.env.R2STORAGE,
-    path: "images",
-  },
-  images: {
-    type: "file[]",
-    bucket: (ctx) => ctx.env.R2STORAGE,
-    path: "images",
-  },
-  tags: {
-    type: "string[]",
-  },
-};
+`c3` has added for you an example showing how you can use a KV binding.
 
-```
+In order to enable the example:
+- Search for javascript/typescript lines containing the following comment:
+  ```ts
+  // KV Example:
+  ```
+  and uncomment the commented lines below it.
+- Do the same in the `wrangler.toml` file, where
+  the comment is:
+  ```
+  # KV Example:
+  ```
 
-## [Tus API](https://tus.io/)
+After doing this you can run the `dev` or `preview` script and visit the `/api/hello` route to see the example in action.
 
-A [tus api](https://tus.io/) is available for uploading files. The tus api is available at `/tus`.  
-In addition to the normal tus api 3 headers should be passed in the request to properly handle finding the correct bucket, the path to store the file, permissions, hooks, etc.
-  - sonic-route - the route of the table the file is being uploaded to e.g 'posts'
-  - sonic-field - the field name of the file e.g. 'image'
-  - sonic-mode - should be 'create' if calling manually
-
-# Authentication
-
-
-**Important:** There are two options for how passwords are stored (key derivation functions), set by the AUTH_KDF env variable. These effect the security of your passwords if they were to ever leak, as well as how much cpu time is used when a user is created, changes their password, or logs in. 
-
-  - **AUTH_KDF="pbkdf2"**
-    - The default if no env variable is set
-    - Faster than scrypt, but less secure
-    - Uses about 80-100ms CPU time
-    - Recommended if on cloudflare workers free plan
-      - Since cloudflare allows rollover CPU time you are unlikely to get an Exceeded CPU Limits error, but you can adjust the options below to potentially use less CPU time
-    - Can adjust iterations with the AUTH_ITERATIONS env variable (default and max 100000)
-    - Can adjust hash with the AUTH_HASH env variable ("SHA_256", "SHA-384" or "SHA-512" ("SHA-512" is the default))
-  - **AUTH_KDF="scrypt"**
-    - Slower than pbkdf2, but more secure
-    - Uses about 300-400ms CPU time
-    - Recommended if on cloudflare workers paid plan
-
-If you change your auth options old users will still be able to login but the encryption won't change for their password until they change their password.
-
- [https://sonicjs.com/environment-variables](https://sonicjs.com/environment-variables)
-
-## Setup a user
-  1. When you first open the app you will be prompted to create an admin user
-  1. Create the user and save and you will be redirected to login
-  1. Login
-  1. You now have admin dashboard for CRUD operations
-  1. To authorize via the API post to /v1/auth/login  with the email and password in the body
-    ```json
-    {
-      "email": "user@sonicjs.com",
-      "password": "password123"
-    }
-    ```
-  1. The API will return a bearer token
-      ```json
-      {
-        "bearer": "eo0t9q52njemo83rm1qktr6kwjh8zu5o3vma1g6j"
-      }
-      ```
-  1. Then add that bearer token to the Authorization header on future requests
-      ```js
-       const url = "http://localhost:8788/v1/posts/c1d462a4-fd10-4bdb-bbf2-2b33a94f82aa";
-       const data = {
-         "data": {
-             "title": "Test Post Update"
-         }
-       };
-       const requestOptions = {
-         method: 'PUT',
-         headers: { 
-             'Content-Type': 'application/json',
-             'Authorization': 'Bearer eo0t9q52njemo83rm1qktr6kwjh8zu5o3vma1g6j'
-         },
-         body: JSON.stringify(data)
-       };
-       fetch(url, requestOptions)
-      ```
-
-## [Access Control Configuration](ACCESS-CONTROL.md)
-
-  See the [Access Control Readme](ACCESS-CONTROL.md)
-
-
-# Hooks
-
-The `hooks` property on the `ApiConfig` type allows configuring functions that run at certain points in the request lifecycle. Here are the available hooks:
-
-## resolveInput
-
-The `resolveInput` hook allows transforming the input data before running a create or update operation. 
-
-```ts
-resolveInput: {
-  create: (ctx: AppContext, data: any) => any | Promise<any>;
-  update: (ctx: AppContext, id: string, data: any) => any | Promise<any>;
-}
-```
-
-For example, it can be used to automatically populate the `userId` field based on the authenticated user:
-
-```ts
-resolveInput: {
-  create: (ctx, data) => {
-    if (ctx.get("user")?.userId) {
-      data.userId = ctx.get("user").userId; 
-    }
-    return data;
-  } 
-}
-```
-
-The hooks receive the context (`ctx`) containing the request information, as well as the input `data`. They can return a Promise of the transformed data.
-
-## beforeOperation
-
-The `beforeOperation` hook runs before executing the database operation:
-
-```ts  
-beforeOperation?: (
-  ctx: AppContext,
-  operation: "create" | "read" | "update" | "delete", 
-  id?: string,
-  data?: any  
-) => void | Promise<void>;
-```
-
-It receives:
-
-- `ctx` - the context
-- `operation` - the operation being performed 
-- `id` - the document ID (if applies)
-- `data` - the input data (if applies)
-
-For example, it can be used for logging.
-
-## afterOperation
-
-The `afterOperation` hook runs after executing the database operation:  
-
-```ts
-afterOperation?: (
-  ctx: AppContext,
-  operation: "create" | "read" | "update" | "delete", 
-  id?: string,
-  data?: any,
-  result?: { data?: any } & Record<string, any>  
-) => void | Promise<void>;
-```
- 
-It receives:
-
-- `ctx` - the context
-- `operation` - the operation performed
-- `id` - the document ID (if applies) 
-- `data` - the input data (if applies)
-- `result` - the operation result
-
-For example, it can be used for logging or post-processing the result.
-
-
-# Legacy
-The legacy version of SonicJs (a Node.js based web content management system) can be found here:
-[https://github.com/lane711/sonicjs/tree/legacy](https://github.com/lane711/sonicjs/tree/legacy)
+Finally, if you also want to see the example work in the deployed application make sure to add a `MY_KV` binding to your Pages application in its [dashboard kv bindings settings section](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/functions#kv_namespace_bindings_section). After having configured it make sure to re-deploy your application.
