@@ -1,8 +1,6 @@
-import { getRequestContext } from '@cloudflare/next-on-pages'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-import { DB } from '@/db/types'
 import { initializeLucia, validateRequest } from './auth'
 
 interface ActionResult {

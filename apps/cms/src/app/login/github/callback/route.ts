@@ -6,7 +6,7 @@ import { D1Dialect } from 'kysely-d1'
 import { getRequestContext } from '@cloudflare/next-on-pages'
 
 import { DB } from '@db/types'
-import { github, initializeLucia } from '@lib/auth'
+import { getGithubClient, initializeLucia } from '@lib/auth'
 
 export const runtime = 'edge'
 
@@ -30,6 +30,7 @@ export async function GET(request: Request): Promise<Response> {
   const lucia = initializeLucia()
 
   try {
+    const github = getGithubClient()
     const tokens = await github.validateAuthorizationCode(code)
     const githubUserResponse = await fetch('https://api.github.com/user', {
       headers: {

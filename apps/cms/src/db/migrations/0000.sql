@@ -1,4 +1,3 @@
--- DROP TABLE IF EXISTS users;
 CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
 	`githubId` text NOT NULL,
@@ -6,7 +5,6 @@ CREATE TABLE `users` (
 	`role` text NOT NULL
 );
 
--- DROP TABLE IF EXISTS userSessions;
 CREATE TABLE `userSessions` (
 	`id` TEXT NOT NULL PRIMARY KEY,
     `expires_at` INTEGER NOT NULL,

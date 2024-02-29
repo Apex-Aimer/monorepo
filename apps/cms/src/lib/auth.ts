@@ -1,3 +1,4 @@
+/* eslint-disable turbo/no-undeclared-env-vars */
 import { Lucia, Session, User } from 'lucia'
 import { D1Adapter } from '@lucia-auth/adapter-sqlite'
 import { GitHub } from 'arctic'
@@ -49,10 +50,14 @@ declare module 'lucia' {
   }
 }
 
-export const github = new GitHub(
-  process.env.GITHUB_CLIENT_ID!,
-  process.env.GITHUB_CLIENT_SECRET!
-)
+export function getGithubClient() {
+  const ctx = getRequestContext()
+
+  return new GitHub(
+    process.env.GITHUB_CLIENT_ID || ctx.env.GITHUB_CLIENT_ID,
+    process.env.GITHUB_CLIENT_SECRET || ctx.env.GITHUB_CLIENT_SECRET
+  )
+}
 
 export const validateRequest = cache(
   async (): Promise<

@@ -7,7 +7,7 @@ interface Props {
 }
 
 export function Footer({ copyright, container, hasBorder = false }: Props) {
-  const Container = container || 'div'
+  const Container: any = container || 'div'
   return (
     <Container
       className={cx(

@@ -85,7 +85,7 @@ function DashboardContent({
     )
 
     return source
-  }, [processedAllVideosLinksMap])
+  }, [processedAllVideosLinksMap, streamVideos])
 
   const renderItem = (item: CfStreamEntry) => {
     const slug = processedAllVideosLinksMap[item.uid]?.slug
@@ -140,18 +140,32 @@ function DashboardContent({
 
   const onUpdateItem = useCallback(async () => {
     setUpdatingData(true)
+
+    const slug = slugRef.current
+    const metadata = {
+      thumbnail: streamVideos.find(({ uid }) => currenlyActiveVideo === uid)
+        .thumbnail,
+      hls: streamVideos.find(({ uid }) => currenlyActiveVideo === uid).playback
+        .hls,
+    }
+
     try {
+      await fetch('/api/update-videos-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cfId: currenlyActiveVideo,
+          slug,
+          metadata,
+        }),
+      })
       setProcessedAllVideosLinksMap({
         ...processedAllVideosLinksMap,
         [currenlyActiveVideo]: {
-          slug: slugRef.current,
-          metadata: {
-            thumbnail: streamVideos.find(
-              ({ uid }) => currenlyActiveVideo === uid
-            ).thumbnail,
-            hls: streamVideos.find(({ uid }) => currenlyActiveVideo === uid)
-              .playback.hls,
-          },
+          slug,
+          metadata,
         },
       })
       setModalOpen(false)
@@ -159,7 +173,7 @@ function DashboardContent({
       // no-op
     }
     setUpdatingData(false)
-  }, [])
+  }, [currenlyActiveVideo, processedAllVideosLinksMap, streamVideos])
 
   return (
     <>

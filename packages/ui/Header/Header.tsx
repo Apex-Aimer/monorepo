@@ -48,7 +48,7 @@ interface NavbarProps {
 }
 
 export function Header({ left = [], right = [], container }: NavbarProps) {
-  const Container = container || Fragment
+  const Container: any = container || Fragment
   const all = [...left, ...right]
 
   return (

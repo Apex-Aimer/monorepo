@@ -71,6 +71,7 @@ resource "cloudflare_pages_project" "apexaimer-cms" {
       d1_databases = {
         D1DATA = cloudflare_d1_database.apexaimer-cms-db.id
       }
+      compatibility_flags = ["nodejs_compat"]
     }
   }
 }
@@ -81,7 +82,7 @@ resource "null_resource" "deploy" {
   }
 
   provisioner "local-exec" {
-    command = "cd ../../apps/cms && envsubst < wrangler.template.toml > wrangler.toml && yarn build && yarn up:prod && yarn deploy --project-name $PROJECT_NAME"
+    command = "cd ../../apps/cms && envsubst < wrangler.template.toml > wrangler.toml && yarn deploy --project-name $PROJECT_NAME && yarn up:prod"
 
     environment = {
       PROJECT_NAME = local.CMS_PROJECT_NAME
