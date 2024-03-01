@@ -24,7 +24,7 @@ export const InstructionVideo = memo(
         ref={_ref}
         style={[styles.video, { height: videoHeight }]}
         source={{
-          uri: 'https://cms.apexaimer.com/api/content/hls/whole-mag-long-strafing',
+          uri,
         }}
         useNativeControls
         resizeMode={ResizeMode.COVER}

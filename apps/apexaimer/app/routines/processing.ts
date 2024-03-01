@@ -1,8 +1,3 @@
-import { Image } from 'react-native'
-
-// @ts-expect-error
-import stub from '../../assets/simple_movement.mp4'
-
 import { DrillCategory, DrillType, RoutineDrill } from './types'
 import { ModificationT } from '../components/ModificationBadge'
 import { Levels, getAllSuitableLevels } from './levels'
@@ -14,7 +9,7 @@ interface MDDrillMetadata {
   description: string
   modifications: string[]
   levels: string
-  videoCloudflareID?: string
+  slug: string
 }
 
 function getTypeFromMetadata(metadata: MDDrillMetadata) {
@@ -85,28 +80,21 @@ interface RawDrill {
   filename: string
 }
 
-function processCloudflareVideo(videoId?: string) {
-  if (videoId == null) {
-    // TODO
-    return Image.resolveAssetSource(stub).uri
-  }
-
-  return `https://customer-xzvhmwg826li9fy3.cloudflarestream.com/${videoId}/downloads/default.mp4`
+function processCloudflareVideo(slug: string) {
+  return `https://cms.apexaimer.com/api/content/hls/${slug}`
 }
 
-function processCloudflareVideoThumbnail(videoId?: string) {
-  if (videoId == null) {
-    // TODO
-    return undefined
-  }
-
-  return `https://customer-xzvhmwg826li9fy3.cloudflarestream.com/${videoId}/thumbnails/thumbnail.jpg`
+function processCloudflareVideoThumbnail(slug: string) {
+  return `https://cms.apexaimer.com/api/content/thumbnail/${slug}`
 }
 
 function processDrill(
   category: DrillCategory,
   { default: content, metadata, filename }: RawDrill
 ): RoutineDrill {
+  if (metadata.slug == null) {
+    throw new Error(`${filename} doesn't set slug for video`)
+  }
   return {
     key: filename,
     category,
@@ -118,8 +106,8 @@ function processDrill(
     levels: getLevelsFromMetadata(metadata, filename),
     duration: metadata.duration,
     instructions: content,
-    videoUri: processCloudflareVideo(metadata.videoCloudflareID),
-    thumbnail: processCloudflareVideoThumbnail(metadata.videoCloudflareID),
+    videoUri: processCloudflareVideo(metadata.slug),
+    thumbnail: processCloudflareVideoThumbnail(metadata.slug),
   }
 }
 
