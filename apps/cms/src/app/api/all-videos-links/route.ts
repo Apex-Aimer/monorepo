@@ -1,8 +1,6 @@
 // @ts-ignore
 import { getRequestContext } from '@cloudflare/next-on-pages'
 
-import { CloudflareEnv } from '../../../../env'
-
 export const runtime = 'edge'
 
 export async function GET() {

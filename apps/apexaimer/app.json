@@ -12,15 +12,29 @@
       "resizeMode": "contain",
       "backgroundColor": "#282624"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.apexaimer",
       "googleServicesFile": "./configs/GoogleService-Info.plist",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "apexaimer.com": {
+              "NSIncludesSubdomains": true
+            },
+            "cloudflarestream.com": {
+              "NSIncludesSubdomains": true
+            },
+            "localhost": {
+              "NSIncludesSubdomains": true,
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            }
+          }
+        }
       }
     },
     "android": {

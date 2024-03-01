@@ -2,8 +2,6 @@ import { NextRequest } from 'next/server'
 // @ts-ignore
 import { getRequestContext } from '@cloudflare/next-on-pages'
 
-import { CloudflareEnv } from '../../../../env'
-
 export const runtime = 'edge'
 
 interface DataToUpdate {
