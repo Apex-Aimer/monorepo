@@ -3,7 +3,7 @@ type: Movement
 duration: 60
 description: Turns & Slides Flow
 levels: Rookie-Predator
-videoCloudflareID: 7ce5cd34d01361aa7031ba7c5b51f8fa
+slug: simple_movement
 ---
 
 Simple movement to get blood flowing.
