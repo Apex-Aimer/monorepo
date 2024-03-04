@@ -33,7 +33,7 @@ import { Avatar } from '../components/Avatar'
 import { Button } from '../components/Button'
 import { DurationLevels } from '../routines/types'
 import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
-import { OnboardingScreens, currentOnboardingScreen } from '../onboarding'
+import { OnboardingScreens, currentOnboardingScreen } from '../onboarding/store'
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -226,6 +226,7 @@ export default function MainScreen() {
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,
+          gestureEnabled: false,
         }}
       />
       {/* TODO: loading state for the routine */}

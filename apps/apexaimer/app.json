@@ -2,7 +2,7 @@
   "expo": {
     "name": "ApexAimer",
     "slug": "ApexAimer",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "scheme": "apexaimer",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

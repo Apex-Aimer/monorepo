@@ -1,13 +1,15 @@
-import { useEffect, useMemo } from 'react'
+import { Suspense, useEffect, useMemo, useRef } from 'react'
 import { Stack, useNavigation } from 'expo-router'
 import { View } from 'react-native'
-import { atom, useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { SplashScreen } from 'expo-router'
+import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter'
 
 import { OnboardingFadeInOutViewContainer } from './components/OnboardingFadeInOutView'
 import { OnboardingStepperProgress } from './components/OnboardingStepperProgress'
 import { IntroScreen } from './IntroScreen'
-import { PlatformScreen } from './PlatformScreen'
-import { UsernameScreen } from './UsernameScreen'
+import { PlatformScreen, platform } from './PlatformScreen'
+import { UsernameScreen, stats } from './UsernameScreen'
 import { StatsConfirmationScreen } from './StatsConfirmationScreen'
 import { HowManyTimeYouPlayScreenScreen } from './HowManyTimeYouPlayScreen'
 import { GameModeScreen } from './GameModeScreen'
@@ -16,28 +18,12 @@ import { FinishScreen } from './FinishScreen'
 import { PersonalizationScreen } from './PersonalizationScreen'
 import { PaywallScreen } from './PaywallScreen'
 import { TermsAndPrivacyScreen } from './TermsAndPrivacyScreen'
-import { persistAtom } from '../persistAtom'
-import { SplashScreen } from 'expo-router'
-
-export enum OnboardingScreens {
-  TermsAndPrivacy,
-  Intro,
-  Platform,
-  Username,
-  StatsConfirmation,
-  Personalization,
-  HowManyTimeYouPlay,
-  GameMode,
-  SoloQueue,
-  Finish,
-  Paywall,
-}
-
-export const currentOnboardingScreen = atom({
-  key: 'onboardingStep',
-  default: OnboardingScreens.TermsAndPrivacy,
-  effects: [persistAtom],
-})
+import {
+  onboardingHeaderLeft,
+  onboardingHeaderRight,
+} from './components/OnboardingHeaderButtons'
+import { OnboardingScreens, currentOnboardingScreen } from './store'
+import { OnboardingLoading } from './components/OnboardingLoading'
 
 const screens = {
   [OnboardingScreens.TermsAndPrivacy]: 1,
@@ -73,6 +59,10 @@ function OnboardingScreenHeader() {
 
 export default function OnboardingScreen() {
   const [screen, setScreen] = useRecoilState(currentOnboardingScreen)
+  const hasPlatform = useRecoilValue(platform) != null
+  const hasStats = useRecoilValue(stats) != null
+
+  const emitter = useRef(new EventEmitter())
 
   const navigation = useNavigation()
   useEffect(() => {
@@ -81,11 +71,7 @@ export default function OnboardingScreen() {
     })
 
     return () => {
-      unsubscribe
-      // eslint-disable-next-line turbo/no-undeclared-env-vars
-      if (process.env.NODE_ENV === 'development') {
-        // setScreen(OnboardingScreens.TermsAndPrivacy)
-      }
+      unsubscribe()
     }
   }, [navigation, setScreen])
 
@@ -94,12 +80,17 @@ export default function OnboardingScreen() {
       <Stack.Screen
         options={{
           headerBackVisible: false,
+          headerLeft: onboardingHeaderLeft(emitter),
           headerTitle: () => <OnboardingScreenHeader />,
+          headerRight: onboardingHeaderRight(emitter),
           headerTransparent: true,
+          gestureEnabled: false,
+          headerShadowVisible: false,
         }}
       />
       {screen === OnboardingScreens.TermsAndPrivacy && (
         <OnboardingFadeInOutViewContainer
+          emitter={emitter.current}
           onChildrenFadedOut={() => {
             setScreen(OnboardingScreens.Intro)
           }}
@@ -109,6 +100,7 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.Intro && (
         <OnboardingFadeInOutViewContainer
+          emitter={emitter.current}
           onChildrenFadedOut={() => {
             setScreen(OnboardingScreens.Platform)
           }}
@@ -118,7 +110,12 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.Platform && (
         <OnboardingFadeInOutViewContainer
-          onChildrenFadedOut={() => {
+          emitter={emitter.current}
+          onChildrenFadedOut={(action) => {
+            if (action === 'skip') {
+              setScreen(OnboardingScreens.HowManyTimeYouPlay)
+              return
+            }
             setScreen(OnboardingScreens.Username)
           }}
         >
@@ -127,7 +124,16 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.Username && (
         <OnboardingFadeInOutViewContainer
-          onChildrenFadedOut={() => {
+          emitter={emitter.current}
+          onChildrenFadedOut={(action) => {
+            if (action === 'back') {
+              setScreen(OnboardingScreens.Platform)
+              return
+            }
+            if (action === 'skip') {
+              setScreen(OnboardingScreens.HowManyTimeYouPlay)
+              return
+            }
             setScreen(OnboardingScreens.StatsConfirmation)
           }}
         >
@@ -136,7 +142,16 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.StatsConfirmation && (
         <OnboardingFadeInOutViewContainer
-          onChildrenFadedOut={() => {
+          emitter={emitter.current}
+          onChildrenFadedOut={(action) => {
+            if (action === 'back') {
+              setScreen(OnboardingScreens.Username)
+              return
+            }
+            if (action === 'skip') {
+              setScreen(OnboardingScreens.HowManyTimeYouPlay)
+              return
+            }
             setScreen(OnboardingScreens.Personalization)
           }}
         >
@@ -145,6 +160,7 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.Personalization && (
         <OnboardingFadeInOutViewContainer
+          emitter={emitter.current}
           onChildrenFadedOut={() => {
             setScreen(OnboardingScreens.HowManyTimeYouPlay)
           }}
@@ -154,7 +170,43 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.HowManyTimeYouPlay && (
         <OnboardingFadeInOutViewContainer
-          onChildrenFadedOut={() => {
+          emitter={emitter.current}
+          onChildrenFadedOut={(action) => {
+            if (action === 'back') {
+              /**
+               * We are "skipping" onboarding to "how many time you play"
+               * from both platform and username screens.
+               * Hence, when a user goes back from here
+               * to follow the users flow we should either go to
+               * the platform screen or to the username
+               *
+               * PS. Assume that no complicated flows are made, ie
+               *     Platform -> Username -> Stats -> back -> back -> skip
+               */
+              // If no stats then a user hasn't been on stats confirmation screen
+              if (!hasStats) {
+                /**
+                 * If doesn't have stats but have a platform,
+                 * then she skipped on username screen
+                 */
+                if (hasPlatform) {
+                  setScreen(OnboardingScreens.Username)
+                  return
+                }
+                /**
+                 * If no platform either, then it was skipped on platform page
+                 */
+                setScreen(OnboardingScreens.Platform)
+                return
+              }
+              // Regular flow
+              setScreen(OnboardingScreens.StatsConfirmation)
+              return
+            }
+            if (action === 'skip') {
+              setScreen(OnboardingScreens.GameMode)
+              return
+            }
             setScreen(OnboardingScreens.GameMode)
           }}
         >
@@ -163,7 +215,16 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.GameMode && (
         <OnboardingFadeInOutViewContainer
-          onChildrenFadedOut={() => {
+          emitter={emitter.current}
+          onChildrenFadedOut={(action) => {
+            if (action === 'back') {
+              setScreen(OnboardingScreens.HowManyTimeYouPlay)
+              return
+            }
+            if (action === 'skip') {
+              setScreen(OnboardingScreens.SoloQueue)
+              return
+            }
             setScreen(OnboardingScreens.SoloQueue)
           }}
         >
@@ -172,7 +233,16 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.SoloQueue && (
         <OnboardingFadeInOutViewContainer
-          onChildrenFadedOut={() => {
+          emitter={emitter.current}
+          onChildrenFadedOut={(action) => {
+            if (action === 'back') {
+              setScreen(OnboardingScreens.GameMode)
+              return
+            }
+            if (action === 'skip') {
+              setScreen(OnboardingScreens.Finish)
+              return
+            }
             setScreen(OnboardingScreens.Finish)
           }}
         >
@@ -181,6 +251,7 @@ export default function OnboardingScreen() {
       )}
       {screen === OnboardingScreens.Finish && (
         <OnboardingFadeInOutViewContainer
+          emitter={emitter.current}
           onChildrenFadedOut={() => {
             setScreen(OnboardingScreens.Paywall)
           }}
@@ -189,8 +260,13 @@ export default function OnboardingScreen() {
         </OnboardingFadeInOutViewContainer>
       )}
       {screen === OnboardingScreens.Paywall && (
-        <OnboardingFadeInOutViewContainer onChildrenFadedOut={() => {}}>
-          <PaywallScreen />
+        <OnboardingFadeInOutViewContainer
+          emitter={emitter.current}
+          onChildrenFadedOut={() => {}}
+        >
+          <Suspense fallback={<OnboardingLoading />}>
+            <PaywallScreen />
+          </Suspense>
         </OnboardingFadeInOutViewContainer>
       )}
     </>

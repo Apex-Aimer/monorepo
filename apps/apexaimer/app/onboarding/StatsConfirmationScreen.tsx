@@ -14,7 +14,7 @@ import { Avatar } from '../components/Avatar'
 import { OnboardingScreenCTA } from './components/OnboardingScreenCTA'
 import { stats as statsAtom } from './UsernameScreen'
 import { ALStatsService } from './ALStatsService'
-import { level } from '../store'
+import { avatar, level, name } from '../store'
 
 interface StatProps {
   label: string
@@ -46,6 +46,8 @@ export function StatsConfirmationScreen() {
   const stats = useRecoilValue(statsAtom)
 
   const setLevel = useSetRecoilState(level)
+  const setAvatar = useSetRecoilState(avatar)
+  const setUsername = useSetRecoilState(name)
 
   return (
     <View
@@ -90,6 +92,11 @@ export function StatsConfirmationScreen() {
           setLevel(
             ALStatsService.sharedInstance.calculateDifficultyLevel(stats)
           )
+
+          setUsername(stats.username)
+          if (stats.avatar != null) {
+            setAvatar({ uri: stats.avatar, cacheKey: stats.avatar })
+          }
 
           fadeOut()
         }}

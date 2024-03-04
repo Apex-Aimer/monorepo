@@ -6,7 +6,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native'
-import { Link, Stack, useRouter } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import {
   Canvas,
@@ -24,18 +24,6 @@ import { Levels } from '../routines/levels'
 import { level as levelAtom } from '../store'
 import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
 import { useThemeColors } from '../components/ThemeProvider'
-
-function OnboardingButton() {
-  const styles = useAppStyles(themedStyles)
-
-  return (
-    <Link href="/onboarding/" asChild>
-      <Button activeOpacity={0.6} haptic="selection">
-        <Text style={[styles.title, { fontSize: 12 }]}>Onboarding</Text>
-      </Button>
-    </Link>
-  )
-}
 
 interface OptionProps {
   children: string
@@ -121,7 +109,6 @@ export default function ChooseLevelScreen() {
         options={{
           title: null,
           headerLeft,
-          headerRight: () => <OnboardingButton />,
           headerStyle: styles.header as unknown,
           contentStyle: styles.content,
           headerShadowVisible: false,

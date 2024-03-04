@@ -21,6 +21,7 @@ export const InstructionVideo = memo(
 
     return (
       <Video
+        key={uri}
         ref={_ref}
         style={[styles.video, { height: videoHeight }]}
         source={{

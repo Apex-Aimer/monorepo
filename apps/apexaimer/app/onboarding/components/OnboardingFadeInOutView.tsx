@@ -21,7 +21,7 @@ import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter'
 const FadeInOutContext = createContext<{
   emitter: EventEmitter
   onMount(): void
-  onFadeOut(): void
+  onFadeOut(action?: 'back' | 'skip'): void
 }>({
   emitter: null,
   onMount() {},
@@ -29,11 +29,13 @@ const FadeInOutContext = createContext<{
 })
 
 interface OnboardingFadeInOutViewContainerProps extends PropsWithChildren {
-  onChildrenFadedOut(): void
+  emitter?: EventEmitter
+  onChildrenFadedOut(action?: 'back' | 'skip'): void
 }
 
 export function OnboardingFadeInOutViewContainer({
   onChildrenFadedOut,
+  emitter: emitterInstance,
   children,
 }: OnboardingFadeInOutViewContainerProps) {
   const onChildrenFadedOutRef = useRef(onChildrenFadedOut)
@@ -42,7 +44,7 @@ export function OnboardingFadeInOutViewContainer({
     onChildrenFadedOutRef.current = onChildrenFadedOut
   }
 
-  const emitter = useRef(new EventEmitter())
+  const emitter = useRef(emitterInstance || new EventEmitter())
 
   const countRef = useRef(0)
 
@@ -50,11 +52,11 @@ export function OnboardingFadeInOutViewContainer({
     countRef.current += 1
   }, [])
 
-  const onFadeOut = useCallback(() => {
+  const onFadeOut = useCallback((action?: 'back' | 'skip') => {
     countRef.current -= 1
 
     if (countRef.current === 0) {
-      onChildrenFadedOutRef.current?.()
+      onChildrenFadedOutRef.current?.(action)
     }
   }, [])
 
@@ -84,11 +86,11 @@ function useFadeOut(fadeProgress: SharedValue<number>, delay: number) {
 
   useEffect(() => {
     onMount()
-    const sub = emitter.addListener('fadeOut', () => {
+    const sub = emitter.addListener('fadeOut', (action) => {
       fadeProgress.value = withDelay(
         delay,
         withTiming(0, {}, () => {
-          runOnJS(onFadeOut)()
+          runOnJS(onFadeOut)(action)
         })
       )
     })

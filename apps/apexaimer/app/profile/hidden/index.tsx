@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { Stack } from 'expo-router'
+import { Stack, useRouter } from 'expo-router'
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -55,6 +55,7 @@ function LevelSelectorBottomSheetContent() {
 
 export default function HiddenSettingsScreen() {
   const styles = useAppStyles(themedStyles)
+  const router = useRouter()
 
   const sheetRef = useRef<BottomSheetModal>(null)
 
@@ -92,6 +93,14 @@ export default function HiddenSettingsScreen() {
               icon: { external: false },
               onPress() {
                 sheetRef.current?.expand()
+              },
+            },
+            // eslint-disable-next-line turbo/no-undeclared-env-vars
+            process.env.NODE_ENV === 'development' && {
+              label: 'Onboarding',
+              icon: { external: false },
+              onPress() {
+                router.push('/onboarding/')
               },
             },
           ]}
