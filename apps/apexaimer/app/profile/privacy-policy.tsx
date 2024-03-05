@@ -1,5 +1,5 @@
 import { withDocScreen } from './Doc'
 
-const PrivacyPolicyScreen = withDocScreen(require('./privacy-policy.md'))
+const PrivacyPolicyScreen = withDocScreen(require('terms/privacy-policy.md'))
 
 export default PrivacyPolicyScreen

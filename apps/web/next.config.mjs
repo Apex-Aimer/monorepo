@@ -1,7 +1,20 @@
+import { mdLoaderConfigPath } from 'terms/md-loader-config.mjs'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.md$/,
+      use: [
+        {
+          loader: mdLoaderConfigPath,
+        },
+      ],
+    })
+    return config
+  },
   env: {
     BLOG_DOMAIN: process.env.BLOG_DOMAIN,
     MAIN_WEN_DOMAIN: process.env.MAIN_WEB_DOMAIN,
