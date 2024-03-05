@@ -20,6 +20,7 @@ import {
 import { CheckIcon } from 'react-native-heroicons/solid'
 import { Link } from 'expo-router'
 import { useRecoilState } from 'recoil'
+import { Settings as FBSDKSettings } from 'react-native-fbsdk-next'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import {
@@ -152,7 +153,10 @@ export function TermsAndPrivacyScreen() {
             )
             return
           }
+
           setAgree(true)
+          FBSDKSettings.initializeSDK()
+
           fadeOut()
         }}
       >

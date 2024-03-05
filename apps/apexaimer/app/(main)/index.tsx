@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import {
   FlatList,
   ScrollView,
@@ -11,6 +11,7 @@ import { Link, SplashScreen, Stack, router, useRouter } from 'expo-router'
 import { ArrowUturnDownIcon } from 'react-native-heroicons/outline'
 import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Settings as FBSDKSettings } from 'react-native-fbsdk-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import * as Haptics from 'expo-haptics'
 
@@ -202,11 +203,16 @@ SplashScreen.preventAutoHideAsync()
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
   const onboardingScreen = useRecoilValue(currentOnboardingScreen)
+  const firstOnboardingScreen = useRef(onboardingScreen).current
   const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => {
-      if (onboardingScreen !== OnboardingScreens.Paywall) {
+      if (firstOnboardingScreen !== OnboardingScreens.TermsAndPrivacy) {
+        FBSDKSettings.initializeSDK()
+      }
+
+      if (firstOnboardingScreen !== OnboardingScreens.Paywall) {
         router.push('/onboarding/')
 
         return
@@ -214,7 +220,7 @@ export default function MainScreen() {
 
       SplashScreen.hideAsync()
     })
-  }, [onboardingScreen, router])
+  }, [firstOnboardingScreen, router])
 
   return (
     <>
