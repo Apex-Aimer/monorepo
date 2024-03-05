@@ -20,6 +20,8 @@ import {
 import { CheckIcon } from 'react-native-heroicons/solid'
 import { Link } from 'expo-router'
 import { useRecoilState } from 'recoil'
+import { Settings as FBSDKSettings } from 'react-native-fbsdk-next'
+import { IronSource } from 'ironsource-mediation'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import {
@@ -144,7 +146,7 @@ export function TermsAndPrivacyScreen() {
             </Button>
           </OnboardingFadeInOutView>
         }
-        onPress={() => {
+        onPress={async () => {
           if (!hasAgreed) {
             Alert.alert(
               'You must agree to Terms first',
@@ -152,7 +154,11 @@ export function TermsAndPrivacyScreen() {
             )
             return
           }
+
           setAgree(true)
+          FBSDKSettings.initializeSDK()
+          await IronSource.setConsent(true)
+
           fadeOut()
         }}
       >

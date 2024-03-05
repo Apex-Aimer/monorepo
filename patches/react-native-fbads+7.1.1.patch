@@ -1,0 +1,48 @@
+diff --git a/node_modules/react-native-fbads/ReactNativeAdsFacebook.podspec b/node_modules/react-native-fbads/ReactNativeAdsFacebook.podspec
+index 7ba2cee..f5ba337 100644
+--- a/node_modules/react-native-fbads/ReactNativeAdsFacebook.podspec
++++ b/node_modules/react-native-fbads/ReactNativeAdsFacebook.podspec
+@@ -13,6 +13,8 @@ Pod::Spec.new do |s|
+   s.platform      = :ios, '7.0'
+   s.dependency      'React'
+   s.dependency      'FBAudienceNetwork'
++  s.dependency      'FBSDKCoreKit'
++  s.dependency      'FBSDKCoreKit_Basics'
+ 
+   s.source_files  = 'ios/**/*.{h,m}'
+ end
+\ No newline at end of file
+diff --git a/node_modules/react-native-fbads/android/app/build.gradle b/node_modules/react-native-fbads/android/app/build.gradle
+index 39e889c..21a7abe 100644
+--- a/node_modules/react-native-fbads/android/app/build.gradle
++++ b/node_modules/react-native-fbads/android/app/build.gradle
+@@ -27,6 +27,6 @@ repositories {
+ dependencies {
+     implementation 'com.facebook.react:react-native:+'
+     implementation "com.android.support:recyclerview-v7:${safeExtGet('supportLibVersion', '26.1.0')}"
+-    implementation 'com.facebook.android:audience-network-sdk:6.2.+'
++    implementation 'com.facebook.android:audience-network-sdk:6.+'
+     implementation 'com.facebook.android:facebook-android-sdk:6.+'
+ }
+diff --git a/node_modules/react-native-fbads/ios/ReactNativeAdsFacebook/EXAdSettingsManager.m b/node_modules/react-native-fbads/ios/ReactNativeAdsFacebook/EXAdSettingsManager.m
+index 56bb991..437a520 100644
+--- a/node_modules/react-native-fbads/ios/ReactNativeAdsFacebook/EXAdSettingsManager.m
++++ b/node_modules/react-native-fbads/ios/ReactNativeAdsFacebook/EXAdSettingsManager.m
+@@ -7,7 +7,7 @@
+ #import <FBAudienceNetwork/FBAudienceNetwork.h>
+ #import <AppTrackingTransparency/AppTrackingTransparency.h>
+ 
+-#import <FBSDKCoreKit/FBSDKSettings.h>
++#import <FBSDKCoreKit/FBSDKCoreKit.h>
+ 
+ @implementation RCTConvert (EXNativeAdView)
+ 
+@@ -126,7 +126,7 @@ - (void)setBridge:(RCTBridge *)bridge
+ 
+ RCT_EXPORT_METHOD(setAdvertiserIDCollectionEnabled:(BOOL)enabled)
+ {
+-    [FBSDKSettings setAdvertiserIDCollectionEnabled:enabled];
++    [FBSDKSettings.sharedSettings setAdvertiserIDCollectionEnabled:enabled];
+ }
+ 
+ 

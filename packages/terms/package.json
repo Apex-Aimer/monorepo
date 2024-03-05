@@ -1,0 +1,15 @@
+{
+  "name": "terms",
+  "version": "0.0.1",
+  "main": "./index.ts",
+  "files": [
+    "terms-of-use.md",
+    "privacy-policy.md",
+    "md-loader.mjs",
+    "md-transform.js"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "yaml-front-matter": "^4.1.1"
+  }
+}

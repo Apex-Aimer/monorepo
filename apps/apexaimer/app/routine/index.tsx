@@ -31,6 +31,8 @@ import { AnimatedCircleGradientProgressBar } from '../components/CircleGradientP
 import { RoutinCTAWithTimer } from '../components/RoutinCTAWithTimer'
 import { FadeInView } from '../components/FadeInView'
 import { drillsVoiceOverTable } from '../routines/routines'
+import { iapHasPremium } from '../createIapStore'
+import { RoutineAd } from './ad'
 
 const DrillTimer = memo(function DrillTimerComp({
   id,
@@ -208,6 +210,9 @@ export default function RoutineScreen() {
   const styles = useAppStyles(themedStyles)
   const [hasVoiceOver, setHasVoiceOver] = useState(false)
 
+  const hasPremium = useRecoilValue(iapHasPremium)
+  const [showAd, setShowAd] = useState(!hasPremium)
+
   return (
     <>
       <StatusBar style="light" />
@@ -250,9 +255,18 @@ export default function RoutineScreen() {
           headerTintColor: styles.tint.backgroundColor as string,
         }}
       />
-      <Suspense fallback={null}>
-        <Routine hasVoiceOver={hasVoiceOver} />
-      </Suspense>
+      {!showAd && (
+        <Suspense fallback={null}>
+          <Routine hasVoiceOver={hasVoiceOver} />
+        </Suspense>
+      )}
+      {showAd && (
+        <RoutineAd
+          onShown={() => {
+            setShowAd(false)
+          }}
+        />
+      )}
     </>
   )
 }

@@ -2,6 +2,11 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRecoilState } from 'recoil'
+import {
+  requestTrackingPermissionsAsync,
+  PermissionStatus,
+} from 'expo-tracking-transparency'
+import { Settings as FBSDKSettings } from 'react-native-fbsdk-next'
 
 import {
   ColorsPalette,
@@ -70,8 +75,18 @@ export function PaywallScreenCTA({ isFree, currentProductId }: Props) {
       />
       <Button
         disabled={isBusyPaying}
-        onPress={() => {
+        onPress={async () => {
           if (isFree) {
+            const { status } = await requestTrackingPermissionsAsync()
+
+            if (
+              status === PermissionStatus.GRANTED ||
+              status === PermissionStatus.UNDETERMINED
+            ) {
+              await FBSDKSettings.setAdvertiserTrackingEnabled(true)
+              // await FBSDKSettings.setAdvertiserIDCollectionEnabled(true)
+            }
+
             router.replace('/')
 
             return

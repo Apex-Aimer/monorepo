@@ -11,13 +11,15 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,js,json}\"",
     "blog:deploy": "",
-    "blog:deploy:local": "wrangler pages dev apps/blog/.vercel/output/static --ip '127.0.0.1'"
+    "blog:deploy:local": "wrangler pages dev apps/blog/.vercel/output/static --ip '127.0.0.1'",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@turbo/gen": "^1.12.3",
     "dotenv-cli": "^7.3.0",
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
+    "patch-package": "^8.0.0",
     "prettier": "^2.5.1",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "turbo": "latest",
