@@ -1,7 +1,5 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
-
 import { ExpoConfig } from 'expo/config'
-import 'dotenv/config'
 
 const config: ExpoConfig = {
   name: 'ApexAimer',
@@ -26,19 +24,21 @@ const config: ExpoConfig = {
     },
     infoPlist: {
       NSAppTransportSecurity: {
-        NSExceptionDomains: {
-          'apexaimer.com': {
-            NSIncludesSubdomains: true,
-          },
-          'cloudflarestream.com': {
-            NSIncludesSubdomains: true,
-          },
-          localhost: {
-            NSIncludesSubdomains: true,
-            NSExceptionAllowsInsecureHTTPLoads: true,
-          },
-        },
+        // NSExceptionDomains: {
+        //   'apexaimer.com': {
+        //     NSIncludesSubdomains: true,
+        //   },
+        //   'cloudflarestream.com': {
+        //     NSIncludesSubdomains: true,
+        //   },
+        //   localhost: {
+        //     NSIncludesSubdomains: true,
+        //     NSExceptionAllowsInsecureHTTPLoads: true,
+        //   },
+        // },
+        NSAllowsArbitraryLoads: true,
       },
+      SKAdNetworkItems: [{ SKAdNetworkIdentifier: 'su67r6k2v3.skadnetwork' }],
     },
   },
   android: {
@@ -77,10 +77,10 @@ const config: ExpoConfig = {
     [
       'react-native-fbsdk-next',
       {
-        appID: process.env.FB_APP_ID,
-        clientToken: process.env.FB_APP_CLIENT_TOKEN,
+        appID: '1431135080835812',
+        clientToken: '914744c36c45114d01992713b00d1824',
         displayName: 'ApexAimer Mobile',
-        scheme: process.env.FB_APP_SCHEME,
+        scheme: 'fb1431135080835812',
         // https://github.com/thebergamo/react-native-fbsdk-next?tab=readme-ov-file#enabling-auto-app-installs-in-expo
         advertiserIDCollectionEnabled: true,
         autoLogAppEventsEnabled: true,
@@ -89,7 +89,6 @@ const config: ExpoConfig = {
           'This identifier will be used to deliver personalized ads to you.',
       },
     ],
-    'react-native-fbads',
   ],
   experiments: {
     typedRoutes: true,

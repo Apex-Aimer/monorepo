@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Settings as FBSDKSettings } from 'react-native-fbsdk-next'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import * as Haptics from 'expo-haptics'
+import { IronSource, InitializationEvents } from 'ironsource-mediation'
 
 import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { Drill } from '../components/Drill/Drill'
@@ -35,6 +36,18 @@ import { Button } from '../components/Button'
 import { DurationLevels } from '../routines/types'
 import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
 import { OnboardingScreens, currentOnboardingScreen } from '../onboarding/store'
+import { iapHasPremium } from '../createIapStore'
+
+async function preloadAd() {
+  try {
+    /**
+     * Load the first ad
+     */
+    await IronSource.loadInterstitial()
+  } catch {
+    // no-op
+  }
+}
 
 function Routine() {
   const [intensityLevel, setIntensityLevel] = useRecoilState(
@@ -42,6 +55,11 @@ function Routine() {
   )
   const routine = useRecoilValue(routineOfTheDay)
   const isRoutineCompleted = useRecoilValue(isRoutineOfTheDayCompleted)
+  const hasPremium = useRef(useRecoilValue(iapHasPremium)).current
+
+  useEffect(() => {
+    preloadAd()
+  }, [hasPremium])
 
   const appColorScheme = useAppColorScheme()
   const styles = useAppStyles(themedStyles)
@@ -200,6 +218,32 @@ function LevelButton() {
 
 SplashScreen.preventAutoHideAsync()
 
+async function initIronSource() {
+  const isDev = process.env.NODE_ENV === 'development'
+  try {
+    if (isDev) {
+      await IronSource.validateIntegration()
+
+      await IronSource.setAdaptersDebug(true)
+      await IronSource.shouldTrackNetworkState(true)
+
+      await IronSource.setMetaData('is_test_suite', ['enable'])
+    }
+
+    await IronSource.setMetaData('is_child_directed', ['false'])
+    // await IronSource.setUserId()
+
+    await IronSource.init(process.env.EXPO_PUBLIC_IRONSRC_APP_KEY, [
+      'REWARDED_VIDEO',
+      'INTERSTITIAL',
+    ])
+  } catch (err) {
+    if (err instanceof Error && isDev) {
+      console.error(err.message)
+    }
+  }
+}
+
 export default function MainScreen() {
   const styles = useAppStyles(themedStyles)
   const onboardingScreen = useRecoilValue(currentOnboardingScreen)
@@ -218,8 +262,20 @@ export default function MainScreen() {
         return
       }
 
+      if (process.env.NODE_ENV === 'development') {
+        InitializationEvents.onInitializationComplete.setListener(() => {
+          console.log('IronSource is successfuly init')
+        })
+      }
+
       SplashScreen.hideAsync()
     })
+
+    initIronSource()
+
+    return () => {
+      InitializationEvents.removeAllListeners()
+    }
   }, [firstOnboardingScreen, router])
 
   return (

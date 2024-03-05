@@ -17,6 +17,7 @@ import { useRecoilState } from 'recoil'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { level as levelSelector } from '../../store'
 import { Levels } from '../../routines/levels'
+import { IronSource } from 'ironsource-mediation'
 
 function LevelSelectorBottomSheetContent() {
   const styles = useAppStyles(themedStyles)
@@ -101,6 +102,18 @@ export default function HiddenSettingsScreen() {
               icon: { external: false },
               onPress() {
                 router.push('/onboarding/')
+              },
+            },
+            process.env.NODE_ENV === 'development' && {
+              label: 'IronSource test suite',
+              icon: { external: false },
+              onPress() {
+                try {
+                  // @ts-ignore
+                  IronSource.launchTestSuite()
+                } catch {
+                  console.log('no launch suite available')
+                }
               },
             },
           ]}
