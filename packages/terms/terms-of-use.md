@@ -5,7 +5,9 @@ title: Terms of Use
 These Terms govern
 
 - the use of ApexAimer, and,
-- any other related Agreement or legal relationship with the Owner in a legally binding way. Capitalized words are defined in the relevant dedicated section of this document.
+- any other related Agreement or legal relationship with the Owner in a legally binding way.
+
+Capitalized words are defined in the relevant dedicated section of this document.
 
 The User must read this document carefully.
 
@@ -39,11 +41,17 @@ By using ApexAimer, Users confirm to meet the following requirements:
 
 ## Content on ApexAimer
 
-Unless where otherwise specified or clearly recognizable, all content available on ApexAimer is owned or provided by the Owner or its licensors.
+ApexAimer is an independently developed project by fans for fans of "Apex Legends" and holds no official affiliation, sponsorship, or endorsement from Electronic Arts Inc. (EA), Respawn Entertainment, or the EA Competitive Gaming Division (EAC).
 
-The Owner undertakes its utmost effort to ensure that the content provided on ApexAimer infringes no applicable legal provisions or third-party rights. However, it may not always be possible to achieve such a result.
+All images, icons, trademarks, and game assets referenced or utilized in ApexAimer belong to their respective owners.
 
-In such cases, without prejudice to any legal prerogatives of Users to enforce their rights, Users are kindly asked to preferably report related complaints using the contact details provided in this document.
+"Apex Legends" is a registered trademark of Electronic Arts Inc. It's important to note that neither EA nor Respawn Entertainment endorses or assumes responsibility for the content offered within this application.
+
+Unless specifically stated or inherently apparent, all content available through ApexAimer is either owned by the Owner or licensed from its licensors.
+
+The Owner diligently strives to ensure that content on ApexAimer does not violate any legal statutes or third-party rights. Nevertheless, there may be instances where this is not entirely achievable.
+
+Should any content-related concerns arise, Users are encouraged to contact us through the provided contact details in this document, before pursuing legal action. We highly value your feedback and are committed to addressing your concerns promptly and effectively.
 
 ## Rights regarding content on ApexAimer - All rights reserved
 
@@ -370,3 +378,15 @@ The exclusive competence to decide on any controversy resulting from or connecte
 ## Exception for European Consumers
 
 The above does not apply to any Users that qualify as European Consumers, nor to Consumers based in Switzerland, Norway or Iceland.
+
+## Incorporation by Reference with Platform Agreements
+
+The terms and conditions outlined herein supplement and complement the standard terms and agreements of the platform from which ApexAimer was downloaded, including but not limited to Apple Inc.'s End User License Agreement (EULA) for the Apple App Store and Google Play's Terms of Service for the Google Play Store. Our Terms of Use are intended to be additional to, not a replacement for, the standard terms provided by the respective platform. In the event of any conflict or inconsistency between the provisions of our custom Terms of Use and those of the platform's standard agreements, the terms of the platform's agreements shall take precedence and control.
+
+By using ApexAimer, you acknowledge and agree to comply with both these Terms of Use and the standard terms of the platform from which the app was downloaded.
+
+We encourage you to review the standard terms of the respective platform, which govern your use of software applications obtained from their services. Should you have any questions regarding these terms or the relationship between our Terms of Use and the platform's standard agreements, please contact us using the information provided in the "Contact Us" section of this document.
+
+## Contact Us
+
+For any questions about these Terms or ApexAimer, please contact us at support@apexaimer.com.
