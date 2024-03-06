@@ -37,6 +37,7 @@ import { DurationLevels } from '../routines/types'
 import { DifficultyLevelIcon } from '../components/DifficultyLevelIcon'
 import { OnboardingScreens, currentOnboardingScreen } from '../onboarding/store'
 import { iapHasPremium } from '../createIapStore'
+import { MainScreenLoading } from './MainScreenLoading'
 
 async function preloadAd() {
   try {
@@ -291,8 +292,7 @@ export default function MainScreen() {
           gestureEnabled: false,
         }}
       />
-      {/* TODO: loading state for the routine */}
-      <Suspense fallback={null}>
+      <Suspense fallback={<MainScreenLoading />}>
         <Routine />
       </Suspense>
     </>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Stack } from 'expo-router'
-import { ScrollView, Text, View, Share, TouchableOpacity } from 'react-native'
+import { ScrollView, Text, View, Share } from 'react-native'
 import { StarIcon, UserGroupIcon } from 'react-native-heroicons/solid'
 import { nativeApplicationVersion } from 'expo-application'
 import {
@@ -18,7 +18,7 @@ import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import { headerLeft } from '../components/HeaderBackButton'
 import { SettingsSection } from './SettingsSection'
 import { InstagramIcon } from './icons/Instagram'
-import { TwitterIcon } from './icons/Twitter'
+import { XIcon } from './icons/X'
 import { RedditIcon } from './icons/Reddit'
 import { ApexAimerThemedLogo } from './logo/ApexAimerThemedLogo'
 import { useUserName } from '../store'
@@ -194,19 +194,19 @@ export default function ProfileScreen() {
                 label: 'Instagram',
                 labelIcon: InstagramIcon,
                 icon: { external: true },
-                href: 'https://instagram.com',
+                href: 'https://instagram.com/apex_aimer',
               },
               {
-                label: 'Twitter',
-                labelIcon: TwitterIcon,
+                label: 'X',
+                labelIcon: XIcon,
                 icon: { external: true },
-                href: 'https://twitter.com',
+                href: 'https://x.com/@TheApexAimer',
               },
               {
                 label: 'Reddit',
                 labelIcon: RedditIcon,
                 icon: { external: true },
-                href: 'https://reddit.com',
+                href: 'https://reddit.com/r/apex_aimer/',
               },
             ]}
           />
