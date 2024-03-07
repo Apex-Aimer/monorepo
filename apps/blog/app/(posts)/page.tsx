@@ -3,9 +3,9 @@ import { Posts } from './HomePage'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'List of all articles in the blog',
+  title: 'All articles in the blog',
   description:
-    'Articles in the blog relates to Apex Legends game and aim to help people improve in it.',
+    'Articles in the blog related to Apex Legends game and aim to help people improve in it.',
   keywords: [
     'Apex Legends',
     'firing range',

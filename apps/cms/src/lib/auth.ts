@@ -25,7 +25,7 @@ export function initializeLucia() {
           ? {
               secure: true,
               sameSite: 'strict',
-              domain: process.env.NEXTJS_PUBLIC_CMS_DOMAIN,
+              domain: process.env.NEXT_PUBLIC_CMS_DOMAIN,
             }
           : {
               secure: false,

@@ -20,7 +20,10 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui'],
   images: {
-    domains: ['customer-xzvhmwg826li9fy3.cloudflarestream.com'],
+    domains: [
+      'customer-xzvhmwg826li9fy3.cloudflarestream.com',
+      'media.apexaimer.com',
+    ],
   },
 }
 

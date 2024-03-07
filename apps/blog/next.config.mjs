@@ -18,9 +18,14 @@ const nextConfig = {
     SNOWPLOW_TRACKER_ID: process.env.SNOWPLOW_TRACKER_ID,
     SNOWPLOW_COLLECTOR_URL: process.env.SNOWPLOW_COLLECTOR_URL,
     CLOUDFLARE_IMAGES_ACCOUNT_HASH: process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH,
+    MEDIA_PROD_DOMAIN: process.env.MEDIA_PROD_DOMAIN,
   },
   images: {
-    domains: [process.env.BLOG_DOMAIN, process.env.BLOG_PROD_DOMAIN],
+    domains: [
+      process.env.BLOG_DOMAIN,
+      process.env.BLOG_PROD_DOMAIN,
+      process.env.MEDIA_PROD_DOMAIN,
+    ],
   },
   async headers() {
     if (!(process.env.NODE_ENV === 'production')) {

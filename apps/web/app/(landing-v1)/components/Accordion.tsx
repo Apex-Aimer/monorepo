@@ -36,9 +36,9 @@ export function AccordionItem({
           <path
             d="M19 9L12 16L5 9"
             stroke="#F4F5EF"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </label>

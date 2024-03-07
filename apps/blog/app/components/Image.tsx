@@ -9,8 +9,10 @@ function findPostByCoverSrc(cover: string) {
   })
 }
 
-const cloudflareLoader = ({ src }) => {
-  return `https://${process.env.BLOG_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/${src}/public`
+const cmsLoader = ({ src }: { src: string }) => {
+  return `https://${process.env.MEDIA_PROD_DOMAIN}${
+    src.startsWith('/') ? '' : '/'
+  }${src}`
 }
 
 export function Image({ src, ...rest }: ImageProps) {
@@ -18,13 +20,7 @@ export function Image({ src, ...rest }: ImageProps) {
     const post = findPostByCoverSrc(src)
 
     if (post != null) {
-      return (
-        <NextImage
-          src={post.meta.coverID}
-          loader={cloudflareLoader}
-          {...rest}
-        />
-      )
+      return <NextImage src={src} loader={cmsLoader} {...rest} />
     }
   }
 

@@ -25,9 +25,14 @@ const nextConfig = {
     MAILCHIMP_AUDIENCE_ID: process.env.MAILCHIMP_AUDIENCE_ID,
     SNOWPLOW_TRACKER_ID: process.env.SNOWPLOW_TRACKER_ID,
     SNOWPLOW_COLLECTOR_URL: process.env.SNOWPLOW_COLLECTOR_URL,
+    MEDIA_PROD_DOMAIN: process.env.MEDIA_PROD_DOMAIN,
   },
   images: {
-    domains: [process.env.MAIN_WEB_DOMAIN, process.env.MAIN_WEB_PROD_DOMAIN],
+    domains: [
+      process.env.MAIN_WEB_DOMAIN,
+      process.env.MAIN_WEB_PROD_DOMAIN,
+      process.env.MEDIA_PROD_DOMAIN,
+    ],
   },
   async headers() {
     if (!(process.env.NODE_ENV === 'production')) {

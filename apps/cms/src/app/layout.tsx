@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     default: 'Dashboard',
   },
   description: 'ApexAimer CMS',
-  metadataBase: new URL(`https://${process.env.NEXTJS_PUBLIC_CMS_DOMAIN}`),
+  metadataBase: new URL(`https://${process.env.NEXT_PUBLIC_CMS_DOMAIN}`),
   alternates: {
     canonical: '/',
     languages: {

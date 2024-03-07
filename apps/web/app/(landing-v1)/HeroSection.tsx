@@ -2,8 +2,8 @@ import cx from 'clsx'
 
 import { PhoneMockupSVG } from './components/PhoneMockup'
 import { HeroSubInput } from './components/HeroSubscriptionInput'
-import { CloudflareImage } from '../components/CloudflareImage'
 import { HeroTitle } from './components/HeroTitle'
+import { CmsImage } from '../components/CmsImage'
 
 function PhoneMockup() {
   return (
@@ -13,8 +13,8 @@ function PhoneMockup() {
       </div>
       <div className="relative flex flex-1">
         <div className="absolute left-[18px] right-[18px] top-[16px] aspect-[0.449] overflow-hidden rounded-[56px]">
-          <CloudflareImage
-            src="f798e242-6bcf-4ffa-5c21-dd5340010200"
+          <CmsImage
+            src="landing-phone-mockup.png"
             alt="Example of the app ApexAimer"
             fill
           />
@@ -39,8 +39,8 @@ function HeroPhoneMockupMobile() {
           'absolute bottom-0 left-1/2 top-0 w-full min-w-[700px] -translate-x-1/2 overflow-hidden'
         )}
       >
-        <CloudflareImage
-          src="be176a3f-b493-440e-a268-6f95d7c8df00"
+        <CmsImage
+          src="landing-cover-v1-mobile.jpg"
           alt="View of firing range in ApexAimer"
           fill
           className="scale-150"
@@ -66,8 +66,8 @@ export function HeroPhoneMockupDesktop() {
           'absolute bottom-0 left-1/2 top-0 w-full min-w-[700px] -translate-x-1/2 overflow-hidden'
         )}
       >
-        <CloudflareImage
-          src="be176a3f-b493-440e-a268-6f95d7c8df00"
+        <CmsImage
+          src="landing-cover-v1-desktop.jpg"
           alt="View of firing range in ApexAimer"
           fill
           className="scale-150"

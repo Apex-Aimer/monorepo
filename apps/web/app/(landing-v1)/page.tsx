@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     images: [
       {
-        url: `https://${process.env.MAIN_WEB_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/cd92743c-7765-4a9a-6a83-6b5dd7908e00/public`,
+        url: `https://${process.env.MEDIA_PROD_DOMAIN}/apexaimer-landing-og.jpg`,
       },
     ],
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: 'Warm-ups to reach your peak in Apex Legends',
     creator: '@TheApexAimer',
     images: [
-      `https://${process.env.MAIN_WEB_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/cd92743c-7765-4a9a-6a83-6b5dd7908e00/public`,
+      `https://${process.env.MEDIA_PROD_DOMAIN}/apexaimer-landing-og.jpg`,
     ],
   },
 }

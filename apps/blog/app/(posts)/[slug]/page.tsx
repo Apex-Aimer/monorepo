@@ -28,7 +28,7 @@ export async function generateMetadata(
     openGraph: {
       images: [
         {
-          url: `https://${process.env.BLOG_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/${post.meta.coverID}/public`,
+          url: `https://${process.env.MEDIA_PROD_DOMAIN}${post.meta.cover}`,
         },
       ],
     },
@@ -36,9 +36,7 @@ export async function generateMetadata(
       ...(await parent).twitter,
       title: post.meta.title,
       description: post.meta.description,
-      images: [
-        `https://${process.env.BLOG_PROD_DOMAIN}/cdn-cgi/imagedelivery/${process.env.CLOUDFLARE_IMAGES_ACCOUNT_HASH}/${post.meta.coverID}/public`,
-      ],
+      images: [`https://${process.env.MEDIA_PROD_DOMAIN}${post.meta.cover}`],
     },
   }
 }

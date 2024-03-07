@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import cx from 'clsx'
 
-import { CloudflareImage } from '../../components/CloudflareImage'
+import { CmsImage } from '../../components/CmsImage'
 
 interface Props extends PropsWithChildren {
   className?: string
@@ -16,8 +16,8 @@ export function DottedBG({ className, children }: Props) {
           className
         )}
       >
-        <CloudflareImage
-          src="8f0eae94-752e-4fff-4f2a-1e4f71361800"
+        <CmsImage
+          src="dots.png"
           alt="Dotted pattern"
           fill
           style={{ objectFit: 'contain' }}

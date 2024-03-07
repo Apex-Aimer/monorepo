@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import cx from 'clsx'
 
-import { CloudflareImage } from '../components/CloudflareImage'
+import { CmsImage } from '../components/CmsImage'
 
 function Highlight({
   title,
@@ -32,7 +32,7 @@ function Highlight({
         </p>
       </div>
       <div className="relative aspect-square w-[200px] overflow-hidden rounded-2xl">
-        <CloudflareImage src={src} alt={alt} fill />
+        <CmsImage src={src} alt={alt} fill />
       </div>
     </div>
   )
@@ -55,7 +55,7 @@ export function Highlights() {
             </>
           }
           description="Do it just for 10 minutes before the game, raise blood in your muscles and enjoy the result."
-          src="fdf9fcf9-17bd-4cd2-6af8-d53be12e0700"
+          src="landing-highlight-1.jpg"
           alt="Player is enjoing practicing less and playing more"
         />
         <Highlight
@@ -66,7 +66,7 @@ export function Highlights() {
             </>
           }
           description="Do precisely what needs to be done to be prepared for the game, no more, no less."
-          src="f9d42c20-2bed-43f9-adc5-c76e3d617a00"
+          src="landing-highlight-2.jpg"
           alt="The view of a firing range that you want to use effectively"
           reverse
         />
@@ -77,7 +77,7 @@ export function Highlights() {
             </>
           }
           description="Short warm-up, if done consistently every day, can take your skills to the next level."
-          src="e384503e-a9d9-4f66-cd1e-3c5ebd6f2a00"
+          src="landing-highlight-3.jpg"
           alt="Progress every day to become the champion"
         />
       </div>

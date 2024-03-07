@@ -36,7 +36,7 @@ function getSlugFromPath(path: string) {
         path.join(POSTS_DIR, postPath),
         'utf-8'
       )
-      const compiled = await bindings.mdx.compile(postContent)
+      const compiled = await (bindings as any).mdx.compile(postContent)
 
       await fs.writeFile(
         path.join(...GENERATED_COMPONENTS_PATH, `${postPath}.jsx`),
@@ -61,10 +61,6 @@ export interface IBlogPostMeta {
   date: string;
   lastModDate?: string;
   cover: string;
-  /**
-   * Cloudflare Image ID
-   */
-  coverID: string;
   coverAlt: string;
   coverCredits?: string;
   estReadingTime?: number;
