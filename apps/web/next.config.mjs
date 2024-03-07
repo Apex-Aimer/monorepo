@@ -48,7 +48,13 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: `default-src 'self' 'unsafe-inline' ${process.env.SNOWPLOW_COLLECTOR_URL}; font-src 'self' https://fonts.googleapis.com; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'`,
+            value: [
+              `default-src 'self' 'unsafe-inline' ${process.env.SNOWPLOW_COLLECTOR_URL}`,
+              `img-src ${process.env.MEDIA_PROD_DOMAIN}`,
+              "font-src 'self' https://fonts.googleapis.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline'",
+            ].join('; '),
           },
           {
             key: 'X-Content-Type-Options',
