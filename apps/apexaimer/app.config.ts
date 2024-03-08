@@ -3,7 +3,7 @@ import { ExpoConfig } from 'expo/config'
 
 const config: ExpoConfig = {
   name: 'ApexAimer',
-  slug: 'ApexAimer',
+  slug: 'warm-ups-for-apex-legends-apexaimer',
   version: '0.0.3',
   scheme: 'apexaimer',
   orientation: 'portrait',
@@ -79,7 +79,7 @@ const config: ExpoConfig = {
       {
         appID: '1431135080835812',
         clientToken: '914744c36c45114d01992713b00d1824',
-        displayName: 'ApexAimer Mobile',
+        displayName: 'ApexAimer',
         scheme: 'fb1431135080835812',
         // https://github.com/thebergamo/react-native-fbsdk-next?tab=readme-ov-file#enabling-auto-app-installs-in-expo
         advertiserIDCollectionEnabled: true,
@@ -101,7 +101,7 @@ const config: ExpoConfig = {
       projectId: '9042a6e2-e3fe-42bf-944c-2a5a1d9085a5',
     },
   },
-  owner: 'apexaimer',
+  owner: 'Aleksei Savelev',
 }
 
 export default config

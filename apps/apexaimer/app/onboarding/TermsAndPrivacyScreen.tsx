@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   Alert,
   StyleSheet,
@@ -104,6 +104,7 @@ export function TermsAndPrivacyScreen() {
   const styles = useAppStyles(themedStyles)
   const headerHeight = useHeaderHeight()
   const fadeOut = useOnboardingFadeOut()
+  const [hasNoted, setHasNoted] = useState(false)
   const [hasAgreed, setAgree] = useRecoilState(hasAgreedToTermsAndPrivacy)
 
   return (
@@ -117,36 +118,93 @@ export function TermsAndPrivacyScreen() {
         <FiringRangeImage />
       </OnboardingFadeInOutView>
       <OnboardingScreenCTA
-        fadeInDelay={400}
+        fadeInDelay={450}
         preButton={
-          <OnboardingFadeInOutView fadeInDelay={300}>
-            <Button
-              onPress={() => {
-                setAgree(!hasAgreed)
-              }}
-              style={styles.termsWrapper}
-            >
-              <Checkbox isActive={hasAgreed} />
-              <Text style={styles.termsLabel}>
-                I agree to{' '}
-                <Link
-                  href="/profile/terms-of-use"
-                  style={styles.termsLabelAccent}
-                >
-                  Terms
-                </Link>{' '}
-                and{' '}
-                <Link
-                  href="/profile/privacy-policy"
-                  style={styles.termsLabelAccent}
-                >
-                  Privacy Policy
-                </Link>
-              </Text>
-            </Button>
-          </OnboardingFadeInOutView>
+          <View style={styles.checkboxesContainer}>
+            <OnboardingFadeInOutView fadeInDelay={300}>
+              <Button
+                onPress={() => {
+                  setHasNoted(!hasNoted)
+                }}
+                style={styles.checkboxWrapper}
+              >
+                <Checkbox isActive={hasNoted} />
+                <Text style={styles.checkboxLabel}>
+                  I understand that this app {'\n'}is not sponsored, affiliated
+                  with, {'\n'}or endorsed by{' '}
+                  <Link
+                    href="https://ea.com/"
+                    style={styles.checkboxLabelAccent}
+                  >
+                    Electronic Arts Inc. (EA)
+                  </Link>
+                  {'\n'}or{' '}
+                  <Link
+                    href="https://www.respawn.com/"
+                    style={styles.checkboxLabelAccent}
+                  >
+                    Respawn Entertainment
+                  </Link>
+                </Text>
+              </Button>
+            </OnboardingFadeInOutView>
+            <OnboardingFadeInOutView fadeInDelay={350}>
+              <Button
+                onPress={() => {
+                  setAgree(!hasAgreed)
+                }}
+                style={styles.checkboxWrapper}
+              >
+                <Checkbox isActive={hasAgreed} />
+                <Text style={styles.checkboxLabel}>
+                  I agree to{' '}
+                  <Link
+                    href="/profile/terms-of-use"
+                    style={styles.checkboxLabelAccent}
+                  >
+                    Terms
+                  </Link>{' '}
+                  and{' '}
+                  <Link
+                    href="/profile/privacy-policy"
+                    style={styles.checkboxLabelAccent}
+                  >
+                    Privacy Policy
+                  </Link>
+                </Text>
+              </Button>
+            </OnboardingFadeInOutView>
+          </View>
         }
         onPress={async () => {
+          async function proceed() {
+            setAgree(true)
+            FBSDKSettings.initializeSDK()
+            await IronSource.setConsent(true)
+
+            fadeOut()
+          }
+          if (!hasNoted) {
+            Alert.alert(
+              'Unofficial firing range guide',
+              'Please note that EA and Respawn Entertainment have not endorsed nor are they responsible for the content of this application.',
+              [
+                {
+                  text: 'I understand',
+                  onPress: () => {
+                    setHasNoted(true)
+
+                    if (!hasAgreed) {
+                      return
+                    }
+
+                    proceed()
+                  },
+                },
+              ]
+            )
+            return
+          }
           if (!hasAgreed) {
             Alert.alert(
               'You must agree to Terms first',
@@ -155,12 +213,24 @@ export function TermsAndPrivacyScreen() {
             return
           }
 
-          setAgree(true)
-          FBSDKSettings.initializeSDK()
-          await IronSource.setConsent(true)
-
-          fadeOut()
+          await proceed()
         }}
+        postButton={
+          <Text style={styles.footnote}>
+            All images, icons, trademarks, and game assets used or referenced{' '}
+            {'\n'}herein are the property of their respective owners. {'\n'}
+            <Link
+              href="https://www.ea.com/en-gb/games/apex-legends"
+              style={styles.checkboxLabelAccent}
+            >
+              &quot;Apex Legends&quot;
+            </Link>{' '}
+            is a registered trademark of{' '}
+            <Link href="https://ea.com/" style={styles.checkboxLabelAccent}>
+              Electronic Arts Inc.
+            </Link>
+          </Text>
+        }
       >
         Start
       </OnboardingScreenCTA>
@@ -197,6 +267,16 @@ const themedStyles = AppStyleSheet.create({
   gradient: {
     backgroundColor: 'bg',
   },
+  checkboxesContainer: {
+    flexDirection: 'column',
+    gap: 15,
+  },
+  checkboxWrapper: {
+    width: 300,
+    flexDirection: 'row',
+    gap: 14,
+    paddingBottom: 4,
+  },
   checkbox: {
     width: 22,
     height: 22,
@@ -210,20 +290,20 @@ const themedStyles = AppStyleSheet.create({
   checkboxActive: {
     backgroundColor: 'text accent',
   },
-  termsWrapper: {
-    flexDirection: 'row',
-    gap: 14,
-    alignItems: 'center',
-    paddingVertical: 4,
-  },
-  termsLabel: {
+  checkboxLabel: {
     fontFamily: 'rubik 400',
     fontSize: 14,
     lineHeight: 24,
     color: 'text primary',
   },
-  termsLabelAccent: {
+  checkboxLabelAccent: {
     color: 'text accent',
     textDecorationLine: 'underline',
+  },
+  footnote: {
+    fontFamily: 'rubik 400',
+    fontSize: 9,
+    color: 'line',
+    textAlign: 'center',
   },
 })
