@@ -28,9 +28,9 @@ export const busyPaying = atom({
 })
 
 export interface GeneralSubscriptions {
-  yearly: Product
-  monthly: Product
-  weekly: Product
+  yearly: Product | null
+  monthly: Product | null
+  weekly: Product | null
 }
 
 export const generalSubscriptions = atom<Partial<GeneralSubscriptions>>({
@@ -39,34 +39,38 @@ export const generalSubscriptions = atom<Partial<GeneralSubscriptions>>({
   effects: [
     ({ setSelf }) => {
       async function init() {
-        const isConnected = await InAppSubscriptionsService.sharedInstance
-          .connection
+        try {
+          const canConnect = await InAppSubscriptionsService.sharedInstance
+            .connection
 
-        if (!isConnected) {
+          if (!canConnect) {
+            return null
+          }
+
+          const products = await getProducts({
+            skus: [
+              InAppPremiumProducts.Yearly,
+              InAppPremiumProducts.Monthly,
+              InAppPremiumProducts.Weekly,
+            ],
+          })
+
+          const subs: GeneralSubscriptions = {
+            yearly: products.find(
+              ({ productId }) => productId === InAppPremiumProducts.Yearly
+            ),
+            monthly: products.find(
+              ({ productId }) => productId === InAppPremiumProducts.Monthly
+            ),
+            weekly: products.find(
+              ({ productId }) => productId === InAppPremiumProducts.Weekly
+            ),
+          }
+
+          return subs
+        } catch {
           return null
         }
-
-        const products = await getProducts({
-          skus: [
-            InAppPremiumProducts.Yearly,
-            InAppPremiumProducts.Monthly,
-            InAppPremiumProducts.Weekly,
-          ],
-        })
-
-        const subs: GeneralSubscriptions = {
-          yearly: products.find(
-            ({ productId }) => productId === InAppPremiumProducts.Yearly
-          ),
-          monthly: products.find(
-            ({ productId }) => productId === InAppPremiumProducts.Monthly
-          ),
-          weekly: products.find(
-            ({ productId }) => productId === InAppPremiumProducts.Weekly
-          ),
-        }
-
-        return subs
       }
 
       setSelf(init())

@@ -216,20 +216,22 @@ export function TermsAndPrivacyScreen() {
           await proceed()
         }}
         postButton={
-          <Text style={styles.footnote}>
-            All images, icons, trademarks, and game assets used or referenced{' '}
-            {'\n'}herein are the property of their respective owners. {'\n'}
-            <Link
-              href="https://www.ea.com/en-gb/games/apex-legends"
-              style={styles.checkboxLabelAccent}
-            >
-              &quot;Apex Legends&quot;
-            </Link>{' '}
-            is a registered trademark of{' '}
-            <Link href="https://ea.com/" style={styles.checkboxLabelAccent}>
-              Electronic Arts Inc.
-            </Link>
-          </Text>
+          <OnboardingFadeInOutView fadeInDelay={500}>
+            <Text style={styles.footnote}>
+              All images, icons, trademarks, and game assets used or referenced{' '}
+              {'\n'}herein are the property of their respective owners. {'\n'}
+              <Link
+                href="https://www.ea.com/en-gb/games/apex-legends"
+                style={styles.checkboxLabelAccent}
+              >
+                &quot;Apex Legends&quot;
+              </Link>{' '}
+              is a registered trademark of{' '}
+              <Link href="https://ea.com/" style={styles.checkboxLabelAccent}>
+                Electronic Arts Inc.
+              </Link>
+            </Text>
+          </OnboardingFadeInOutView>
         }
       >
         Start

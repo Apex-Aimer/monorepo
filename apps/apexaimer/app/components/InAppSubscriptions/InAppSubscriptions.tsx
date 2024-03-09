@@ -1,6 +1,6 @@
 import { noop } from 'lodash'
 import { memo, useEffect } from 'react'
-import { Platform } from 'react-native'
+import { Platform, Alert } from 'react-native'
 import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   PurchaseError,
@@ -10,6 +10,7 @@ import {
   purchaseErrorListener,
   purchaseUpdatedListener,
 } from 'react-native-iap'
+import isEmpty from 'lodash/isEmpty'
 
 import { iapHasPremium, iapRootToken } from '../../createIapStore'
 import { InAppSubscriptionsService } from './InAppSubscriptionsService'
@@ -23,20 +24,20 @@ const iapConnected = atom({
 export function useInAppSubscriptions() {
   const resolvedSubs = useRecoilValue(generalSubscriptions)
 
-  const areSubscriptionsAvailable = resolvedSubs != null
+  const areSubscriptionsAvailable = isEmpty(resolvedSubs)
 
   return {
     areSubscriptionsAvailable,
     yearly: {
-      isAvailable: areSubscriptionsAvailable,
+      isAvailable: areSubscriptionsAvailable && resolvedSubs?.yearly != null,
       product: resolvedSubs?.yearly,
     },
     monthly: {
-      isAvailable: areSubscriptionsAvailable,
+      isAvailable: areSubscriptionsAvailable && resolvedSubs?.monthly != null,
       product: resolvedSubs?.monthly,
     },
     weekly: {
-      isAvailable: areSubscriptionsAvailable,
+      isAvailable: areSubscriptionsAvailable && resolvedSubs?.weekly != null,
       product: resolvedSubs?.weekly,
     },
   }
