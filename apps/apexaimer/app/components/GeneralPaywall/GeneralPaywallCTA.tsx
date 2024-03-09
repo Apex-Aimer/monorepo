@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View, Alert } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { ArrowRightIcon } from 'react-native-heroicons/solid'
@@ -57,13 +57,24 @@ export function GeneralPaywallCTA({ currentProductId, onBack }: Props) {
           onPress={async () => {
             try {
               setBusyPaying(true)
-              await InAppSubscriptionsService.sharedInstance.buyPremium(
-                currentProductId
-              )
 
-              onBack()
+              if (
+                await InAppSubscriptionsService.sharedInstance.buyPremium(
+                  currentProductId
+                )
+              ) {
+                /**
+                 * Wait a bit for event listener in `InAppSubscriptionsComp.tsx` to handle a purchase
+                 */
+                await new Promise((r) => setTimeout(r, 200))
+                onBack()
+              }
             } catch {
               // no-op
+              Alert.alert(
+                'Purchase is unavailable',
+                'Sorry, the purchase is unavailable for an unknown reason - Please try again later'
+              )
             } finally {
               setBusyPaying(false)
             }

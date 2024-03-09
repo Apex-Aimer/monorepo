@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Alert, Platform } from 'react-native'
 import { useRecoilValue } from 'recoil'
 
 import { PaywallContainer } from '../components/Paywall/PaywallContainer'
@@ -7,7 +7,6 @@ import { AppStyleSheet, useAppStyles } from '../components/useAppStyles'
 import {
   GeneralSubscriptions,
   busyPaying,
-  generalSubscriptions,
   getYearlyDiscount,
 } from '../components/GeneralPaywall/store'
 import { PaywallSubPrice } from '../components/Paywall/PaywallSubPrice'
@@ -15,15 +14,26 @@ import { PaywallPlan } from '../components/Paywall/PaywallPlan'
 import { PaywallDiscountSubPrice } from '../components/Paywall/PaywallDiscountSubPrice'
 import { PAYWALL_CTA_HEIGHT, PaywallScreenCTA } from './PaywallScreenCTA'
 import { OnboardingFadeInOutView } from './components/OnboardingFadeInOutView'
+import { useInAppSubscriptions } from '../components/InAppSubscriptions/InAppSubscriptions'
+
+function showProductIsUnavailable() {
+  Alert.alert(
+    'Product is unavailable',
+    `We couldn't fetch information from the ${Platform.select({
+      ios: 'App Store',
+      android: 'Google Play Store',
+    })} about the product. Please check your internet connection and try again.`
+  )
+}
 
 export function PaywallScreen() {
   const styles = useAppStyles(themedStyles)
-  const resolvedSubs = useRecoilValue(generalSubscriptions)
-  const { yearly, monthly } = resolvedSubs
+  const { areSubscriptionsAvailable, yearly, monthly, weekly } =
+    useInAppSubscriptions()
   const isBusyPaying = useRecoilValue(busyPaying)
   const [activePlan, setActivePlan] = useState<
     keyof GeneralSubscriptions | 'free'
-  >('yearly')
+  >(areSubscriptionsAvailable ? 'yearly' : 'free')
 
   return (
     <>
@@ -43,9 +53,14 @@ export function PaywallScreen() {
           <OnboardingFadeInOutView fadeInDelay={300}>
             <PaywallPlan
               active={activePlan === 'yearly'}
+              disabled={!yearly.isAvailable}
               busy={isBusyPaying}
               badge="Save 40%"
               onChange={() => {
+                if (!yearly.isAvailable) {
+                  showProductIsUnavailable()
+                  return
+                }
                 setActivePlan('yearly')
               }}
             >
@@ -54,20 +69,31 @@ export function PaywallScreen() {
                 <Text style={styles.planDescription}>No ads</Text>
               </View>
               <View style={styles.planPricesContainer}>
-                <PaywallSubPrice {...yearly} suffix="/year" />
-                <PaywallDiscountSubPrice
-                  {...monthly}
-                  calculateDiscount={getYearlyDiscount}
-                  suffix="/year"
-                />
+                {yearly.isAvailable ? (
+                  <>
+                    <PaywallSubPrice {...yearly.product} suffix="/year" />
+                    <PaywallDiscountSubPrice
+                      {...monthly.product}
+                      calculateDiscount={getYearlyDiscount}
+                      suffix="/year"
+                    />
+                  </>
+                ) : (
+                  <Text style={styles.planFree}>-</Text>
+                )}
               </View>
             </PaywallPlan>
           </OnboardingFadeInOutView>
           <OnboardingFadeInOutView fadeInDelay={400}>
             <PaywallPlan
               active={activePlan === 'monthly'}
+              disabled={!monthly.isAvailable}
               busy={isBusyPaying}
               onChange={() => {
+                if (!monthly.isAvailable) {
+                  showProductIsUnavailable()
+                  return
+                }
                 setActivePlan('monthly')
               }}
             >
@@ -76,7 +102,11 @@ export function PaywallScreen() {
                 <Text style={styles.planDescription}>No ads</Text>
               </View>
               <View style={styles.planPricesContainer}>
-                <PaywallSubPrice {...monthly} suffix="/month" />
+                {monthly.isAvailable ? (
+                  <PaywallSubPrice {...monthly.product} suffix="/month" />
+                ) : (
+                  <Text style={styles.planFree}>-</Text>
+                )}
               </View>
             </PaywallPlan>
           </OnboardingFadeInOutView>
@@ -101,7 +131,14 @@ export function PaywallScreen() {
       <OnboardingFadeInOutView fadeInDelay={600}>
         <PaywallScreenCTA
           isFree={activePlan === 'free'}
-          currentProductId={resolvedSubs[activePlan]?.productId}
+          currentProductId={
+            {
+              yearly: yearly.product?.productId,
+              monthly: monthly.product?.productId,
+              weekly: weekly.product?.productId,
+              free: undefined,
+            }[activePlan]
+          }
         />
       </OnboardingFadeInOutView>
     </>

@@ -1,4 +1,4 @@
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View, Alert } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useRecoilState } from 'recoil'
@@ -22,7 +22,7 @@ import { useRouter } from 'expo-router'
 
 interface Props {
   isFree: boolean
-  currentProductId: string
+  currentProductId?: string
 }
 
 export function PaywallScreenCTA({ isFree, currentProductId }: Props) {
@@ -36,13 +36,23 @@ export function PaywallScreenCTA({ isFree, currentProductId }: Props) {
   const pay = useCallback(async () => {
     try {
       setBusyPaying(true)
-      await InAppSubscriptionsService.sharedInstance.buyPremium(
-        currentProductId
-      )
 
-      router.replace('/')
+      if (
+        await InAppSubscriptionsService.sharedInstance.buyPremium(
+          currentProductId
+        )
+      ) {
+        /**
+         * Wait a bit for event listener in `InAppSubscriptionsComp.tsx` to handle a purchase
+         */
+        await new Promise((r) => setTimeout(r, 200))
+        router.replace('/')
+      }
     } catch {
-      // no-op
+      Alert.alert(
+        'Purchase is unavailable',
+        'Sorry, the purchase is unavailable for an unknown reason - Please try again later'
+      )
     } finally {
       setBusyPaying(false)
     }

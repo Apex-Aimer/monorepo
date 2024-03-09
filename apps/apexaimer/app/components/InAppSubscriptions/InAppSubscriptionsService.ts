@@ -41,8 +41,14 @@ export class InAppSubscriptionsService {
   }
 
   async buyPremium(product: string) {
-    return requestSubscription({
+    let purchase = await requestSubscription({
       sku: product,
     })
+
+    if (purchase == null) {
+      return false
+    }
+
+    return true
   }
 }

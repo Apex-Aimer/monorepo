@@ -29,6 +29,7 @@ import {
   InAppPremiumProducts,
   InAppSubscriptionsService,
 } from '../../components/InAppSubscriptions/InAppSubscriptionsService'
+import { useInAppSubscriptions } from '../../components/InAppSubscriptions/InAppSubscriptions'
 
 const busyRestore = atom({
   key: 'goPremiumBusyRestore',
@@ -95,15 +96,38 @@ const Underlay = memo(function UnderlayDecoration() {
   )
 })
 
+function showUpgradeIsNotAvailable() {
+  Alert.alert(
+    'Upgrade is unavailable',
+    `We couldn't fetch information from the ${Platform.select({
+      ios: 'App Store',
+      android: 'Google Play Store',
+    })}. Please check your internet connection and try again.`
+  )
+}
+
 export function GoPremium() {
   const styles = useAppStyles(themedStyles)
   const [hasPremium, setHasPremium] = useRecoilState(iapHasPremium)
+  const { areSubscriptionsAvailable } = useInAppSubscriptions()
   const { openPaywall } = useGeneralPaywallScreen()
   const setRootToken = useSetRecoilState(iapRootToken)
 
   const [isBusy, setBusy] = useRecoilState(busyRestore)
 
+  const openPaywallIfPossible = useCallback(() => {
+    if (!areSubscriptionsAvailable) {
+      return showUpgradeIsNotAvailable()
+    }
+
+    openPaywall()
+  }, [areSubscriptionsAvailable, openPaywall])
+
   const onRestore = useCallback(async () => {
+    if (!areSubscriptionsAvailable) {
+      return showUpgradeIsNotAvailable()
+    }
+
     try {
       setBusy(true)
 
@@ -161,7 +185,7 @@ export function GoPremium() {
     } finally {
       setBusy(false)
     }
-  }, [setBusy, setHasPremium, setRootToken])
+  }, [areSubscriptionsAvailable, setBusy, setHasPremium, setRootToken])
 
   if (hasPremium) {
     return null
@@ -175,7 +199,7 @@ export function GoPremium() {
           <Text style={styles.title}>Go Premium</Text>
           <Text style={styles.description}>Enjoy ads-less experience</Text>
         </View>
-        <PrimaryButton onPress={isBusy ? noop : openPaywall}>
+        <PrimaryButton onPress={isBusy ? noop : openPaywallIfPossible}>
           <View
             style={[
               styles.buttonLabelWrapper,

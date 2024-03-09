@@ -1,12 +1,11 @@
 import { noop } from 'lodash'
 import { memo, useEffect } from 'react'
 import { Platform } from 'react-native'
-import { atom, useRecoilState, useSetRecoilState } from 'recoil'
+import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import {
   PurchaseError,
   SubscriptionPurchase,
   finishTransaction,
-  initConnection,
   promotedProductListener,
   purchaseErrorListener,
   purchaseUpdatedListener,
@@ -14,11 +13,34 @@ import {
 
 import { iapHasPremium, iapRootToken } from '../../createIapStore'
 import { InAppSubscriptionsService } from './InAppSubscriptionsService'
+import { generalSubscriptions } from '../GeneralPaywall/store'
 
 const iapConnected = atom({
   key: 'iapConnected',
   default: false,
 })
+
+export function useInAppSubscriptions() {
+  const resolvedSubs = useRecoilValue(generalSubscriptions)
+
+  const areSubscriptionsAvailable = resolvedSubs != null
+
+  return {
+    areSubscriptionsAvailable,
+    yearly: {
+      isAvailable: areSubscriptionsAvailable,
+      product: resolvedSubs?.yearly,
+    },
+    monthly: {
+      isAvailable: areSubscriptionsAvailable,
+      product: resolvedSubs?.monthly,
+    },
+    weekly: {
+      isAvailable: areSubscriptionsAvailable,
+      product: resolvedSubs?.weekly,
+    },
+  }
+}
 
 function InAppSubscriptionsComp() {
   const [isConnected, setConnected] = useRecoilState(iapConnected)
@@ -43,6 +65,10 @@ function InAppSubscriptionsComp() {
 
     const purchaseUpdateSubscription = purchaseUpdatedListener(
       async (purchase: SubscriptionPurchase) => {
+        if (purchase?.transactionId == null) {
+          return
+        }
+
         const rootToken = Platform.select({
           ios: purchase.originalTransactionIdentifierIOS,
           android: purchase.purchaseToken,

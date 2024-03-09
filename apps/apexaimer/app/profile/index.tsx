@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { Link, Stack } from 'expo-router'
 import { ScrollView, Text, View, Share } from 'react-native'
 import { StarIcon, UserGroupIcon } from 'react-native-heroicons/solid'
@@ -149,7 +149,9 @@ export default function ProfileScreen() {
           <Avatar size={80} />
           <Text style={styles.profileText}>{name}</Text>
         </View>
-        <GoPremium />
+        <Suspense fallback={null}>
+          <GoPremium />
+        </Suspense>
         <View style={styles.sectionContainer}>
           <View style={styles.sectionTitleContainer}>
             <Text style={styles.sectionTitle}>PERSONALIZE</Text>

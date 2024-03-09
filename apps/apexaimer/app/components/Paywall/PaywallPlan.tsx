@@ -49,7 +49,15 @@ function PlanBadge({
 }
 
 interface PlanProps extends PropsWithChildren {
+  /**
+   * Active is to choose which plan is chosen right now
+   */
   active: boolean
+  /**
+   * Disabled is when an option can be chosen
+   * i.e. couldn't fetch info
+   */
+  disabled?: boolean
   busy: boolean
   onChange(): void
   badge?: string
@@ -57,6 +65,7 @@ interface PlanProps extends PropsWithChildren {
 
 export function PaywallPlan({
   active,
+  disabled,
   busy,
   badge,
   onChange,
@@ -89,7 +98,14 @@ export function PaywallPlan({
 
   return (
     <GestureDetector gesture={tapGesture}>
-      <Animated.View style={[styles.plan, busy && styles.planBusy, style]}>
+      <Animated.View
+        style={[
+          styles.plan,
+          busy && styles.planBusy,
+          { opacity: disabled ? 0.4 : 1 },
+          style,
+        ]}
+      >
         <PlanDecorations active={active} />
         <View style={styles.planContent}>{children}</View>
         {badge && <PlanBadge active={active}>{badge}</PlanBadge>}
